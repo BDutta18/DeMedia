@@ -2,14 +2,6 @@
   "name": "demedia",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://github.com/BDutta18/DeMedia#readme",
-  "bugs": {
-    "url": "https://github.com/BDutta18/DeMedia/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/BDutta18/DeMedia.git"
-  },
   "scripts": {
     "build": "next build",
     "dev": "next dev",
@@ -17,7 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@creit.tech/stellar-wallets-kit": "^1.5.0",
+    "@creit.tech/stellar-wallets-kit": "^2.1.0",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",
@@ -47,7 +39,7 @@
     "@radix-ui/react-toggle-group": "1.1.1",
     "@radix-ui/react-tooltip": "1.1.6",
     "@stellar/freighter-api": "latest",
-    "@stellar/stellar-sdk": "^15.0.0",
+    "@stellar/stellar-sdk": "^15.0.1",
     "@vercel/analytics": "latest",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
@@ -58,11 +50,11 @@
     "eslint": "^10.2.0",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
-    "next": "^16.2.4",
+    "next": "16.0.10",
     "next-themes": "^0.4.6",
-    "react": "19.2.0",
+    "react": "^18.3.1",
     "react-day-picker": "9.8.0",
-    "react-dom": "19.2.0",
+    "react-dom": "^18.3.1",
     "react-hook-form": "^7.60.0",
     "react-resizable-panels": "^2.1.7",
     "recharts": "2.15.4",
@@ -75,11 +67,12 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.9",
     "@types/node": "^22",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
     "postcss": "^8.5",
     "tailwindcss": "^4.1.9",
     "tw-animate-css": "1.3.3",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@10.33.2+sha512.a90faf6feeab71ad6c6e57f94e0fe1a12f5dcc22cd754db40ae9593eb6a3e0b6b12e3540218bb37ae083404b1f2ce6db2a4121e979829b4aff94b99f49da1cf8"
 }

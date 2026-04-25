@@ -172,3 +172,11 @@ Metadata uploaded: QmcdYE5oAojXC6rcxJ4WA8m552qpj5hjUJyMM7cP1yjrXe
 [0mPOST /api/upload/upload [32m200[0m 17320.113 ms - 1290[0m
 [0mGET /api/upload/my-nfts [32m200[0m 91.128 ms - 1776[0m
 [0mGET /api/upload/my-nfts [32m200[0m 86.867 ms - 1776[0m
+[0mGET / [36m304[0m 10.484 ms - -[0m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `cross-env NODE_ENV=development tsx -r dotenv/config src/index.ts`[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+✅ MongoDB connected! DB HOST: ac-s2hhg8i-shard-00-02.fbvkkmu.mongodb.net
+✅ Server running on http://localhost:5000
