@@ -65,10 +65,33 @@ router.post("/upload", walletProtect, upload.single("file"), async (req, res) =>
     const fileHash = `0x${keccak256(fileBuffer)}`;
     const registryResult = await uploadContentToBlockchain(imageCid, fileHash);
     if (!registryResult.success) {
+      const typedError = registryResult.error as { code?: string; message?: string; address?: string } | Error | string | undefined;
       const detail = registryResult.error instanceof Error ? registryResult.error.message : String(registryResult.error);
+      const registryCode =
+        typeof typedError === "object" && typedError !== null && "code" in typedError && typedError.code
+          ? String(typedError.code)
+          : "CONTENT_REGISTRY_FAILED";
+
+      if (registryCode === "STELLAR_SOURCE_ACCOUNT_NOT_FOUND") {
+        const missingAddress =
+          typeof typedError === "object" && typedError !== null && "address" in typedError
+            ? String(typedError.address)
+            : "";
+
+        return res.status(500).json({
+          success: false,
+          code: registryCode,
+          message: "Backend signer account is not funded on Stellar testnet.",
+          detail,
+          action: missingAddress
+            ? `Fund ${missingAddress} on Friendbot, then retry upload.`
+            : "Fund backend signer account on Friendbot, then retry upload.",
+        });
+      }
+
       return res.status(500).json({
         success: false,
-        code: "CONTENT_REGISTRY_FAILED",
+        code: registryCode,
         message: "Blockchain content registration failed",
         detail,
       });

@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (storedToken && storedAddress) {
       setToken(storedToken)
-      setAddress(storedAddress)
+      setAddress(storedAddress.toUpperCase())
       setIsAuthenticated(true)
     }
     setIsLoading(false)
@@ -56,9 +56,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = (userAddress: string, userToken: string) => {
     localStorage.setItem("demedia_token", userToken)
-    localStorage.setItem("demedia_address", userAddress)
+    localStorage.setItem("demedia_address", userAddress.toUpperCase())
     setToken(userToken)
-    setAddress(userAddress)
+    setAddress(userAddress.toUpperCase())
     setIsAuthenticated(true)
   }
 

@@ -17,8 +17,9 @@ export const uploadContentToBlockchain = async (
   cid: string,
   fileHash: string,
   price: number = 0,
-  paymentToken: string = ""
-) => {
+  paymentToken: string = "",
+  retryCount: number = 0
+): Promise<{ success: boolean; txHash?: string; contentId?: string; error?: unknown }> => {
   void price;
   void paymentToken;
 
@@ -130,11 +131,30 @@ export const uploadContentToBlockchain = async (
     const accountMatch = message.match(/Account not found:\s*([A-Z0-9]+)/i);
 
     if (accountMatch?.[1]) {
+      const missingAddress = accountMatch[1];
+      const isTestnet =
+        (process.env.RPC_URL || "").includes("testnet") ||
+        (process.env.STELLAR_NETWORK_PASSPHRASE || Networks.TESTNET) === Networks.TESTNET;
+
+      if (isTestnet && retryCount < 1) {
+        try {
+          const friendbotUrl = `https://friendbot.stellar.org/?addr=${encodeURIComponent(missingAddress)}`;
+          const fundRes = await fetch(friendbotUrl);
+          if (fundRes.ok) {
+            return await uploadContentToBlockchain(cid, fileHash, price, paymentToken, retryCount + 1);
+          }
+          const fundDetail = await fundRes.text();
+          console.error(`Friendbot funding failed for ${missingAddress}:`, fundDetail);
+        } catch (friendbotError) {
+          console.error(`Friendbot funding error for ${missingAddress}:`, friendbotError);
+        }
+      }
+
       const friendlyError = new Error(
-        `Stellar source account not found on network for PRIVATE_KEY public key ${accountMatch[1]}.`
+        `Stellar source account not found on network for PRIVATE_KEY public key ${missingAddress}.`
       );
       (friendlyError as any).code = "STELLAR_SOURCE_ACCOUNT_NOT_FOUND";
-      (friendlyError as any).address = accountMatch[1];
+      (friendlyError as any).address = missingAddress;
       console.error("UploadContent error:", friendlyError.message);
       return { success: false, error: friendlyError };
     }

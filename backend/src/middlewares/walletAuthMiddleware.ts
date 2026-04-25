@@ -14,7 +14,7 @@ export const walletProtect = (req: Request, res: Response, next: NextFunction) =
   try {
     const decoded = jwt.verify(token, getJwtSecret()) as { address: string };
 
-    (req as any).user = { address: decoded.address };
+    (req as any).user = { address: decoded.address?.toUpperCase?.() || decoded.address };
 
     next();
   } catch (error) {

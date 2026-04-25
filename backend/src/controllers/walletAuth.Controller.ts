@@ -80,8 +80,8 @@ const getMessageCandidates = (message: string): Buffer[] => {
 };
 
 const isSignatureValid = (address: string, signatureRaw: string, message: string): boolean => {
-  const normalizedAddress = address.trim().toUpperCase();
-  const kp = Keypair.fromPublicKey(normalizedAddress);
+  const canonicalAddress = address.trim().toUpperCase();
+  const kp = Keypair.fromPublicKey(canonicalAddress);
   const signatureCandidates = getSignatureCandidates(signatureRaw);
   const messageCandidates = getMessageCandidates(message);
 
@@ -131,7 +131,8 @@ export const verifyWalletSignature = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Signature verification failed" });
     }
 
-    const normalizedAddress = String(address).toLowerCase();
+    const canonicalAddress = String(address).trim().toUpperCase();
+    const normalizedAddress = canonicalAddress.toLowerCase();
 
     // Keep auth resilient: if DB is temporarily unavailable, still issue a token.
     let user: any = { address: normalizedAddress, name: "anonymous" };
@@ -168,11 +169,11 @@ export const verifyWalletSignature = async (req: Request, res: Response) => {
       expiresIn: (process.env.TOKEN_EXPIRY ?? "7d") as SignOptions["expiresIn"],
     };
 
-    const token = jwt.sign({ address: normalizedAddress }, getJwtSecret(), options);
+    const token = jwt.sign({ address: canonicalAddress }, getJwtSecret(), options);
 
     return res.json({
       message: "Wallet verified successfully",
-      address: normalizedAddress,
+      address: canonicalAddress,
       token,
       user,
     });

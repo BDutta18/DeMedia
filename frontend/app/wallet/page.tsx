@@ -23,6 +23,8 @@ export default function WalletPage() {
   const [recipient, setRecipient] = useState("")
   const [amount, setAmount] = useState("")
   const [transactions, setTransactions] = useState<Array<{ type: string; amount: string; party: string; time: string; status: "pending" | "success" | "fail"; txHash?: string }>>([])
+  const [isFundingWallet, setIsFundingWallet] = useState(false)
+  const autoFundAttemptedRef = useRef(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const handleDisconnect = async () => {
@@ -44,26 +46,39 @@ export default function WalletPage() {
   const [xlmBalance, setXlmBalance] = useState<string>("0.00")
   const [usdBalance, setUsdBalance] = useState<string>("$0.00")
 
-  useEffect(() => {
-    const fetchBalance = async () => {
-      if (address) {
-        try {
-          const res = await fetch(`https://horizon-testnet.stellar.org/accounts/${address}`);
-          if (res.ok) {
-            const data = await res.json();
-            const nativeBalance = data.balances.find((b: any) => b.asset_type === "native")?.balance || "0";
-            setXlmBalance(Number(nativeBalance).toFixed(4));
-            setUsdBalance(`$${(Number(nativeBalance) * 0.12).toFixed(2)}`);
-          } else {
-            console.error("Account not found on network yet");
-          }
-        } catch (error) {
-          console.error("Error fetching balance:", error)
-        }
+  const fetchBalance = async () => {
+    if (!address) return
+
+    try {
+      const res = await fetch(`https://horizon-testnet.stellar.org/accounts/${address.toUpperCase()}`)
+      if (res.ok) {
+        autoFundAttemptedRef.current = false
+        const data = await res.json()
+        const nativeBalance = data.balances.find((b: any) => b.asset_type === "native")?.balance || "0"
+        setXlmBalance(Number(nativeBalance).toFixed(4))
+        setUsdBalance(`$${(Number(nativeBalance) * 0.12).toFixed(2)}`)
+        return
       }
+
+      // Unfunded testnet accounts return 404/400 on horizon account lookup.
+      if ((res.status === 404 || res.status === 400) && !autoFundAttemptedRef.current) {
+        autoFundAttemptedRef.current = true
+        setTxMessage("Wallet account is not activated on testnet. Funding via Friendbot...")
+        await requestFriendbotFunding()
+        return
+      }
+
+      setTxMessage("Wallet account is not activated on testnet yet. Use 'Fund Testnet Wallet'.")
+    } catch (error) {
+      console.error("Error fetching balance:", error)
     }
-    fetchBalance()
-    const interval = setInterval(fetchBalance, 12000)
+  }
+
+  useEffect(() => {
+    void fetchBalance()
+    const interval = setInterval(() => {
+      void fetchBalance()
+    }, 12000)
     return () => clearInterval(interval)
   }, [address])
 
@@ -202,25 +217,23 @@ export default function WalletPage() {
 
   const requestFriendbotFunding = async () => {
     if (!address) return
+    if (isFundingWallet) return
+    setIsFundingWallet(true)
     setTxMessage("Requesting testnet funds...")
     try {
-      const friendbotUrl = `https://friendbot.stellar.org/?addr=${encodeURIComponent(address)}`
+      const friendbotUrl = `https://friendbot.stellar.org/?addr=${encodeURIComponent(address.toUpperCase())}`
       const response = await fetch(friendbotUrl)
       if (!response.ok) {
         const text = await response.text()
         throw new Error(text || "Funding failed")
       }
       setTxMessage("Wallet funded from Friendbot. Refreshing balance...")
-      const res = await fetch(`https://horizon-testnet.stellar.org/accounts/${address}`)
-      if (res.ok) {
-        const data = await res.json()
-        const nativeBalance = data.balances.find((b: any) => b.asset_type === "native")?.balance || "0"
-        setXlmBalance(Number(nativeBalance).toFixed(4))
-        setUsdBalance(`$${(Number(nativeBalance) * 0.12).toFixed(2)}`)
-      }
+      await fetchBalance()
     } catch (error) {
       const mapped = mapWalletError(error)
       setTxMessage(mapped.message)
+    } finally {
+      setIsFundingWallet(false)
     }
   }
 
@@ -600,9 +613,10 @@ export default function WalletPage() {
 
             <button
               onClick={requestFriendbotFunding}
-              className="mb-4 w-full rounded-xl border border-blue-500/40 bg-blue-500/10 px-6 py-3 font-semibold text-blue-300 transition-all hover:bg-blue-500/20"
+              disabled={isFundingWallet}
+              className="mb-4 w-full rounded-xl border border-blue-500/40 bg-blue-500/10 px-6 py-3 font-semibold text-blue-300 transition-all hover:bg-blue-500/20 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Fund Testnet Wallet (Friendbot)
+              {isFundingWallet ? "Funding Testnet Wallet..." : "Fund Testnet Wallet (Friendbot)"}
             </button>
 
             <div className="mb-6 flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 p-3">
