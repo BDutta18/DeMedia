@@ -1,0 +1,200 @@
+# DeMedia - Decentralized Media Content Platform on Stellar
+
+DeMedia is a decentralized media content platform built on the Stellar testnet with Soroban smart contracts.
+Creators can upload media, register its fingerprint on-chain, mint NFTs, and manage content ownership with wallet-based auth.
+
+## Live Submission Links
+
+- Live demo: [https://demedia-stellar.vercel.app/](https://demedia-stellar.vercel.app/)
+- Demo video: [Google Drive Demo](https://drive.google.com/drive/folders/17dLtEjczj6FqkgJJSdYAzHzNRuH3Avii?usp=sharing)
+
+## Level 5 MVP Validation (Real Users)
+
+### User Wallet Addresses (5+)
+
+1. `GCG34N562IX57PLLVKVC6LYQEK7VNX3HBR5KIECNT22MR5P7MOHN7ECW`
+2. `GC53LJZ4V2CLF7NTWFKVSFWSPMKSVT7TABLDVZLT7A63HFHAY4DF4MKC`
+3. `GAJDI3UZB2JGUCDDHBUQKLXYI5336YSAUIP3SKIM5MZXXHIC3IS2NK46`
+4. `GBTHKSSIXQIHXYYTJJWCRYLLMV2GRJGKW4XWSUGVRLKKXJLWIJVLX4AC`
+5. `GBSG3YI6RMKZZEYD3LRODO5OCIE54NKC2KBR6MKU5XSDFXBHHUKEIGEW`
+
+### User Onboarding Artifacts
+
+- Google Form (name, email, wallet, rating, feedback): [Feedback Form](https://docs.google.com/forms/d/e/1FAIpQLSeZZYXpnCqEGOSr-SwlU9c1rLPN9GrDHuuBLp80kRbT6HhTdA/viewform?usp=publish-editor)
+- Exported feedback sheet (Excel): [User Feedback Sheet](https://docs.google.com/spreadsheets/d/1Wlkg_i6xbI1-V893uAwyUwSFlKBpczFlUhwFRE8eaR0/edit?usp=sharing)
+- Feedback + iteration document: `docs/USER_FEEDBACK.md`
+
+### Architecture Documentation
+
+- Architecture doc: `docs/ARCHITECTURE.md`
+
+### Feedback Iteration Implemented
+
+Based on user feedback, completed upgrades include:
+
+- NFT image rendering fixes across gallery/marketplace/profile flows.
+- Profile personalization (banner/accent/showcase title) and owned-NFTs profile section.
+- Mint reliability and clearer failure handling in upload/mint pipeline.
+- Buy/sell marketplace flow implemented and connected to escrow-backed backend route.
+- Dashboard visual stability improvements to reduce glitchy transitions.
+- Homepage NFT section connected to live backend NFTs (replacing static mock cards).
+
+### Raw User Feedback Captured
+
+- "The Image is Not Displayed when I am Minting an Nft that should be fixed in the next version. The UI is Awesome"
+- "My personal profile could be really a nice part of me therefore to display what I own and a way to design it my way would be great"
+- "To buy and sell nft"
+- "It is good but can't see picture in nft and also the dashboard is a bit glitchy"
+- "In the main page, NFT mocks should be replaced"
+
+## Next Phase Improvement Plan
+
+1. Strengthen social profile layer (follow/creator pages + richer ownership timeline).
+2. Add robust analytics dashboard for creators (mint conversion, engagement, retention).
+3. Add contract-level ownership transfer sync and richer marketplace order lifecycle.
+4. Expand automated tests across upload/mint/profile/purchase flows.
+
+Improvement commit links:
+
+- [f5279bc](https://github.com/Anubhab-Rakshit/demedia/commit/f5279bc)
+- [edd6af9](https://github.com/Anubhab-Rakshit/demedia/commit/edd6af9)
+- [24255f8](https://github.com/Anubhab-Rakshit/demedia/commit/24255f8)
+
+## What Is Fully Integrated Now
+
+- One upload action now runs a complete backend pipeline:
+  1. Media upload to IPFS (Pinata)
+  2. Metadata creation + upload to IPFS
+  3. Content fingerprint registration on `ContentRegistry`
+  4. NFT mint on `ContentNFT`
+  5. MongoDB state sync (including tx references)
+- Wallet disconnect is wired end-to-end (`Freighter/StellarWalletsKit disconnect` + local app logout).
+- Purchase path uses royalty-enabled escrow call (`instant_settle_with_royalty`) from production backend flow.
+- Frontend API routes now use a single normalized backend base URL helper.
+- Explorer links are aligned to Stellar testnet.
+
+## Belt Requirement Mapping
+
+### Belt 1 (White Belt)
+
+- Wallet setup and testnet usage:
+  - `frontend/app/auth/page.tsx`
+  - `frontend/lib/wallet-kit.ts`
+- Wallet connect/disconnect:
+  - Connect in `frontend/app/auth/page.tsx`
+  - Disconnect in `frontend/app/wallet/page.tsx`
+- XLM balance fetch and UI display:
+  - `frontend/app/wallet/page.tsx`
+- Send XLM transaction on Stellar testnet with user feedback and tx hash:
+  - `frontend/app/wallet/page.tsx`
+
+### Belt 2
+
+- Multi-wallet integration via StellarWalletsKit:
+  - `frontend/lib/wallet-kit.ts`
+- Error handling (wallet not found / rejected / insufficient balance):
+  - `frontend/lib/errors.ts`
+  - `backend/src/utils/stellarError.ts`
+- Contract invocation from frontend-backed API routes:
+  - Upload pipeline entry: `frontend/app/api/upload/route.ts`
+  - Buy pipeline entry: `frontend/app/api/nft/buy/route.ts`
+- Transaction status tracking:
+  - `backend/src/services/txTracker.ts`
+  - `backend/src/controllers/tx.Controller.ts`
+  - `frontend/app/post/[id]/post-detail.tsx`
+- Event streaming endpoint:
+  - `backend/src/routes/tx.Routes.ts`
+
+### Belt 3
+
+- Mini dApp flows implemented (auth, upload, wallet, profile, gallery).
+- At least 3 passing tests:
+  - `backend/src/__tests__/stellarError.test.ts`
+- Loading states and caching present:
+  - `frontend/lib/cache.ts`
+  - `frontend/app/content/page.tsx`
+  - `frontend/app/my-nfts/page.tsx`
+  - `frontend/app/post/[id]/post-detail.tsx`
+- Demo video link:
+  - [Google Drive Demo](https://drive.google.com/drive/folders/17dLtEjczj6FqkgJJSdYAzHzNRuH3Avii?usp=sharing)
+
+### Belt 4 (current implemented scope)
+
+- Inter-contract call path used in backend purchase flow:
+  - `contracts/payment_escrow/src/lib.rs` (`instant_settle_with_royalty`)
+  - `backend/src/web3/buyNFT.ts`
+- CI/CD workflow:
+  - `.github/workflows/ci.yml`
+- Mobile responsive frontend pages exist across app routes.
+
+Note: Real-time buyer/seller settlement beyond current prototype scope is intentionally not claimed here.
+
+## Core Architecture
+
+- Frontend: Next.js + TypeScript (`frontend/`)
+- Backend: Express + TypeScript (`backend/`)
+- Contracts: Soroban Rust contracts (`contracts/`)
+- Contract integration layer: `backend/src/contract-integration.ts` (details in `CONTRACT_INTEGRATION.md`)
+- DB: MongoDB
+- Storage: Pinata/IPFS
+- Wallet: Freighter and StellarWalletsKit
+
+## Key Smart Contracts (Testnet)
+
+| Contract | Address |
+| :--- | :--- |
+| AccessControl | `CAUXZFU6GH57S5QWSPO7M2I2ZMWWIX7VA4RFXOA6AT6724D5PTKBZ22A` |
+| ContentNFT | `CA7VIJCB4D3A7LU2UZHIQDKKCREREBHRT6RLFS35NPT3GKCBMV73WBRW` |
+| RoyaltyManager | `CBUKJDKA2DSQ4HF5IGAQDUJJ7TLDU3C44ZNA3D7T2IKEFG77T7XMNITS` |
+| PaymentEscrow | `CC565PKCVD7OODIUP37R3UWRSDVYVPTWAIDKF22D3GNF6WCIYTT4VCGY` |
+| SubscriptionManager | `CAPJ45XLMHCS75XDYCYJRGTVCXGFZM5FIGP2EBNV7A3C6WTL7COC5HC5` |
+| ContentRegistry | `CBODPDB5DDR624WR5AFY4ISLYBI5CE3ENFZRZTDAP4FC5M4O6VRX5XKX` |
+
+## Deployment Verification (Stellar Testnet)
+
+| Contract | Deployment Tx |
+| :--- | :--- |
+| AccessControl | [613ce04f66fe55baa26a1e01a62482f9097fefa11744eca61ce75a72ec440aec](https://stellar.expert/explorer/testnet/tx/613ce04f66fe55baa26a1e01a62482f9097fefa11744eca61ce75a72ec440aec) |
+| ContentNFT | [fbed31b73a19bf82f7cc3a55d5d6acb85b2c82a3751728cc7b460ad9c8301061](https://stellar.expert/explorer/testnet/tx/fbed31b73a19bf82f7cc3a55d5d6acb85b2c82a3751728cc7b460ad9c8301061) |
+| ContentRegistry | [5afb51098967c84459a5d3cd47798596292983d46a314cc54d9f33af087d2d7c](https://stellar.expert/explorer/testnet/tx/5afb51098967c84459a5d3cd47798596292983d46a314cc54d9f33af087d2d7c) |
+| RoyaltyManager | [383a3e46ff068df29397fc25115d86f768fb8f3819af5a0898f4e9918cebe08b](https://stellar.expert/explorer/testnet/tx/383a3e46ff068df29397fc25115d86f768fb8f3819af5a0898f4e9918cebe08b) |
+
+## Environment
+
+Set these values before running locally:
+
+- `NEXT_PUBLIC_API_BASE_URL`
+- `RPC_URL`
+- `PRIVATE_KEY`
+- `PINATA_JWT`
+- `PINATA_GATEWAY`
+- `JWT_SECRET`
+- `MONGO_URI`
+- `CONTRACT_ADDRESS_CONTENTNFT`
+- `CONTRACT_ADDRESS_CONTENTREGISTRY`
+- `CONTRACT_ADDRESS_PAYMENTESCROW`
+- `CONTRACT_ADDRESS_ROYALTYMANAGER`
+
+## Local Run
+
+```bash
+# backend
+cd backend
+npm install
+npm run dev
+
+# frontend
+cd ../frontend
+npm install
+npm run dev
+```
+
+## Verification Commands
+
+```bash
+# backend tests (includes 3 passing tests)
+cd backend && npm test
+
+# frontend build
+cd frontend && npm run build
+```

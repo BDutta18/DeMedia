@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: zyncit-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5001
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: PRIVATE_KEY
+        sync: false
+      - key: RPC_URL
+        value: https://soroban-testnet.stellar.org:443
+      - key: PINATA_API_KEY
+        sync: false
+      - key: PINATA_API_SECRET
+        sync: false
+      - key: PINATA_JWT
+        sync: false
+      - key: PINATA_GATEWAY
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: TOKEN_EXPIRY
+        value: 7d
+      - key: CONTRACT_ADDRESS_ACCESSCONTROL
+        value: CAUXZFU6GH57S5QWSPO7M2I2ZMWWIX7VA4RFXOA6AT6724D5PTKBZ22A
+      - key: CONTRACT_ADDRESS_CONTENTNFT
+        value: CA7VIJCB4D3A7LU2UZHIQDKKCREREBHRT6RLFS35NPT3GKCBMV73WBRW
+      - key: CONTRACT_ADDRESS_ROYALTYMANAGER
+        value: CBUKJDKA2DSQ4HF5IGAQDUJJ7TLDU3C44ZNA3D7T2IKEFG77T7XMNITS
+      - key: CONTRACT_ADDRESS_PAYMENTESCROW
+        value: CC565PKCVD7OODIUP37R3UWRSDVYVPTWAIDKF22D3GNF6WCIYTT4VCGY
+      - key: CONTRACT_ADDRESS_SUBSCRIPTIONMANAGER
+        value: CAPJ45XLMHCS75XDYCYJRGTVCXGFZM5FIGP2EBNV7A3C6WTL7COC5HC5
+      - key: CONTRACT_ADDRESS_CONTENTREGISTRY
+        value: CBODPDB5DDR624WR5AFY4ISLYBI5CE3ENFZRZTDAP4FC5M4O6VRX5XKX

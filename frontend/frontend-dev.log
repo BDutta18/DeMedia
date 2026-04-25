@@ -1,0 +1,17 @@
+
+> demedia@0.1.0 dev
+> next dev
+
+Error: spawn EPERM
+    at ChildProcess.spawn (node:internal/child_process:420:11)
+    at spawn (node:child_process:753:9)
+    at fork (node:child_process:171:10)
+    at C:\Users\BITTU\OneDrive\Documents\Desktop\DeMedia-main\frontend\node_modules\next\dist\cli\next-dev.js:253:45
+    at new Promise (<anonymous>)
+    at startServer (C:\Users\BITTU\OneDrive\Documents\Desktop\DeMedia-main\frontend\node_modules\next\dist\cli\next-dev.js:221:16)
+    at runDevServer (C:\Users\BITTU\OneDrive\Documents\Desktop\DeMedia-main\frontend\node_modules\next\dist\cli\next-dev.js:355:23)
+    at Module.nextDev (C:\Users\BITTU\OneDrive\Documents\Desktop\DeMedia-main\frontend\node_modules\next\dist\cli\next-dev.js:363:11) {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'spawn'
+}

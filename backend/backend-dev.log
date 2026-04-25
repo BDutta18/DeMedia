@@ -1,0 +1,139 @@
+
+> demedia@1.0.0 dev
+> nodemon
+
+[33m[nodemon] 3.1.10[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): src\**\*[39m
+[33m[nodemon] watching extensions: ts,json[39m
+[32m[nodemon] starting `cross-env NODE_ENV=development tsx -r dotenv/config src/index.ts`[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+
+✅ MongoDB connected! DB HOST: ac-s2hhg8i-shard-00-02.fbvkkmu.mongodb.net
+✅ Server running on http://localhost:5000
+[0mGET / [32m200[0m 2.013 ms - 36[0m
+[0mGET / [36m304[0m 0.751 ms - -[0m
+[0mGET / [36m304[0m 0.401 ms - -[0m
+[0mGET /api/upload/find [32m200[0m 81.269 ms - 81[0m
+Upload or Mint Error: Error: Pinata API key has been revoked. Update PINATA_JWT in backend env.
+    at uploadToPinata (C:\Users\BITTU\OneDrive\Documents\Desktop\DeMedia-main\backend\src\utils\pinataUpload.ts:121:29)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async <anonymous> (C:\Users\BITTU\OneDrive\Documents\Desktop\DeMedia-main\backend\src\routes\upload.Routes.ts:53:22) {
+  code: 'PINATA_API_KEY_REVOKED'
+}
+[0mPOST /api/upload/upload [31m500[0m 1830.982 ms - 211[0m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `cross-env NODE_ENV=development tsx -r dotenv/config src/index.ts`[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+
+✅ MongoDB connected! DB HOST: ac-s2hhg8i-shard-00-01.fbvkkmu.mongodb.net
+✅ Server running on http://localhost:5000
+[0mGET / [36m304[0m 3.971 ms - -[0m
+[0mGET /api/upload/find [32m200[0m 89.131 ms - 81[0m
+Uploaded to IPFS: QmaTLxDEbwFHDdvdGZCY7LNZdSjYx9JSKxN7dqTFTBEvgH
+Metadata uploaded: QmUaGzCqwaSghnWHJhW4PDVhqTgZ9ucGTJCv5X3RwvsEwN
+❌ UploadContent error: Error: Account not found: GDKGKSUN2SJ7JVKWZPETCCYELHR3MRDNHFSQL6CLNNJGDBNAL7S22APO
+    at RpcServer.<anonymous> (C:\Users\BITTU\OneDrive\Documents\Desktop\DeMedia-main\backend\node_modules\@stellar\stellar-sdk\lib\rpc\server.js:126:21)
+    at Generator.<anonymous> (C:\Users\BITTU\OneDrive\Documents\Desktop\DeMedia-main\backend\node_modules\@stellar\stellar-sdk\lib\rpc\server.js:27:1494)
+    at Generator.throw (C:\Users\BITTU\OneDrive\Documents\Desktop\DeMedia-main\backend\node_modules\@stellar\stellar-sdk\lib\rpc\server.js:28:255)
+    at asyncGeneratorStep (C:\Users\BITTU\OneDrive\Documents\Desktop\DeMedia-main\backend\node_modules\@stellar\stellar-sdk\lib\rpc\server.js:29:70)
+    at _throw (C:\Users\BITTU\OneDrive\Documents\Desktop\DeMedia-main\backend\node_modules\@stellar\stellar-sdk\lib\rpc\server.js:30:241)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[0mPOST /api/upload/upload [31m500[0m 4694.854 ms - 188[0m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `cross-env NODE_ENV=development tsx -r dotenv/config src/index.ts`[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+✅ MongoDB connected! DB HOST: ac-s2hhg8i-shard-00-02.fbvkkmu.mongodb.net
+✅ Server running on http://localhost:5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `cross-env NODE_ENV=development tsx -r dotenv/config src/index.ts`[39m
+
+node:internal/modules/run_main:122
+    triggerUncaughtException(
+    ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'C:\Users\BITTU\OneDrive\Documents\Desktop\DeMedia-main\backend\src\web3\uploadContent' imported from C:\Users\BITTU\OneDrive\Documents\Desktop\DeMedia-main\backend\src\routes\upload.Routes.ts
+    at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+    at moduleResolve (node:internal/modules/esm/resolve:860:10)
+    at defaultResolve (node:internal/modules/esm/resolve:984:11)
+    at nextResolve (node:internal/modules/esm/hooks:748:28)
+    at resolveBase (file:///C:/Users/BITTU/OneDrive/Documents/Desktop/DeMedia-main/backend/node_modules/tsx/dist/esm/index.mjs?1777101247029:2:3744)
+    at async resolveDirectory (file:///C:/Users/BITTU/OneDrive/Documents/Desktop/DeMedia-main/backend/node_modules/tsx/dist/esm/index.mjs?1777101247029:2:4237)
+    at async resolve (file:///C:/Users/BITTU/OneDrive/Documents/Desktop/DeMedia-main/backend/node_modules/tsx/dist/esm/index.mjs?1777101247029:2:5355)
+    at async nextResolve (node:internal/modules/esm/hooks:748:22)
+    at async Hooks.resolve (node:internal/modules/esm/hooks:240:24)
+    at async handleMessage (node:internal/modules/esm/worker:199:18) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///C:/Users/BITTU/OneDrive/Documents/Desktop/DeMedia-main/backend/src/web3/uploadContent'
+}
+
+Node.js v22.14.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `cross-env NODE_ENV=development tsx -r dotenv/config src/index.ts`[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+
+✅ MongoDB connected! DB HOST: ac-s2hhg8i-shard-00-01.fbvkkmu.mongodb.net
+✅ Server running on http://localhost:5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `cross-env NODE_ENV=development tsx -r dotenv/config src/index.ts`[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+
+✅ MongoDB connected! DB HOST: ac-s2hhg8i-shard-00-01.fbvkkmu.mongodb.net
+✅ Server running on http://localhost:5000
+[0mGET /api/upload/find [32m200[0m 70.474 ms - 81[0m
+[0mGET /api/tx/events/stream [32m200[0m 2.306 ms - -[0m
+Uploaded to IPFS: QmaTLxDEbwFHDdvdGZCY7LNZdSjYx9JSKxN7dqTFTBEvgH
+Metadata uploaded: QmUaGzCqwaSghnWHJhW4PDVhqTgZ9ucGTJCv5X3RwvsEwN
+UploadContent error: Error: HostError: Error(Contract, #3)
+
+Event log (newest first):
+   0: [Diagnostic Event] contract:CBODPDB5DDR624WR5AFY4ISLYBI5CE3ENFZRZTDAP4FC5M4O6VRX5XKX, topics:[error, Error(Contract, #3)], data:"escalating Ok(ScErrorType::Contract) frame-exit to Err"
+   1: [Diagnostic Event] topics:[fn_call, CBODPDB5DDR624WR5AFY4ISLYBI5CE3ENFZRZTDAP4FC5M4O6VRX5XKX, register_content], data:[GDKGKSUN2SJ7JVKWZPETCCYELHR3MRDNHFSQL6CLNNJGDBNAL7S22APO, "0xf2bc2658b7808b2723082fe63ef1523b00236b906e54839b7d460c4d28f12db2", "QmaTLxDEbwFHDdvdGZCY7LNZdSjYx9JSKxN7dqTFTBEvgH"]
+
+    at RpcServer.<anonymous> (C:\Users\BITTU\OneDrive\Documents\Desktop\DeMedia-main\backend\node_modules\@stellar\stellar-sdk\lib\rpc\server.js:779:21)
+    at Generator.<anonymous> (C:\Users\BITTU\OneDrive\Documents\Desktop\DeMedia-main\backend\node_modules\@stellar\stellar-sdk\lib\rpc\server.js:27:1494)
+    at Generator.next (C:\Users\BITTU\OneDrive\Documents\Desktop\DeMedia-main\backend\node_modules\@stellar\stellar-sdk\lib\rpc\server.js:28:255)
+    at asyncGeneratorStep (C:\Users\BITTU\OneDrive\Documents\Desktop\DeMedia-main\backend\node_modules\@stellar\stellar-sdk\lib\rpc\server.js:29:70)
+    at _next (C:\Users\BITTU\OneDrive\Documents\Desktop\DeMedia-main\backend\node_modules\@stellar\stellar-sdk\lib\rpc\server.js:30:163)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[0mPOST /api/upload/upload [31m500[0m 4651.980 ms - 676[0m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `cross-env NODE_ENV=development tsx -r dotenv/config src/index.ts`[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+
+✅ MongoDB connected! DB HOST: ac-s2hhg8i-shard-00-02.fbvkkmu.mongodb.net
+✅ Server running on http://localhost:5000
+[0mGET / [36m304[0m 1.672 ms - -[0m
+[0mGET /api/upload/find [32m200[0m 63.263 ms - 81[0m
+Uploaded to IPFS: QmaTLxDEbwFHDdvdGZCY7LNZdSjYx9JSKxN7dqTFTBEvgH
+Metadata uploaded: QmVgE2rfGpU51BatyBLwzaD1oeCAujGdBWP7F13i5A5sQn
+🔗 Minting NFT for GA6LENTHFAG3UY2HK7V24RBGYKIQTPLPG42G5QT26VILKB7KXLUR2ACI ...
+🚀 TX sent: e4938bb504c6dcd32159828079e11d8d3f97b4811b7bba595a1c7b69fa2eae77
+[0mPOST /api/upload/upload [32m200[0m 8393.077 ms - 1098[0m
+[0mGET /api/upload/my-nfts [32m200[0m 60.997 ms - 895[0m
+[0mGET /api/upload/my-nfts [32m200[0m 54.344 ms - 895[0m
+[0mGET /api/upload/find [32m200[0m 50.404 ms - 829[0m
+[0mGET /api/upload/find [32m200[0m 51.938 ms - 829[0m
+[0mGET /api/wallet/profile/GA6LENTHFAG3UY2HK7V24RBGYKIQTPLPG42G5QT26VILKB7KXLUR2ACI [32m200[0m 89.317 ms - 342[0m
+[0mGET /api/wallet/profile/GA6LENTHFAG3UY2HK7V24RBGYKIQTPLPG42G5QT26VILKB7KXLUR2ACI [32m200[0m 63.097 ms - 342[0m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `cross-env NODE_ENV=development tsx -r dotenv/config src/index.ts`[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+
+✅ MongoDB connected! DB HOST: ac-s2hhg8i-shard-00-02.fbvkkmu.mongodb.net
+✅ Server running on http://localhost:5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `cross-env NODE_ENV=development tsx -r dotenv/config src/index.ts`[39m
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+
+✅ MongoDB connected! DB HOST: ac-s2hhg8i-shard-00-02.fbvkkmu.mongodb.net
+✅ Server running on http://localhost:5000

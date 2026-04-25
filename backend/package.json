@@ -1,0 +1,58 @@
+{
+  "name": "demedia",
+  "version": "1.0.0",
+  "description": "Backend service for DeMedia - Decentralized Media Platform on Stellar.",
+  "keywords": [
+    "stellar",
+    "soroban",
+    "web3",
+    "publishing",
+    "decentralized"
+  ],
+  "homepage": "https://github.com/Anubhab-Rakshit/zyncit-stellar#readme",
+  "bugs": {
+    "url": "https://github.com/Anubhab-Rakshit/zyncit-stellar/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Anubhab-Rakshit/zyncit-stellar.git"
+  },
+  "license": "MIT",
+  "author": "Anubhab Rakshit",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "nodemon",
+    "build": "tsc",
+    "start": "cross-env NODE_ENV=production tsx src/index.ts",
+    "test": "npm run build && node --test dist/__tests__/*.js"
+  },
+  "dependencies": {
+    "@stellar/stellar-sdk": "^15.0.1",
+    "@types/jsonwebtoken": "^9.0.10",
+    "axios": "^1.13.2",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "form-data": "^4.0.4",
+    "js-sha3": "^0.9.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.19.3",
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "pinata": "^2.5.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/morgan": "^1.9.10",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^24.10.0",
+    "cross-env": "^10.1.0",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

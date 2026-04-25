@@ -1,0 +1,145 @@
+import {
+  BASE_FEE,
+  TransactionBuilder,
+  xdr,
+  scValToNative,
+  Contract,
+  rpc,
+  Keypair,
+  Networks,
+  nativeToScVal,
+} from "@stellar/stellar-sdk";
+import { emitPlatformEvent } from "../services/eventBus";
+import { waitForTransactionFinality } from "../services/txTracker";
+import { getContractIntegration } from "./contractIntegration";
+
+export const uploadContentToBlockchain = async (
+  cid: string,
+  fileHash: string,
+  price: number = 0,
+  paymentToken: string = ""
+) => {
+  void price;
+  void paymentToken;
+
+  try {
+    const { rpcServer, signer, sourceAccount, networkPassphrase, contractIds } = await getContractIntegration();
+
+    let sendRes: { hash: string };
+    let statusRpc = rpcServer;
+
+    try {
+      const tx = new TransactionBuilder(sourceAccount, {
+        fee: BASE_FEE,
+        networkPassphrase,
+      })
+        .addOperation(
+          new Contract(contractIds.contentRegistry).call(
+            "register_content",
+            xdr.ScVal.scvAddress(xdr.ScAddress.scAddressTypeAccount(signer.xdrPublicKey())),
+            xdr.ScVal.scvString(fileHash),
+            xdr.ScVal.scvString(cid)
+          )
+        )
+        .setTimeout(30)
+        .build();
+
+      const preppedTx = await rpcServer.prepareTransaction(tx);
+      preppedTx.sign(signer);
+      sendRes = await rpcServer.sendTransaction(preppedTx);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      if (!message.includes("Bad union switch")) {
+        throw err;
+      }
+
+      // Fallback path for edge RPC/XDR incompatibilities.
+      const fallbackRpc = new rpc.Server(process.env.RPC_URL ?? "https://soroban-testnet.stellar.org:443");
+      const fallbackSigner = Keypair.fromSecret(process.env.PRIVATE_KEY!);
+      const fallbackAccount = await fallbackRpc.getAccount(fallbackSigner.publicKey());
+
+      const fallbackTx = new TransactionBuilder(fallbackAccount, {
+        fee: BASE_FEE,
+        networkPassphrase: process.env.STELLAR_NETWORK_PASSPHRASE || Networks.TESTNET,
+      })
+        .addOperation(
+          new Contract(contractIds.contentRegistry).call(
+            "register_content",
+            nativeToScVal(fallbackSigner.publicKey(), { type: "address" }),
+            nativeToScVal(fileHash, { type: "string" }),
+            nativeToScVal(cid, { type: "string" })
+          )
+        )
+        .setTimeout(30)
+        .build();
+
+      const preparedFallback = await fallbackRpc.prepareTransaction(fallbackTx);
+      preparedFallback.sign(fallbackSigner);
+      sendRes = await fallbackRpc.sendTransaction(preparedFallback);
+      statusRpc = fallbackRpc;
+    }
+
+    const finality = await waitForTransactionFinality(statusRpc, sendRes.hash, {
+      action: "register_content",
+      cid,
+      fileHash,
+    });
+
+    if (finality.status !== "success") {
+      return { success: false, error: "Transaction failed before finality", txHash: sendRes.hash };
+    }
+
+    emitPlatformEvent("nft_minted", {
+      txHash: sendRes.hash,
+      contentId: fileHash,
+      cid,
+    });
+
+    const resultMetaXdr = (finality as { resultMetaXdr?: string }).resultMetaXdr;
+    let contentId = fileHash;
+
+    try {
+      if (resultMetaXdr) {
+        const meta = xdr.TransactionMeta.fromXDR(resultMetaXdr, "base64");
+        const returnVal = meta?.v3()?.sorobanMeta()?.returnValue();
+        if (returnVal) {
+          const native = scValToNative(returnVal);
+          contentId = String(native);
+        }
+      }
+    } catch {
+      // Keep fallback contentId when metadata parsing fails.
+    }
+
+    return {
+      success: true,
+      txHash: sendRes.hash,
+      contentId,
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (message.includes("register_content") && message.includes("Error(Contract, #3)")) {
+      // Content hash already exists on-chain; treat as idempotent success so upload retries can proceed.
+      return {
+        success: true,
+        txHash: undefined,
+        contentId: fileHash,
+      };
+    }
+
+    const accountMatch = message.match(/Account not found:\s*([A-Z0-9]+)/i);
+
+    if (accountMatch?.[1]) {
+      const friendlyError = new Error(
+        `Stellar source account not found on network for PRIVATE_KEY public key ${accountMatch[1]}.`
+      );
+      (friendlyError as any).code = "STELLAR_SOURCE_ACCOUNT_NOT_FOUND";
+      (friendlyError as any).address = accountMatch[1];
+      console.error("UploadContent error:", friendlyError.message);
+      return { success: false, error: friendlyError };
+    }
+
+    console.error("UploadContent error:", error);
+    return { success: false, error };
+  }
+};
