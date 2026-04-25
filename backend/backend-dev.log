@@ -137,3 +137,38 @@ Metadata uploaded: QmVgE2rfGpU51BatyBLwzaD1oeCAujGdBWP7F13i5A5sQn
 
 ✅ MongoDB connected! DB HOST: ac-s2hhg8i-shard-00-02.fbvkkmu.mongodb.net
 ✅ Server running on http://localhost:5000
+[0mGET /api/upload/find [32m200[0m 92.262 ms - 829[0m
+[0mGET /api/upload/find [32m200[0m 57.060 ms - 829[0m
+[0mGET /api/upload/find [32m200[0m 55.572 ms - 829[0m
+[0mGET /api/wallet/profile/GA6LENTHFAG3UY2HK7V24RBGYKIQTPLPG42G5QT26VILKB7KXLUR2ACI [32m200[0m 61.057 ms - 342[0m
+[0mGET /api/wallet/profile/GA6LENTHFAG3UY2HK7V24RBGYKIQTPLPG42G5QT26VILKB7KXLUR2ACI [32m200[0m 55.137 ms - 342[0m
+[0mPOST /api/nft/buy [33m400[0m 66.558 ms - 78[0m
+[0mPOST /api/nft/buy [33m400[0m 58.285 ms - 78[0m
+[0mGET /api/wallet/profile/GA6LENTHFAG3UY2HK7V24RBGYKIQTPLPG42G5QT26VILKB7KXLUR2ACI [32m200[0m 66.340 ms - 342[0m
+[0mGET /api/wallet/profile/GA6LENTHFAG3UY2HK7V24RBGYKIQTPLPG42G5QT26VILKB7KXLUR2ACI [32m200[0m 67.634 ms - 342[0m
+[0mGET /api/upload/find [32m200[0m 66.313 ms - 829[0m
+[0mGET /api/wallet/profile/GA6LENTHFAG3UY2HK7V24RBGYKIQTPLPG42G5QT26VILKB7KXLUR2ACI [32m200[0m 68.939 ms - 342[0m
+[0mGET /api/upload/find [32m200[0m 53.378 ms - 829[0m
+[0mGET /api/wallet/profile/GA6LENTHFAG3UY2HK7V24RBGYKIQTPLPG42G5QT26VILKB7KXLUR2ACI [32m200[0m 50.413 ms - 342[0m
+[0mGET /api/upload/find [32m200[0m 91.222 ms - 829[0m
+[0mGET /api/upload/find [32m200[0m 88.310 ms - 829[0m
+[0mGET /api/wallet/profile/GA6LENTHFAG3UY2HK7V24RBGYKIQTPLPG42G5QT26VILKB7KXLUR2ACI [32m200[0m 94.442 ms - 342[0m
+[0mGET /api/wallet/profile/GA6LENTHFAG3UY2HK7V24RBGYKIQTPLPG42G5QT26VILKB7KXLUR2ACI [32m200[0m 95.377 ms - 342[0m
+[0mGET /api/upload/find [32m200[0m 90.766 ms - 829[0m
+[0mGET /api/wallet/profile/GA6LENTHFAG3UY2HK7V24RBGYKIQTPLPG42G5QT26VILKB7KXLUR2ACI [32m200[0m 88.574 ms - 342[0m
+[0mGET /api/upload/find [32m200[0m 404.841 ms - 829[0m
+[0mGET /api/wallet/profile/GA6LENTHFAG3UY2HK7V24RBGYKIQTPLPG42G5QT26VILKB7KXLUR2ACI [32m200[0m 90.887 ms - 342[0m
+[0mGET /api/upload/my-nfts [32m200[0m 87.000 ms - 895[0m
+[0mGET /api/upload/my-nfts [32m200[0m 88.838 ms - 895[0m
+[0mGET /api/tx/events/stream [32m200[0m 0.607 ms - -[0m
+[0mGET /api/upload/find [32m200[0m 407.958 ms - 829[0m
+[0mGET /api/upload/find [32m200[0m 88.799 ms - 829[0m
+[0mGET /api/wallet/profile/GA6LENTHFAG3UY2HK7V24RBGYKIQTPLPG42G5QT26VILKB7KXLUR2ACI [32m200[0m 641.738 ms - 342[0m
+[0mGET /api/wallet/profile/GA6LENTHFAG3UY2HK7V24RBGYKIQTPLPG42G5QT26VILKB7KXLUR2ACI [32m200[0m 87.107 ms - 342[0m
+Uploaded to IPFS: QmNMPryo7pCwNfeBT5Yqm9z8DwcURe53wAfgj8G15UAUv4
+Metadata uploaded: QmcdYE5oAojXC6rcxJ4WA8m552qpj5hjUJyMM7cP1yjrXe
+🔗 Minting NFT for GA6LENTHFAG3UY2HK7V24RBGYKIQTPLPG42G5QT26VILKB7KXLUR2ACI ...
+🚀 TX sent: 4e2647357a9291c33ca837ef745d58ea51b1d182052be42fe5a2c706708ebbbf
+[0mPOST /api/upload/upload [32m200[0m 17320.113 ms - 1290[0m
+[0mGET /api/upload/my-nfts [32m200[0m 91.128 ms - 1776[0m
+[0mGET /api/upload/my-nfts [32m200[0m 86.867 ms - 1776[0m

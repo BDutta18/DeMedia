@@ -2,6 +2,14 @@
   "name": "demedia",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://github.com/BDutta18/DeMedia#readme",
+  "bugs": {
+    "url": "https://github.com/BDutta18/DeMedia/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BDutta18/DeMedia.git"
+  },
   "scripts": {
     "build": "next build",
     "dev": "next dev",

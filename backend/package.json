@@ -9,13 +9,13 @@
     "publishing",
     "decentralized"
   ],
-  "homepage": "https://github.com/Anubhab-Rakshit/zyncit-stellar#readme",
+  "homepage": "https://github.com/BDutta18/DeMedia#readme",
   "bugs": {
-    "url": "https://github.com/Anubhab-Rakshit/zyncit-stellar/issues"
+    "url": "https://github.com/BDutta18/DeMedia/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Anubhab-Rakshit/zyncit-stellar.git"
+    "url": "git+https://github.com/BDutta18/DeMedia.git"
   },
   "license": "MIT",
   "author": "Anubhab Rakshit",
