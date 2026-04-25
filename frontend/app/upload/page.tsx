@@ -83,6 +83,7 @@ export default function UploadMintPage() {
       if (!response.ok) {
         const parts = [data.message || data.error || "Upload failed"]
         if (data.code) parts.push(`Code: ${data.code}`)
+        if (data.detail) parts.push(`Detail: ${data.detail}`)
         if (data.action) parts.push(data.action)
         throw new Error(parts.filter(Boolean).join(" | "))
       }

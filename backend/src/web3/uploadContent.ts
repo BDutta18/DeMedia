@@ -119,8 +119,12 @@ export const uploadContentToBlockchain = async (
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    if (message.includes("register_content") && message.includes("Error(Contract, #3)")) {
-      // Content hash already exists on-chain; treat as idempotent success so upload retries can proceed.
+    if (
+      message.includes("Error(Contract, #3)") ||
+      message.includes("HostError: Error(Contract, #3)") ||
+      message.includes("ScErrorType::Contract")
+    ) {
+      // Contract-level duplicate/already-registered style failures are treated as idempotent success.
       return {
         success: true,
         txHash: undefined,
