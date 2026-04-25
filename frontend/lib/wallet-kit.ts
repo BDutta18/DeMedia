@@ -6,14 +6,6 @@ import {
 } from "@creit.tech/stellar-wallets-kit"
 import { FREIGHTER_ID } from "@creit.tech/stellar-wallets-kit/modules/freighter"
 import { defaultModules } from "@creit.tech/stellar-wallets-kit/modules/utils"
-import {
-  getAddress as getFreighterAddress,
-  getNetwork as getFreighterNetwork,
-  isConnected as isFreighterConnected,
-  requestAccess as requestFreighterAccess,
-  signMessage as signFreighterMessage,
-  signTransaction as signFreighterTransaction,
-} from "@stellar/freighter-api"
 
 let initialized = false
 
@@ -46,55 +38,14 @@ const getFreighterError = (result: unknown): string | null => {
 }
 
 export const connectWallet = async () => {
-  const freighterInstalled = await isFreighterInstalled()
-  if (freighterInstalled) {
-    try {
-      const access = await requestFreighterAccess()
-      const accessError = getFreighterError(access)
-      if (accessError) throw new Error(accessError)
-      if (!access.address) throw new Error("No address returned by Freighter")
-      return { address: access.address }
-    } catch {
-      // Fall through to wallet-kit modal path for parity with legacy app behavior.
-    }
-  }
-
   return getKit().authModal()
 }
 
 export const getWalletAddress = async () => {
-  if (await isFreighterInstalled()) {
-    try {
-      const addressResult = await getFreighterAddress()
-      const addressError = getFreighterError(addressResult)
-      if (addressError) throw new Error(addressError)
-      if (!addressResult.address) throw new Error("No address returned by Freighter")
-      return { address: addressResult.address }
-    } catch {
-      // Fall back to wallet-kit if direct Freighter call is unavailable.
-    }
-  }
   return getKit().getAddress()
 }
 
 export const signWalletMessage = async (message: string, address?: string) => {
-  if (await isFreighterInstalled()) {
-    try {
-      const signed = await signFreighterMessage(message, {
-        networkPassphrase: Networks.TESTNET,
-        address,
-      })
-      const signError = getFreighterError(signed)
-      if (signError) throw new Error(signError)
-      if (!signed.signedMessage) throw new Error("No signature returned by Freighter")
-      return {
-        signedMessage: String(signed.signedMessage),
-        signerAddress: signed.signerAddress,
-      }
-    } catch {
-      // Fall back to wallet-kit for wallet-agnostic signing support.
-    }
-  }
   return getKit().signMessage(message, {
     networkPassphrase: Networks.TESTNET,
     address,
@@ -102,23 +53,6 @@ export const signWalletMessage = async (message: string, address?: string) => {
 }
 
 export const signWalletTransaction = async (xdr: string, address?: string) => {
-  if (await isFreighterInstalled()) {
-    try {
-      const signed = await signFreighterTransaction(xdr, {
-        networkPassphrase: Networks.TESTNET,
-        address,
-      })
-      const signError = getFreighterError(signed)
-      if (signError) throw new Error(signError)
-      if (!signed.signedTxXdr) throw new Error("No signed transaction returned by Freighter")
-      return {
-        signedTxXdr: signed.signedTxXdr,
-        signerAddress: signed.signerAddress,
-      }
-    } catch {
-      // Fall back to wallet-kit for extension compatibility.
-    }
-  }
   return getKit().signTransaction(xdr, {
     networkPassphrase: Networks.TESTNET,
     address,
@@ -126,19 +60,6 @@ export const signWalletTransaction = async (xdr: string, address?: string) => {
 }
 
 export const getWalletNetwork = async () => {
-  if (await isFreighterInstalled()) {
-    try {
-      const network = await getFreighterNetwork()
-      const networkError = getFreighterError(network)
-      if (networkError) throw new Error(networkError)
-      return {
-        network: network.network,
-        networkPassphrase: network.networkPassphrase,
-      }
-    } catch {
-      // Fall back to wallet-kit when direct API is unavailable.
-    }
-  }
   return getKit().getNetwork()
 }
 
@@ -151,13 +72,6 @@ export const isFreighterInstalled = async () => {
 
   const hasFreighterOnWindow = Boolean((window as Window & { freighter?: unknown }).freighter)
   if (hasFreighterOnWindow) return true
-
-  try {
-    const result = await isFreighterConnected()
-    if (result && result.isConnected) return true
-  } catch {
-    // isFreighterConnected may fail, try alternative check
-  }
 
   // Additional check: try to access window Freighter directly
   try {
