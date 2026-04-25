@@ -32,11 +32,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const analyticsEnabled = process.env.NEXT_PUBLIC_ENABLE_VERCEL_ANALYTICS === "true"
+
   return (
     <html lang="en" className="dark">
       <body className="font-sans antialiased">
         <AuthProvider>{children}</AuthProvider>
-        <Analytics />
+        {analyticsEnabled ? <Analytics /> : null}
       </body>
     </html>
   )

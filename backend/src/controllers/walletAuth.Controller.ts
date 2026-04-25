@@ -33,18 +33,33 @@ export const verifyWalletSignature = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Signature verification failed" });
     }
 
+    const normalizedAddress = String(address).toLowerCase();
+
     // ✅ Check if the user already exists in DB
-    let user = await User.findOne({ address });
+    let user = await User.findOne({ address: normalizedAddress });
 
     if (!user) {
-      // 🆕 Create user on first login
-      user = await User.create({
-      address,
-      name: "anonymous"
-    });
-      console.log("🆕 New user created:", address);
+      try {
+        // 🆕 Create user on first login
+        user = await User.create({
+          address: normalizedAddress,
+          name: "anonymous",
+        });
+        console.log("🆕 New user created:", normalizedAddress);
+      } catch (createError: any) {
+        // Handle race conditions / duplicate-key safely by loading existing user.
+        if (createError?.code === 11000) {
+          user = await User.findOne({ address: normalizedAddress });
+        } else {
+          throw createError;
+        }
+      }
     } else {
-      console.log("✅ Existing user logged in:", address);
+      console.log("✅ Existing user logged in:", normalizedAddress);
+    }
+
+    if (!user) {
+      return res.status(500).json({ message: "Failed to load user profile" });
     }
 
     // ✅ Create JWT token
@@ -52,12 +67,12 @@ export const verifyWalletSignature = async (req: Request, res: Response) => {
       expiresIn: (process.env.TOKEN_EXPIRY ?? "7d") as SignOptions["expiresIn"],
     };
 
-    const token = jwt.sign({ address }, process.env.JWT_SECRET as string, options);
+    const token = jwt.sign({ address: normalizedAddress }, process.env.JWT_SECRET as string, options);
 
     // ✅ Return both token + user info
     return res.json({
       message: "Wallet verified successfully",
-      address,
+      address: normalizedAddress,
       token,
       user,
     });
