@@ -331,7 +331,7 @@ export default function WalletPage() {
         <div className="mx-auto max-w-7xl">
           {/* Page title */}
           <div className="mb-12 text-center">
-            <h1 className="mb-4 bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-400 bg-clip-text text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
+            <h1 className="mb-4 bg-gradient-to-r from-[#fbbf24] via-[#eab308] to-[#ca8a04] bg-clip-text text-5xl font-bold tracking-tight text-transparent md:text-6xl lg:text-7xl">
               Digital Vault
             </h1>
             <p className="text-lg text-gray-400">Manage your crypto assets and transactions</p>
@@ -373,7 +373,7 @@ export default function WalletPage() {
 
                 <div className="mb-6">
                   <div className="mb-2 text-sm text-gray-400">Total Balance</div>
-                  <div className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-5xl font-bold text-transparent md:text-6xl">
+                  <div className="bg-gradient-to-r from-[#fbbf24] via-[#eab308] to-[#ca8a04] bg-clip-text text-5xl font-bold text-transparent md:text-6xl">
                     {xlmBalance} XLM
                   </div>
                   <div className="mt-2 text-xl text-gray-500">{usdBalance} USD</div>

@@ -2,10 +2,13 @@
 node_modules/
 .pnpm-store/
 
-# Next.js
+# Build outputs
 .next/
 out/
 build/
+dist/
+coverage/
+*.tsbuildinfo
 
 # Rust / Soroban
 target/
@@ -20,28 +23,29 @@ target/
 .env.production.local
 .env.sample
 
-# OS
+# OS / Editor
 .DS_Store
 Thumbs.db
 *.swp
 *~
+.idea/
+.vscode/
 
-# Debug logs
+# Logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Misc
+# Runtime caches / deploy
 .cache/
-.vercel
-.turbo
-.idea/
-.vscode/
+.vercel/
+.turbo/
 
+# Local backend artifacts
+backend/uploads/
 
-#files
+# Project-specific docs not to track
 SPEC.md
-DEPLOYMENT.md   
-
-\n# Build / Uploads\nbackend/dist/\nbackend/uploads/
+DEPLOYMENT.md

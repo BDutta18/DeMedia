@@ -50,7 +50,7 @@ export default function DashboardPage() {
         style={{
           left: mousePosition.x - 192,
           top: mousePosition.y - 192,
-          background: "radial-gradient(circle, #3b82f6 0%, transparent 70%)",
+          background: "radial-gradient(circle, #fbbf24 0%, transparent 70%)",
           zIndex: 1,
         }}
       />
@@ -65,7 +65,7 @@ export default function DashboardPage() {
               className="font-[family-name:var(--font-display)] text-5xl sm:text-6xl md:text-7xl font-black tracking-wider"
               style={{
                 letterSpacing: "0.1em",
-                background: "linear-gradient(135deg, #3b82f6 0%, #0284c7 50%, #06b6d4 100%)",
+                background: "linear-gradient(135deg, #fbbf24 0%, #eab308 50%, #ca8a04 100%)",
                 WebkitBackgroundClip: "text",
                 backgroundClip: "text",
                 WebkitTextFillColor: "transparent",
@@ -84,28 +84,28 @@ export default function DashboardPage() {
                 title: "DeMedia Network",
                 description: "Decentralized publishing platform",
                 details: "Live on Blockchain",
-                color: "#3b82f6",
+                color: "#fbbf24",
               },
               {
                 icon: Users,
                 title: "Creator Community",
                 description: "Join thousands of creators",
                 details: "Active ecosystem",
-                color: "#0284c7",
+                color: "#eab308",
               },
               {
                 icon: Lock,
                 title: "Secure Assets",
                 description: "Your content is protected",
                 details: "Web3 Security",
-                color: "#06b6d4",
+                color: "#ca8a04",
               },
               {
                 icon: Rocket,
                 title: "Get Started",
                 description: "Monetize your content today",
                 details: "Zero setup fees",
-                color: "#3b82f6",
+                color: "#f59e0b",
               },
             ].map((item, i) => {
               const IconComponent = item.icon
@@ -161,9 +161,9 @@ export default function DashboardPage() {
           {/* Quick Actions */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 stagger-children">
             {[
-              { title: "Upload Content", description: "Publish and tokenize new digital assets", href: "/upload", color: "#3b82f6" },
-              { title: "View Analytics", description: "Track performance metrics and reach", href: "/analytics", color: "#0284c7" },
-              { title: "Manage Assets", description: "View and manage your NFT portfolio", href: "/my-nfts", color: "#06b6d4" },
+              { title: "Upload Content", description: "Publish and tokenize new digital assets", href: "/upload", color: "#fbbf24" },
+              { title: "View Analytics", description: "Track performance metrics and reach", href: "/analytics", color: "#eab308" },
+              { title: "Manage Assets", description: "View and manage your NFT portfolio", href: "/my-nfts", color: "#ca8a04" },
             ].map((action, i) => (
               <a
                 key={i}
@@ -189,11 +189,11 @@ export default function DashboardPage() {
                       style={{ background: action.color }}
                     />
                   </div>
-                  <h3 className="text-lg font-bold text-white group-hover:text-[#06b6d4] transition-colors">{action.title}</h3>
+                  <h3 className="text-lg font-bold text-white group-hover:text-[#fbbf24] transition-colors">{action.title}</h3>
                   <p className="text-sm text-gray-400">{action.description}</p>
                 </div>
 
-                <div className="mt-4 flex items-center gap-2 text-sm font-mono text-gray-500 group-hover:text-[#3b82f6] transition-colors">
+                <div className="mt-4 flex items-center gap-2 text-sm font-mono text-gray-500 group-hover:text-[#eab308] transition-colors">
                   <span>Access</span>
                   <span className="group-hover:translate-x-1 transition-transform">→</span>
                 </div>

@@ -4,7 +4,6 @@ import { buyNFT } from "./web3/buyNFT";
 import { getContractIntegration } from "./web3/contractIntegration";
 
 export const CONTRACT_ENV_KEYS = [
-  "RPC_URL",
   "PRIVATE_KEY",
   "CONTRACT_ADDRESS_CONTENTREGISTRY",
   "CONTRACT_ADDRESS_CONTENTNFT",

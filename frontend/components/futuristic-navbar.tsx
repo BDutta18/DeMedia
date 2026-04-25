@@ -18,12 +18,15 @@ import {
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useAuth } from "@/lib/auth-context"
+import { usePathname } from "next/navigation"
 
 export default function FuturisticNavbar() {
   const [hoveredIcon, setHoveredIcon] = useState<number | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const { isAuthenticated, address, logout } = useAuth()
+  const pathname = usePathname()
+  const hideBrandLogo = pathname === "/" || pathname === "/dashboard"
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,7 +54,9 @@ export default function FuturisticNavbar() {
           {/* Desktop Navbar */}
           <div className="hidden md:flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-              <img src="/logo.png" alt="DeMedia" className="w-10 h-10 md:w-12 md:h-12 drop-shadow-[0_0_20px_rgba(59,130,246,0.4)]" />
+              {!hideBrandLogo && (
+                <img src="/logo.png" alt="DeMedia" className="w-10 h-10 md:w-12 md:h-12 drop-shadow-[0_0_20px_rgba(59,130,246,0.4)]" />
+              )}
               <span className="font-[family-name:var(--font-display)] text-xl md:text-2xl font-black tracking-wider gradient-text">
                 DeMedia
               </span>
@@ -126,7 +131,9 @@ export default function FuturisticNavbar() {
 
           <div className="flex md:hidden items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
-              <img src="/logo.png" alt="DeMedia" className="w-8 h-8 drop-shadow-[0_0_15px_rgba(59,130,246,0.4)]" />
+              {!hideBrandLogo && (
+                <img src="/logo.png" alt="DeMedia" className="w-8 h-8 drop-shadow-[0_0_15px_rgba(59,130,246,0.4)]" />
+              )}
               <span className="font-[family-name:var(--font-display)] text-xl font-black tracking-wider gradient-text">
                 DeMedia
               </span>
