@@ -3,6 +3,7 @@ export type WalletErrorCode =
   | "WALLET_REJECTED"
   | "INSUFFICIENT_BALANCE"
   | "NETWORK_MISMATCH"
+  | "AUTH_SERVER_UNREACHABLE"
   | "UNKNOWN"
 
 export const mapWalletError = (error: unknown): { code: WalletErrorCode; message: string } => {
@@ -41,6 +42,16 @@ export const mapWalletError = (error: unknown): { code: WalletErrorCode; message
 
   if (message.includes("network") || message.includes("passphrase")) {
     return { code: "NETWORK_MISMATCH", message: "Wrong Stellar network selected in your wallet." }
+  }
+
+  if (
+    message.includes("failed to fetch") ||
+    message.includes("networkerror") ||
+    message.includes("network request failed") ||
+    message.includes("unable to reach authentication server") ||
+    message.includes("service unavailable")
+  ) {
+    return { code: "AUTH_SERVER_UNREACHABLE", message: "Authentication server is unreachable. Please try again in a few seconds." }
   }
 
   return { code: "UNKNOWN", message: raw }

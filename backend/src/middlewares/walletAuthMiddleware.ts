@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { getJwtSecret } from "../utils/jwtSecret";
 
 export const walletProtect = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
@@ -11,7 +12,7 @@ export const walletProtect = (req: Request, res: Response, next: NextFunction) =
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { address: string };
+    const decoded = jwt.verify(token, getJwtSecret()) as { address: string };
 
     (req as any).user = { address: decoded.address };
 

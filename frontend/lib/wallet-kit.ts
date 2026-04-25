@@ -30,15 +30,19 @@ export const getSupportedWallets = async () => {
   }
 }
 
-const getFreighterError = (result: unknown): string | null => {
-  if (!result || typeof result !== "object") return null
-  const err = (result as { error?: { message?: string; code?: string } }).error
-  if (!err) return null
-  return err.message || err.code || "Freighter request failed"
-}
-
 export const connectWallet = async () => {
-  return getKit().authModal()
+  const kit = getKit()
+  const result = await kit.authModal()
+
+  if (result && typeof result === "object" && "address" in result && typeof result.address === "string") {
+    return result
+  }
+
+  // Some wallets resolve auth without returning the address payload.
+  const fallback = await kit.getAddress()
+  if (fallback?.address) return fallback
+
+  throw new Error("Wallet connected but no address was returned")
 }
 
 export const getWalletAddress = async () => {

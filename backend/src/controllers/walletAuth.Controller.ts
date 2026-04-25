@@ -2,31 +2,129 @@ import { Request, Response } from "express";
 import { Keypair } from "@stellar/stellar-sdk";
 import crypto from "crypto";
 import jwt, { SignOptions } from "jsonwebtoken";
-import User from "../models/user.models"; // ✅ make sure this path is correct
+import User from "../models/user.models";
+import { getJwtSecret } from "../utils/jwtSecret";
+
+const SIGN_MESSAGE_PREFIX = "Stellar Signed Message:\n";
+
+const tryDecodeBase64 = (value: string): Buffer | null => {
+  try {
+    const cleaned = value.trim();
+    const decoded = Buffer.from(cleaned, "base64");
+    if (!decoded.length) return null;
+    return decoded;
+  } catch {
+    return null;
+  }
+};
+
+const tryDecodeHex = (value: string): Buffer | null => {
+  const cleaned = value.trim().toLowerCase().replace(/^0x/, "");
+  if (!/^[0-9a-f]+$/.test(cleaned) || cleaned.length % 2 !== 0) return null;
+  try {
+    const decoded = Buffer.from(cleaned, "hex");
+    if (!decoded.length) return null;
+    return decoded;
+  } catch {
+    return null;
+  }
+};
+
+const dedupeBuffers = (items: Buffer[]): Buffer[] => {
+  const seen = new Set<string>();
+  const out: Buffer[] = [];
+  for (const item of items) {
+    const key = item.toString("hex");
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(item);
+  }
+  return out;
+};
+
+const getSignatureCandidates = (signatureRaw: string): Buffer[] => {
+  const candidates: Buffer[] = [];
+
+  const base64Decoded = tryDecodeBase64(signatureRaw);
+  if (base64Decoded) {
+    candidates.push(base64Decoded);
+    if (base64Decoded.length === 68) {
+      candidates.push(base64Decoded.subarray(4));
+    }
+    if (base64Decoded.length > 64) {
+      candidates.push(base64Decoded.subarray(base64Decoded.length - 64));
+    }
+  }
+
+  const hexDecoded = tryDecodeHex(signatureRaw);
+  if (hexDecoded) {
+    candidates.push(hexDecoded);
+    if (hexDecoded.length === 68) {
+      candidates.push(hexDecoded.subarray(4));
+    }
+    if (hexDecoded.length > 64) {
+      candidates.push(hexDecoded.subarray(hexDecoded.length - 64));
+    }
+  }
+
+  return dedupeBuffers(candidates);
+};
+
+const getMessageCandidates = (message: string): Buffer[] => {
+  const rawMessage = Buffer.from(message, "utf8");
+  const prefixedMessage = Buffer.from(`${SIGN_MESSAGE_PREFIX}${message}`, "utf8");
+  const rawHash = crypto.createHash("sha256").update(rawMessage).digest();
+  const prefixedHash = crypto.createHash("sha256").update(prefixedMessage).digest();
+
+  return [prefixedHash, rawHash, prefixedMessage, rawMessage];
+};
+
+const isSignatureValid = (address: string, signatureRaw: string, message: string): boolean => {
+  const normalizedAddress = address.trim().toUpperCase();
+  const kp = Keypair.fromPublicKey(normalizedAddress);
+  const signatureCandidates = getSignatureCandidates(signatureRaw);
+  const messageCandidates = getMessageCandidates(message);
+
+  for (const candidateSignature of signatureCandidates) {
+    if (candidateSignature.length !== 64) continue;
+
+    for (const candidateMessage of messageCandidates) {
+      if (kp.verify(candidateMessage, candidateSignature)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
 
 export const verifyWalletSignature = async (req: Request, res: Response) => {
-  console.log("🔥 Incoming body type:", typeof req.body, req.body);
+  console.log("Incoming wallet verify payload:", req.body);
 
   try {
-    const { address, signature, message } = req.body;
+    const {
+      address,
+      signature,
+      signedMessage,
+      message,
+    }: {
+      address?: string;
+      signature?: string;
+      signedMessage?: string;
+      message?: string;
+    } = req.body;
 
-    if (!address || !signature || !message) {
+    const signatureRaw = signature ?? signedMessage;
+
+    if (!address || !signatureRaw || !message) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // ✅ Verify the wallet signature
-    const SIGN_MESSAGE_PREFIX = "Stellar Signed Message:\n";
-    const messageHash = crypto
-      .createHash("sha256")
-      .update(SIGN_MESSAGE_PREFIX + message)
-      .digest();
-
     let isVerified = false;
     try {
-        const kp = Keypair.fromPublicKey(address);
-        isVerified = kp.verify(messageHash, Buffer.from(signature, "base64"));
-    } catch (e) {
-        console.error("Verification error", e);
+      isVerified = isSignatureValid(address, signatureRaw, message);
+    } catch (error) {
+      console.error("Signature verification error:", error);
     }
 
     if (!isVerified) {
@@ -35,41 +133,43 @@ export const verifyWalletSignature = async (req: Request, res: Response) => {
 
     const normalizedAddress = String(address).toLowerCase();
 
-    // ✅ Check if the user already exists in DB
-    let user = await User.findOne({ address: normalizedAddress });
+    // Keep auth resilient: if DB is temporarily unavailable, still issue a token.
+    let user: any = { address: normalizedAddress, name: "anonymous" };
+    try {
+      const existingUser = await User.findOne({ address: normalizedAddress });
 
-    if (!user) {
-      try {
-        // 🆕 Create user on first login
-        user = await User.create({
-          address: normalizedAddress,
-          name: "anonymous",
-        });
-        console.log("🆕 New user created:", normalizedAddress);
-      } catch (createError: any) {
-        // Handle race conditions / duplicate-key safely by loading existing user.
-        if (createError?.code === 11000) {
-          user = await User.findOne({ address: normalizedAddress });
-        } else {
-          throw createError;
+      if (!existingUser) {
+        try {
+          user = await User.create({
+            address: normalizedAddress,
+            name: "anonymous",
+          });
+          console.log("New user created:", normalizedAddress);
+        } catch (createError: any) {
+          if (createError?.code === 11000) {
+            user = await User.findOne({ address: normalizedAddress });
+          } else {
+            throw createError;
+          }
         }
+      } else {
+        user = existingUser;
+        console.log("Existing user logged in:", normalizedAddress);
       }
-    } else {
-      console.log("✅ Existing user logged in:", normalizedAddress);
+    } catch (dbError) {
+      console.error("User profile lookup failed, proceeding with minimal profile:", dbError);
     }
 
     if (!user) {
-      return res.status(500).json({ message: "Failed to load user profile" });
+      user = { address: normalizedAddress, name: "anonymous" };
     }
 
-    // ✅ Create JWT token
     const options: SignOptions = {
       expiresIn: (process.env.TOKEN_EXPIRY ?? "7d") as SignOptions["expiresIn"],
     };
 
-    const token = jwt.sign({ address: normalizedAddress }, process.env.JWT_SECRET as string, options);
+    const token = jwt.sign({ address: normalizedAddress }, getJwtSecret(), options);
 
-    // ✅ Return both token + user info
     return res.json({
       message: "Wallet verified successfully",
       address: normalizedAddress,
@@ -77,7 +177,7 @@ export const verifyWalletSignature = async (req: Request, res: Response) => {
       user,
     });
   } catch (error) {
-    console.error("JWT Error:", error);
-    return res.status(500).json({ message: "Server error", error });
+    console.error("Wallet verify error:", error);
+    return res.status(500).json({ message: "Server error" });
   }
 };

@@ -24,7 +24,10 @@ interface Toast {
   type: "error" | "success"
 }
 
+const TESTNET_PASSPHRASE = "Test SDF Network ; September 2015"
+
 export default function AuthPage() {
+  const backendBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "")
   const [hasFreighter, setHasFreighter] = useState(false)
   const [address, setAddress] = useState<string | null>(null)
   const [status, setStatus] = useState<AuthStatus>("connect")
@@ -146,14 +149,16 @@ export default function AuthPage() {
       const [wallets, freighterInstalled] = await Promise.all([getSupportedWallets(), isFreighterInstalled()])
       const available = wallets.filter((wallet) => wallet.isAvailable)
       const totalDetectedWallets = Math.max(available.length, freighterInstalled ? 1 : 0)
+      const hasDetectedWallet = totalDetectedWallets > 0
 
       setWalletCount(totalDetectedWallets)
       setHasFreighter(freighterInstalled)
-      setStatus("connect")
+      setStatus(hasDetectedWallet ? "connect" : "detect")
     } catch (error) {
       console.error("Freighter detection error", error)
       setHasFreighter(false)
-      setStatus("connect")
+      setWalletCount(0)
+      setStatus("detect")
     } finally {
       setIsCheckingWallets(false)
     }
@@ -176,6 +181,12 @@ export default function AuthPage() {
   }
 
   const handleConnect = async () => {
+    if (walletCount === 0 && !hasFreighter) {
+      setStatus("detect")
+      addToast("No compatible Stellar wallet detected. Please install or enable Freighter.", "error")
+      return
+    }
+
     setStatus("connecting")
     try {
       const result = await connectWallet()
@@ -183,12 +194,16 @@ export default function AuthPage() {
       
       if (!publicKey) throw new Error("No address returned")
 
-      const walletNetwork = await getWalletNetwork()
-      if (walletNetwork.networkPassphrase !== "Test SDF Network ; September 2015") {
-        setStatus("wrong-network")
-        addToast("Please switch wallet network to Stellar Testnet", "error")
-        setTimeout(() => setStatus("connect"), 2000)
-        return
+      try {
+        const walletNetwork = await getWalletNetwork()
+        if (walletNetwork.networkPassphrase !== TESTNET_PASSPHRASE) {
+          setStatus("wrong-network")
+          addToast("Please switch wallet network to Stellar Testnet", "error")
+          setTimeout(() => setStatus("connect"), 2000)
+          return
+        }
+      } catch {
+        // Some extension versions intermittently fail this read; proceed to sign step.
       }
 
       setAddress(publicKey)
@@ -209,22 +224,105 @@ export default function AuthPage() {
       const message = `Login verification at ${timestamp}`
 
       const signResponse = await signWalletMessage(message, address ?? undefined)
+      const responseRecord =
+        signResponse && typeof signResponse === "object"
+          ? (signResponse as Record<string, unknown>)
+          : {}
+
+      const resolvedAddress =
+        (typeof responseRecord.signerAddress === "string" && responseRecord.signerAddress) ||
+        (typeof responseRecord.address === "string" && responseRecord.address) ||
+        address
+
+      const resolvedSignature =
+        (typeof responseRecord.signedMessage === "string" && responseRecord.signedMessage) ||
+        (typeof responseRecord.signature === "string" && responseRecord.signature) ||
+        (typeof signResponse === "string" ? signResponse : "")
+
+      if (!resolvedAddress || !resolvedSignature) {
+        throw new Error("Wallet returned an invalid signature response")
+      }
+
+      const decodeBase64 = (value: string): Uint8Array | null => {
+        try {
+          const binary = atob(value.trim())
+          const bytes = new Uint8Array(binary.length)
+          for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
+          return bytes
+        } catch {
+          return null
+        }
+      }
+
+      const decodeHex = (value: string): Uint8Array | null => {
+        const cleaned = value.trim().toLowerCase().replace(/^0x/, "")
+        if (!/^[0-9a-f]+$/.test(cleaned) || cleaned.length % 2 !== 0) return null
+        const bytes = new Uint8Array(cleaned.length / 2)
+        for (let i = 0; i < cleaned.length; i += 2) {
+          bytes[i / 2] = Number.parseInt(cleaned.slice(i, i + 2), 16)
+        }
+        return bytes
+      }
+
+      const encodeBase64 = (bytes: Uint8Array): string => {
+        let binary = ""
+        for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i])
+        return btoa(binary)
+      }
+
+      const normalizeSignatureForLegacyVerify = (value: string): string => {
+        const base64Bytes = decodeBase64(value)
+        if (base64Bytes) {
+          if (base64Bytes.length === 64) return encodeBase64(base64Bytes)
+          if (base64Bytes.length === 68) return encodeBase64(base64Bytes.slice(4))
+          if (base64Bytes.length > 64) return encodeBase64(base64Bytes.slice(base64Bytes.length - 64))
+        }
+
+        const hexBytes = decodeHex(value)
+        if (hexBytes) {
+          if (hexBytes.length === 64) return encodeBase64(hexBytes)
+          if (hexBytes.length === 68) return encodeBase64(hexBytes.slice(4))
+          if (hexBytes.length > 64) return encodeBase64(hexBytes.slice(hexBytes.length - 64))
+        }
+
+        return value
+      }
+
+      const normalizedSignature = normalizeSignatureForLegacyVerify(resolvedSignature)
 
       setStatus("verifying")
 
-      const response = await fetch("/api/auth/verify", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          address: signResponse.signerAddress || address,
-          message,
-          signature: signResponse.signedMessage,
-        }),
-      })
+      const verifyPayload = {
+        address: resolvedAddress,
+        message,
+        signature: normalizedSignature,
+        signedMessage: resolvedSignature,
+      }
 
-      const data = await response.json()
+      const tryVerify = async (url: string) =>
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(verifyPayload),
+        })
+
+      const primaryVerifyUrl = backendBaseUrl ? `${backendBaseUrl}/api/wallet/verify` : "/api/auth/verify"
+      let response: globalThis.Response
+      try {
+        response = await tryVerify(primaryVerifyUrl)
+      } catch {
+        // If direct backend call fails in browser (network/CORS/adblock), fallback to local proxy route.
+        response = await tryVerify("/api/auth/verify")
+      }
+
+      let data: any = {}
+      try {
+        data = await response.json()
+      } catch {
+        data = {}
+      }
 
       if (response.ok && data.token) {
         login(data.address, data.token)
@@ -235,7 +333,12 @@ export default function AuthPage() {
           router.push("/dashboard")
         }, 2000)
       } else {
-        throw new Error(data.message || "Verification failed")
+        const detail =
+          (typeof data?.detail === "string" && data.detail) ||
+          (typeof data?.error === "string" && data.error) ||
+          (typeof data?.message === "string" && data.message) ||
+          "Verification failed"
+        throw new Error(detail)
       }
     } catch (error) {
       const mapped = mapWalletError(error)
