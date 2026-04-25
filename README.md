@@ -3,33 +3,11 @@
 DeMedia is a decentralized media content platform built on the Stellar testnet with Soroban smart contracts.
 Creators can upload media, register its fingerprint on-chain, mint NFTs, and manage content ownership with wallet-based auth.
 
+# Deployed Link:
+https://de-media-xi.vercel.app/
 
-
-### Feedback Iteration Implemented
-
-Based on user feedback, completed upgrades include:
-
-- NFT image rendering fixes across gallery/marketplace/profile flows.
-- Profile personalization (banner/accent/showcase title) and owned-NFTs profile section.
-- Mint reliability and clearer failure handling in upload/mint pipeline.
-- Buy/sell marketplace flow implemented and connected to escrow-backed backend route.
-- Dashboard visual stability improvements to reduce glitchy transitions.
-- Homepage NFT section connected to live backend NFTs (replacing static mock cards).
-
-### Raw User Feedback Captured
-
-- "The Image is Not Displayed when I am Minting an Nft that should be fixed in the next version. The UI is Awesome"
-- "My personal profile could be really a nice part of me therefore to display what I own and a way to design it my way would be great"
-- "To buy and sell nft"
-- "It is good but can't see picture in nft and also the dashboard is a bit glitchy"
-- "In the main page, NFT mocks should be replaced"
-
-## Next Phase Improvement Plan
-
-1. Strengthen social profile layer (follow/creator pages + richer ownership timeline).
-2. Add robust analytics dashboard for creators (mint conversion, engagement, retention).
-3. Add contract-level ownership transfer sync and richer marketplace order lifecycle.
-4. Expand automated tests across upload/mint/profile/purchase flows.
+# Mobile Responsive:
+<img width="654" height="1280" alt="image" src="https://github.com/user-attachments/assets/224bd3b1-d17d-44cb-852c-2e6b3ac1a614" />
 
 ## What Is Fully Integrated Now
 
