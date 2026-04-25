@@ -93,8 +93,11 @@ Based on user feedback, completed upgrades include:
 - Inter-contract call path used in backend purchase flow:
   - `contracts/payment_escrow/src/lib.rs` (`instant_settle_with_royalty`)
   - `backend/src/web3/buyNFT.ts`
+- Inter-contract call working (if applicable).
+- Custom token or pool deployed (if used).
 - CI/CD workflow:
   - `.github/workflows/ci.yml`
+- CI/CD running.
 - Mobile responsive frontend pages exist across app routes.
 
 Note: Real-time buyer/seller settlement beyond current prototype scope is intentionally not claimed here.
