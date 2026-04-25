@@ -1,12 +1,11 @@
 "use client"
 
 import {
-  FREIGHTER_ID,
   StellarWalletsKit,
-  WalletNetwork,
-  allowAllModules,
-  type ISupportedWallet,
+  Networks,
 } from "@creit.tech/stellar-wallets-kit"
+import { FREIGHTER_ID } from "@creit.tech/stellar-wallets-kit/modules/freighter"
+import { defaultModules } from "@creit.tech/stellar-wallets-kit/modules/utils"
 import {
   getAddress as getFreighterAddress,
   getNetwork as getFreighterNetwork,
@@ -16,38 +15,27 @@ import {
   signTransaction as signFreighterTransaction,
 } from "@stellar/freighter-api"
 
-let kit: StellarWalletsKit | null = null
+let initialized = false
 
 const getKit = () => {
-  if (!kit) {
-    kit = new StellarWalletsKit({
+  if (!initialized) {
+    StellarWalletsKit.init({
       selectedWalletId: FREIGHTER_ID,
-      modules: allowAllModules(),
-      network: WalletNetwork.TESTNET,
+      modules: defaultModules(),
+      network: Networks.TESTNET,
     })
+    initialized = true
   }
-  return kit
+  return StellarWalletsKit
 }
 
 export const getSupportedWallets = async () => {
   try {
-    return await getKit().getSupportedWallets()
+    return await getKit().refreshSupportedWallets()
   } catch {
     // Keep auth screen resilient if wallet-kit module probing fails in browser-specific contexts.
     return []
   }
-}
-
-const selectWalletFromModal = async () => {
-  const wallet = await new Promise<ISupportedWallet>((resolve, reject) => {
-    void getKit().openModal({
-      onWalletSelected: (option) => resolve(option),
-      onClosed: (error) => reject(error || new Error("Wallet selection was cancelled")),
-      modalTitle: "Connect Wallet",
-    })
-  })
-
-  getKit().setWallet(wallet.id)
 }
 
 const getFreighterError = (result: unknown): string | null => {
@@ -71,8 +59,7 @@ export const connectWallet = async () => {
     }
   }
 
-  await selectWalletFromModal()
-  return getKit().getAddress()
+  return getKit().authModal()
 }
 
 export const getWalletAddress = async () => {
@@ -94,7 +81,7 @@ export const signWalletMessage = async (message: string, address?: string) => {
   if (await isFreighterInstalled()) {
     try {
       const signed = await signFreighterMessage(message, {
-        networkPassphrase: WalletNetwork.TESTNET,
+        networkPassphrase: Networks.TESTNET,
         address,
       })
       const signError = getFreighterError(signed)
@@ -109,7 +96,7 @@ export const signWalletMessage = async (message: string, address?: string) => {
     }
   }
   return getKit().signMessage(message, {
-    networkPassphrase: WalletNetwork.TESTNET,
+    networkPassphrase: Networks.TESTNET,
     address,
   })
 }
@@ -118,7 +105,7 @@ export const signWalletTransaction = async (xdr: string, address?: string) => {
   if (await isFreighterInstalled()) {
     try {
       const signed = await signFreighterTransaction(xdr, {
-        networkPassphrase: WalletNetwork.TESTNET,
+        networkPassphrase: Networks.TESTNET,
         address,
       })
       const signError = getFreighterError(signed)
@@ -133,7 +120,7 @@ export const signWalletTransaction = async (xdr: string, address?: string) => {
     }
   }
   return getKit().signTransaction(xdr, {
-    networkPassphrase: WalletNetwork.TESTNET,
+    networkPassphrase: Networks.TESTNET,
     address,
   })
 }
@@ -182,7 +169,7 @@ export const isFreighterInstalled = async () => {
   // Try connected wallets from stellar-wallets-kit
   try {
     const kit = getKit()
-    const supported = await kit.getSupportedWallets()
+    const supported = await kit.refreshSupportedWallets()
     const freighter = supported.find(w => w.id === FREIGHTER_ID)
     if (freighter?.isAvailable) return true
   } catch {
