@@ -517,7 +517,7 @@ export default function AuthPage() {
                     {/* Chain UI removed for simplicity as Freighter connects to Testnet/Futurenet based on extension */}
                   </div>
 
-                  <p className="text-xs text-gray-500">⛽ Gasless • This only proves wallet ownership</p>
+                  <p className="text-xs text-gray-500">Gasless | This only proves wallet ownership</p>
 
                   <button
                     onClick={handleSign}
