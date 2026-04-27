@@ -26,7 +26,8 @@ export default function FuturisticNavbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const { isAuthenticated, address, logout } = useAuth()
   const pathname = usePathname()
-  const hideBrandLogo = pathname === "/" || pathname === "/dashboard"
+  const isActivePath = (href: string) =>
+    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,6 +35,27 @@ export default function FuturisticNavbar() {
     }
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  useEffect(() => {
+    setMobileMenuOpen(false)
+  }, [pathname])
+
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : ""
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [mobileMenuOpen])
+
+  useEffect(() => {
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMobileMenuOpen(false)
+      }
+    }
+    window.addEventListener("keydown", onEscape)
+    return () => window.removeEventListener("keydown", onEscape)
   }, [])
 
   const iconButtons = [
@@ -54,9 +76,7 @@ export default function FuturisticNavbar() {
           {/* Desktop Navbar */}
           <div className="hidden md:flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-              {!hideBrandLogo && (
-                <img src="/logo.png" alt="DeMedia" className="w-10 h-10 md:w-12 md:h-12 drop-shadow-[0_0_20px_rgba(59,130,246,0.4)]" />
-              )}
+              <img src="/demedia-logo.svg" alt="DeMedia" className="w-10 h-10 md:w-12 md:h-12 drop-shadow-[0_0_20px_rgba(59,130,246,0.4)]" />
               <span className="font-[family-name:var(--font-display)] text-xl md:text-2xl font-black tracking-wider gradient-text">
                 DeMedia
               </span>
@@ -68,13 +88,22 @@ export default function FuturisticNavbar() {
                 <Link
                   key={i}
                   href={button.href}
-                  className="group relative w-12 h-12 md:w-14 md:h-14 rounded-full border border-white/10 backdrop-blur-xl bg-[#12121a]/50 hover:bg-[#1a1a2e]/70 transition-all duration-300 hover:scale-110 hover:border-[#3b82f6]/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+                  className={`group relative w-12 h-12 md:w-14 md:h-14 rounded-full border backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] ${
+                    isActivePath(button.href)
+                      ? "bg-[#1a2236]/90 border-[#3b82f6]/70 shadow-[0_0_20px_rgba(59,130,246,0.35)]"
+                      : "border-white/10 bg-[#12121a]/50 hover:bg-[#1a1a2e]/70 hover:border-[#3b82f6]/50"
+                  }`}
                   onMouseEnter={() => setHoveredIcon(i)}
                   onMouseLeave={() => setHoveredIcon(null)}
                   aria-label={button.label}
+                  aria-current={isActivePath(button.href) ? "page" : undefined}
                 >
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <button.icon className="w-5 h-5 text-gray-400 group-hover:text-[#3b82f6] transition-colors duration-300" />
+                    <button.icon
+                      className={`w-5 h-5 transition-colors duration-300 ${
+                        isActivePath(button.href) ? "text-[#60a5fa]" : "text-gray-400 group-hover:text-[#3b82f6]"
+                      }`}
+                    />
                   </div>
 
                   {hoveredIcon === i && (
@@ -131,9 +160,7 @@ export default function FuturisticNavbar() {
 
           <div className="flex md:hidden items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
-              {!hideBrandLogo && (
-                <img src="/logo.png" alt="DeMedia" className="w-8 h-8 drop-shadow-[0_0_15px_rgba(59,130,246,0.4)]" />
-              )}
+              <img src="/demedia-logo.svg" alt="DeMedia" className="w-8 h-8 drop-shadow-[0_0_15px_rgba(59,130,246,0.4)]" />
               <span className="font-[family-name:var(--font-display)] text-xl font-black tracking-wider gradient-text">
                 DeMedia
               </span>
@@ -179,10 +206,25 @@ export default function FuturisticNavbar() {
                     key={i}
                     href={button.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full flex items-center gap-4 p-4 rounded-xl border border-white/5 bg-[#0a0a0f]/50 hover:bg-[#1a1a2e]/70 hover:border-[#3b82f6]/30 transition-all duration-300 group"
+                    className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-all duration-300 group ${
+                      isActivePath(button.href)
+                        ? "border-[#3b82f6]/45 bg-[#122036]/75"
+                        : "border-white/5 bg-[#0a0a0f]/50 hover:bg-[#1a1a2e]/70 hover:border-[#3b82f6]/30"
+                    }`}
+                    aria-current={isActivePath(button.href) ? "page" : undefined}
                   >
-                    <button.icon className="w-5 h-5 text-gray-400 group-hover:text-[#3b82f6] transition-colors" />
-                    <span className="text-gray-300 group-hover:text-white transition-colors">{button.label}</span>
+                    <button.icon
+                      className={`w-5 h-5 transition-colors ${
+                        isActivePath(button.href) ? "text-[#60a5fa]" : "text-gray-400 group-hover:text-[#3b82f6]"
+                      }`}
+                    />
+                    <span
+                      className={`transition-colors ${
+                        isActivePath(button.href) ? "text-white" : "text-gray-300 group-hover:text-white"
+                      }`}
+                    >
+                      {button.label}
+                    </span>
                   </Link>
                 ))}
               </div>
@@ -223,13 +265,13 @@ export default function FuturisticNavbar() {
                       </div>
                     </Link>
 
-                    <button className="relative w-full py-4 rounded-xl overflow-hidden group">
+                    <Link href="/auth?mode=signup" onClick={() => setMobileMenuOpen(false)} className="relative w-full py-4 rounded-xl overflow-hidden group block">
                       <div className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] via-[#0284c7] to-[#dc2626] animate-gradient-shift" />
                       <div className="relative flex items-center justify-center gap-2 font-[family-name:var(--font-display)] font-bold tracking-wider">
                         <UserPlus className="w-5 h-5 text-white" />
                         <span className="text-white">Sign Up</span>
                       </div>
-                    </button>
+                    </Link>
                   </>
                 )}
               </div>

@@ -235,7 +235,7 @@ export default function ProfilePage() {
         throw new Error(data.error || "Failed to update profile")
       }
 
-      setInitialData(formData)
+      setInitialData((prev) => ({ ...prev, ...formData, avatar: avatarUrl }))
       setFormData((prev) => ({ ...prev, avatar: avatarUrl }))
       setAvatarPreview(avatarUrl)
 

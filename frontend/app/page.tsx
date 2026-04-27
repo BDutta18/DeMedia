@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Users, Coins, ArrowRight, Rocket, Star, Lock } from "lucide-react"
+import Link from "next/link"
 import LoadingAnimation from "@/components/loading-animation"
 import FuturisticNavbar from "@/components/futuristic-navbar"
 import AnimatedBackground from "@/components/animated-background"
@@ -115,6 +116,11 @@ export default function HomePage() {
               className="space-y-6 animate-fadeInScale"
               style={{ animationDelay: "0.4s" }}
             >
+              <div className="chip-row justify-center">
+                <span className="chip">On-chain provenance</span>
+                <span className="chip">Instant royalties</span>
+                <span className="chip">Community ownership</span>
+              </div>
               <h1
                 className="font-[family-name:var(--font-display)] text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-wider"
                 style={{
@@ -141,10 +147,10 @@ export default function HomePage() {
 
             {/* CTA Button */}
             <div
-              className="flex justify-center pt-8 animate-fadeInScale"
+              className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8 animate-fadeInScale"
               style={{ animationDelay: "0.6s" }}
             >
-              <a href="/gallery" className="group relative px-8 md:px-12 py-4 md:py-6 font-[family-name:var(--font-display)] text-sm md:text-lg font-bold tracking-wider overflow-hidden transition-all duration-500 hover:scale-110">
+              <Link href="/gallery" className="group relative px-8 md:px-12 py-4 md:py-6 font-[family-name:var(--font-display)] text-sm md:text-lg font-bold tracking-wider overflow-hidden transition-all duration-500 hover:scale-110">
                 <div
                   className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] via-[#0284c7] to-[#06b6d4] animate-gradient-shift opacity-100"
                   style={{ filter: "blur(1px)" }}
@@ -154,7 +160,23 @@ export default function HomePage() {
                   EXPLORE GALLERY
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-300" />
                 </span>
-              </a>
+              </Link>
+              <Link href="/upload" className="btn-outline-premium px-8 md:px-12 py-4 md:py-6 font-[family-name:var(--font-display)] text-sm md:text-lg font-bold tracking-wider whitespace-nowrap">
+                START TOKENIZING
+              </Link>
+            </div>
+
+            <div className="pt-6 animate-fadeInScale" style={{ animationDelay: "0.7s" }}>
+              <p className="text-xs sm:text-sm uppercase tracking-[0.22em] text-gray-500 mb-4">
+                Trusted by independent creators, studios, and DAOs
+              </p>
+              <div className="chip-row justify-center">
+                {["Nova Press", "Orbit Labs", "Signal DAO", "Aether Studio"].map((brand) => (
+                  <span key={brand} className="chip chip-subtle">
+                    {brand}
+                  </span>
+                ))}
+              </div>
             </div>
 
             {/* Key Statistics */}
@@ -211,7 +233,7 @@ export default function HomePage() {
 
         {/* Features Section */}
         <section className="relative py-20 md:py-32 px-4 sm:px-6 lg:px-8">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#3b82f6] to-transparent opacity-50" />
+          <div className="section-divider" />
 
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
@@ -289,7 +311,7 @@ export default function HomePage() {
         {/* Featured Content Section */}
         {featuredNFTs.length > 0 && (
           <section className="relative py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent via-[#0284c7]/5 to-transparent">
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#0284c7] to-transparent opacity-50" />
+            <div className="section-divider" />
 
             <div className="max-w-7xl mx-auto">
               <div className="text-center mb-16">
@@ -337,6 +359,9 @@ export default function HomePage() {
                         }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
+                      <span className="absolute top-3 left-3 chip chip-subtle text-[10px] sm:text-xs">
+                        {nft.artistName}
+                      </span>
                     </div>
 
                     <div className="p-4 space-y-3">
@@ -347,6 +372,16 @@ export default function HomePage() {
                     </div>
                   </a>
                 ))}
+              </div>
+
+              <div className="mt-12 text-center">
+                <Link
+                  href="/gallery"
+                  className="inline-flex items-center gap-2 text-[#60a5fa] hover:text-[#7dd3fc] transition-colors duration-300 text-sm tracking-wider font-semibold"
+                >
+                  VIEW FULL GALLERY
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
               </div>
             </div>
           </section>
@@ -379,18 +414,18 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/upload" className="group relative px-8 py-4 font-[family-name:var(--font-display)] font-bold tracking-wider overflow-hidden transition-all duration-500 hover:scale-105">
+              <Link href="/upload" className="group relative px-8 py-4 font-[family-name:var(--font-display)] font-bold tracking-wider overflow-hidden transition-all duration-500 hover:scale-105">
                 <div className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] via-[#0284c7] to-[#06b6d4] animate-gradient-shift opacity-100" style={{ filter: "blur(1px)" }} />
                 <div className="absolute inset-[2px] bg-[#0a0a0f] group-hover:bg-[#0f1419] transition-colors duration-300" />
                 <span className="relative text-white group-hover:text-[#06b6d4] transition-colors duration-300">
                   GET STARTED
                 </span>
-              </a>
-              <a href="/gallery" className="group relative px-8 py-4 font-[family-name:var(--font-display)] font-bold tracking-wider border border-[#3b82f6]/50 rounded-lg transition-all duration-300 hover:scale-105">
+              </Link>
+              <Link href="/gallery" className="group relative px-8 py-4 font-[family-name:var(--font-display)] font-bold tracking-wider border border-[#3b82f6]/50 rounded-lg transition-all duration-300 hover:scale-105">
                 <span className="text-[#3b82f6] group-hover:text-[#06b6d4] transition-colors duration-300">
                   EXPLORE
                 </span>
-              </a>
+              </Link>
             </div>
           </div>
         </section>

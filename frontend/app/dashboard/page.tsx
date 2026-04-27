@@ -1,15 +1,26 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Globe, Lock, Rocket, Users } from "lucide-react"
+import Link from "next/link"
+import { useEffect, useState } from "react"
+import {
+  ArrowUpRight,
+  BarChart3,
+  Coins,
+  Eye,
+  FileText,
+  ImageIcon,
+  Rocket,
+  ShieldCheck,
+  Sparkles,
+  Users,
+} from "lucide-react"
 import FuturisticNavbar from "@/components/futuristic-navbar"
 import WaveGridBackground from "@/components/wave-grid-background"
 import { useAuth } from "@/lib/auth-context"
 
 export default function DashboardPage() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, address } = useAuth()
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [visibleElements, setVisibleElements] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -18,26 +29,32 @@ export default function DashboardPage() {
 
     window.addEventListener("mousemove", handleMouseMove)
 
-    // Setup scroll reveal observer
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisibleElements((prev) => new Set([...prev, entry.target.id]))
-          }
-        })
-      },
-      { threshold: 0.1 }
-    )
-
-    const elements = document.querySelectorAll("[data-scroll-reveal]")
-    elements.forEach((el) => observer.observe(el))
-
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
-      elements.forEach((el) => observer.unobserve(el))
     }
   }, [])
+
+  const walletLabel = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Not connected"
+
+  const kpiCards = [
+    { label: "Published Posts", value: "24", delta: "+6 this month", icon: FileText, color: "#3b82f6" },
+    { label: "Portfolio Assets", value: "18", delta: "+2 minted", icon: ImageIcon, color: "#06b6d4" },
+    { label: "Total Reach", value: "42.8K", delta: "+14.2%", icon: Eye, color: "#f59e0b" },
+    { label: "Royalty Earned", value: "1,280 XLM", delta: "+320 XLM", icon: Coins, color: "#ef4444" },
+  ]
+
+  const performance = [
+    { name: "Content Quality", value: 84, color: "from-[#3b82f6] to-[#06b6d4]" },
+    { name: "Audience Growth", value: 71, color: "from-[#06b6d4] to-[#22d3ee]" },
+    { name: "Marketplace Sales", value: 63, color: "from-[#f59e0b] to-[#ef4444]" },
+  ]
+
+  const activity = [
+    { title: "Article minted", subtitle: "Neural Art Guide #12", time: "2h ago", dotColor: "bg-[#60a5fa]" },
+    { title: "Royalty received", subtitle: "48 XLM from resale", time: "5h ago", dotColor: "bg-[#fbbf24]" },
+    { title: "New follower", subtitle: "Wallet connected to your profile", time: "8h ago", dotColor: "bg-[#67e8f9]" },
+    { title: "Collection update", subtitle: "3 assets listed in gallery", time: "1d ago", dotColor: "bg-[#fda4af]" },
+  ]
 
   return (
     <>
@@ -59,155 +76,143 @@ export default function DashboardPage() {
 
       <main className="relative min-h-screen pt-24 sm:pt-28 md:pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-[100vw] overflow-x-hidden">
         <div className="max-w-7xl mx-auto">
-          {/* Header Section */}
-          <div className="mb-16 space-y-4">
-            <h1
-              className="font-[family-name:var(--font-display)] text-5xl sm:text-6xl md:text-7xl font-black tracking-wider"
-              style={{
-                letterSpacing: "0.1em",
-                background: "linear-gradient(135deg, #fbbf24 0%, #eab308 50%, #ca8a04 100%)",
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              DeMedia DASHBOARD
-            </h1>
-            <p className="text-gray-400 text-lg">Your creator hub - manage assets, track performance, and grow your audience</p>
-          </div>
-
-          {/* Platform Information Grid - Static, Reliable Content */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 stagger-children">
-            {[
-              {
-                icon: Globe,
-                title: "DeMedia Network",
-                description: "Decentralized publishing platform",
-                details: "Live on Blockchain",
-                color: "#fbbf24",
-              },
-              {
-                icon: Users,
-                title: "Creator Community",
-                description: "Join thousands of creators",
-                details: "Active ecosystem",
-                color: "#eab308",
-              },
-              {
-                icon: Lock,
-                title: "Secure Assets",
-                description: "Your content is protected",
-                details: "Web3 Security",
-                color: "#ca8a04",
-              },
-              {
-                icon: Rocket,
-                title: "Get Started",
-                description: "Monetize your content today",
-                details: "Zero setup fees",
-                color: "#f59e0b",
-              },
-            ].map((item, i) => {
-              const IconComponent = item.icon
-              return (
-              <div
-                key={i}
-                data-scroll-reveal
-                id={`platform-card-${i}`}
-                className={`group card-premium rounded-2xl p-8 transition-all duration-500 hover:scale-[1.05] hover:-translate-y-2 ${
-                  visibleElements.has(`platform-card-${i}`)
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-10"
-                }`}
-              >
-                <div className="space-y-4">
-                  <div
-                    className="w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110"
-                    style={{
-                      background: item.color + "20",
-                      border: `1px solid ${item.color}40`,
-                    }}
-                  >
-                    <IconComponent className="w-6 h-6" style={{ color: item.color }} />
-                  </div>
-
-                  <div className="space-y-2">
-                    <h3 className="text-lg font-bold text-white">{item.title}</h3>
-                    <p className="text-sm text-gray-400">{item.description}</p>
-                  </div>
-
-                  <div className="pt-3 border-t border-white/5">
-                    <span
-                      className="text-xs font-mono px-3 py-1 rounded-full inline-block transition-colors duration-300"
-                      style={{
-                        background: item.color + "15",
-                        color: item.color,
-                      }}
-                    >
-                      {item.details}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Glow effect on hover */}
-                <div
-                  className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl pointer-events-none"
-                  style={{ background: `radial-gradient(circle, ${item.color}10, transparent 70%)` }}
-                />
+          <section className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-6 mb-8">
+            <div className="card-premium p-7 md:p-8">
+              <div className="chip-row mb-5">
+                <span className="chip chip-subtle">Creator Console</span>
+                <span className="chip">{isAuthenticated ? "Authenticated" : "Guest"}</span>
               </div>
-            )})}
-          </div>
+              <h1 className="font-[family-name:var(--font-display)] text-4xl sm:text-5xl md:text-6xl font-black tracking-[0.08em] gradient-text">
+                DEMEDIA DASHBOARD
+              </h1>
+              <p className="mt-4 text-gray-300 text-base sm:text-lg max-w-2xl">
+                Track your publishing momentum, monitor royalties, and launch new on-chain content from one modern workspace.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link
+                  href="/upload"
+                  className="group relative px-6 py-3 font-[family-name:var(--font-display)] text-sm font-bold tracking-wider overflow-hidden transition-all duration-300 hover:scale-[1.03]"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] via-[#0284c7] to-[#06b6d4] animate-gradient-shift opacity-100" />
+                  <div className="absolute inset-[2px] bg-[#0a0a0f] group-hover:bg-[#0f1419] transition-colors duration-300" />
+                  <span className="relative flex items-center gap-2 text-white group-hover:text-[#67e8f9] transition-colors duration-300">
+                    Publish Content
+                    <ArrowUpRight className="w-4 h-4" />
+                  </span>
+                </Link>
+                <Link href="/my-nfts" className="btn-outline-premium px-6 py-3 font-[family-name:var(--font-display)] text-sm font-bold tracking-wider">
+                  Manage Portfolio
+                </Link>
+              </div>
+            </div>
 
-          {/* Quick Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 stagger-children">
-            {[
-              { title: "Upload Content", description: "Publish and tokenize new digital assets", href: "/upload", color: "#fbbf24" },
-              { title: "View Analytics", description: "Track performance metrics and reach", href: "/analytics", color: "#eab308" },
-              { title: "Manage Assets", description: "View and manage your NFT portfolio", href: "/my-nfts", color: "#ca8a04" },
-            ].map((action, i) => (
-              <a
-                key={i}
-                href={action.href}
-                data-scroll-reveal
-                id={`action-${i}`}
-                className={`group card-premium rounded-2xl p-8 transition-all duration-500 hover:scale-[1.02] cursor-pointer ${
-                  visibleElements.has(`action-${i}`)
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-10"
-                }`}
-              >
-                <div className="space-y-3">
-                  <div
-                    className="w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110"
-                    style={{
-                      background: action.color + "15",
-                      border: `1px solid ${action.color}30`,
-                    }}
-                  >
-                    <div
-                      className="w-6 h-6 rounded-full animate-pulse-glow"
-                      style={{ background: action.color }}
-                    />
+            <div className="card-premium p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-white">Account Status</h2>
+                <ShieldCheck className="w-5 h-5 text-[#67e8f9]" />
+              </div>
+              <div className="space-y-4">
+                <div className="rounded-xl border border-white/10 bg-[#0a0a0f]/70 p-4">
+                  <p className="text-xs uppercase tracking-[0.16em] text-gray-500">Wallet</p>
+                  <p className="text-base font-mono text-[#93c5fd] mt-2">{walletLabel}</p>
+                </div>
+                <div className="rounded-xl border border-white/10 bg-[#0a0a0f]/70 p-4">
+                  <p className="text-xs uppercase tracking-[0.16em] text-gray-500">Profile Strength</p>
+                  <div className="mt-2 flex items-center justify-between text-sm">
+                    <span className="text-white font-semibold">78%</span>
+                    <span className="text-[#67e8f9]">Good</span>
                   </div>
-                  <h3 className="text-lg font-bold text-white group-hover:text-[#fbbf24] transition-colors">{action.title}</h3>
-                  <p className="text-sm text-gray-400">{action.description}</p>
+                  <div className="mt-3 h-2 rounded-full bg-white/10 overflow-hidden">
+                    <div className="h-full w-[78%] bg-gradient-to-r from-[#3b82f6] to-[#22d3ee]" />
+                  </div>
                 </div>
+                <Link href="/profile" className="inline-flex items-center gap-2 text-sm text-[#67e8f9] hover:text-[#a5f3fc] transition-colors">
+                  Complete profile setup
+                  <ArrowUpRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+          </section>
 
-                <div className="mt-4 flex items-center gap-2 text-sm font-mono text-gray-500 group-hover:text-[#eab308] transition-colors">
-                  <span>Access</span>
-                  <span className="group-hover:translate-x-1 transition-transform">→</span>
+          <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+            {kpiCards.map((card) => (
+              <article key={card.label} className="card-premium p-5 rounded-2xl hover:-translate-y-1 transition-transform duration-300">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-gray-400">{card.label}</p>
+                  <card.icon className="w-5 h-5" style={{ color: card.color }} />
                 </div>
-              </a>
+                <p className="mt-4 text-3xl font-bold text-white">{card.value}</p>
+                <p className="mt-2 text-xs tracking-wide" style={{ color: card.color }}>
+                  {card.delta}
+                </p>
+              </article>
             ))}
-          </div>
+          </section>
 
-          {/* Info Section */}
-          <div className="card-premium rounded-2xl p-8 md:p-12 border border-white/5">
-            <h2 className="text-2xl font-bold text-white mb-4">Your DeMedia Hub</h2>
-            <p className="text-gray-400 leading-relaxed">
-              Manage your published content and digital assets on the DeMedia platform. View all your tokenized pages, monitor performance metrics, and access real-time analytics. Upload new content, manage your NFT portfolio, and track your growth across the decentralized publishing ecosystem.
-            </p>
-          </div>
+          <section className="grid grid-cols-1 xl:grid-cols-[1.6fr_1fr] gap-6 mb-8">
+            <div className="card-premium p-6 md:p-7">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-white">Performance Overview</h2>
+                <BarChart3 className="w-5 h-5 text-[#67e8f9]" />
+              </div>
+              <div className="space-y-5">
+                {performance.map((item) => (
+                  <div key={item.name}>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-sm text-gray-300">{item.name}</p>
+                      <p className="text-sm font-semibold text-white">{item.value}%</p>
+                    </div>
+                    <div className="h-2.5 rounded-full bg-white/10 overflow-hidden">
+                      <div className={`h-full rounded-full bg-gradient-to-r ${item.color}`} style={{ width: `${item.value}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 p-4 rounded-xl border border-white/10 bg-[#0a0a0f]/65 flex items-start gap-3">
+                <Sparkles className="w-5 h-5 text-[#fbbf24] mt-0.5" />
+                <p className="text-sm text-gray-300">
+                  This week your content engagement is up by <span className="text-[#67e8f9] font-semibold">14.2%</span>.
+                  Publish one long-form post to push your discovery score above 90%.
+                </p>
+              </div>
+            </div>
+
+            <div className="card-premium p-6 md:p-7">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-white">Recent Activity</h2>
+                <Users className="w-5 h-5 text-[#60a5fa]" />
+              </div>
+              <div className="space-y-4">
+                {activity.map((entry) => (
+                  <div key={entry.title + entry.time} className="flex items-start gap-3">
+                    <span className={`mt-1 inline-flex h-2.5 w-2.5 rounded-full ${entry.dotColor}`} />
+                    <div className="min-w-0">
+                      <p className="text-sm text-white font-medium">{entry.title}</p>
+                      <p className="text-xs text-gray-400">{entry.subtitle}</p>
+                    </div>
+                    <p className="text-xs text-gray-500 ml-auto whitespace-nowrap">{entry.time}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[
+              { title: "Upload New Post", description: "Publish article, audio, or media pack to mint.", href: "/upload", icon: Rocket, tone: "text-[#67e8f9]" },
+              { title: "Open Your Gallery", description: "Review active listings and featured showcases.", href: "/gallery", icon: ImageIcon, tone: "text-[#93c5fd]" },
+              { title: "Manage Collections", description: "Track holdings and update pricing instantly.", href: "/my-nfts", icon: Coins, tone: "text-[#fbbf24]" },
+            ].map((action) => (
+              <Link key={action.title} href={action.href} className="card-premium p-6 rounded-2xl group hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-start justify-between">
+                  <action.icon className={`w-6 h-6 ${action.tone}`} />
+                  <ArrowUpRight className="w-4 h-4 text-gray-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                </div>
+                <h3 className="mt-5 text-lg font-semibold text-white">{action.title}</h3>
+                <p className="mt-2 text-sm text-gray-400 leading-relaxed">{action.description}</p>
+              </Link>
+            ))}
+          </section>
         </div>
       </main>
     </>

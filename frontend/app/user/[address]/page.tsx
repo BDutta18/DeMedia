@@ -120,7 +120,14 @@ export default function UserProfilePage() {
               {/* Avatar */}
               <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-blue-500/30 shadow-2xl flex-shrink-0">
                 {user.avatar ? (
-                  <img src={user.avatar || "/placeholder.svg"} alt={user.name} className="w-full h-full object-cover" />
+                  <img
+                    src={resolveMediaUrl(user.avatar)}
+                    alt={user.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.src = "/placeholder.svg"
+                    }}
+                  />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center text-4xl font-bold text-blue-400">
                     {user.name.charAt(0).toUpperCase()}

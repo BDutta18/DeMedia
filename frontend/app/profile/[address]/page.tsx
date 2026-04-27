@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import ProfileDetail from "./profile-detail"
 import { getBackendApiBaseUrl } from "@/lib/backend-url"
+import { resolveMediaUrl } from "@/lib/media"
 
 interface PageProps {
   params: Promise<{ address: string }>
@@ -26,14 +27,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       openGraph: {
         title: data.user.name || "Creator Profile",
         description: data.user.bio || "View this creator's NFT collection on DeMedia",
-        images: data.user.avatar ? [data.user.avatar] : [],
+        images: data.user.avatar ? [resolveMediaUrl(data.user.avatar)] : [],
         type: "profile",
       },
       twitter: {
         card: "summary",
         title: data.user.name || "Creator Profile",
         description: data.user.bio,
-        images: data.user.avatar ? [data.user.avatar] : [],
+        images: data.user.avatar ? [resolveMediaUrl(data.user.avatar)] : [],
       },
     }
   } catch (error) {

@@ -10,6 +10,10 @@ export const resolveMediaUrl = (value?: string | null, fallback: string = DEFAUL
   const raw = value.trim()
   if (!raw) return fallback
 
+  if (raw.startsWith("data:") || raw.startsWith("blob:")) {
+    return raw
+  }
+
   const maybeHostPath = raw.match(/^([a-z0-9.-]+\.[a-z]{2,})(\/.+)?$/i)
   const normalized = raw.startsWith("//")
     ? `https:${raw}`

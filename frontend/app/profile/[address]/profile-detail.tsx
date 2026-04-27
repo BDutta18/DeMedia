@@ -161,9 +161,12 @@ export default function ProfileDetail({ address }: { address: string }) {
                 <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-4xl font-bold text-white shadow-2xl">
                   {user.avatar ? (
                     <img
-                      src={user.avatar || "/placeholder.svg"}
+                      src={resolveMediaUrl(user.avatar)}
                       alt={user.name}
                       className="w-full h-full rounded-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = "/placeholder.svg"
+                      }}
                     />
                   ) : (
                     user.name?.[0] || "?"
