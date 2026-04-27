@@ -33,9 +33,6 @@ https://www.youtube.com/watch?v=hcs871xpv-E
 ### 4. Wallet - Digital Vault
 ![Wallet Digital Vault](docs/screenshots/wallet-vault.png)
 
-# Mobile Responsive:
-<img width="654" height="1280" alt="image" src="https://github.com/user-attachments/assets/224bd3b1-d17d-44cb-852c-2e6b3ac1a614" />
-
 ## What Is Fully Integrated Now
 
 - One upload action now runs a complete backend pipeline:
