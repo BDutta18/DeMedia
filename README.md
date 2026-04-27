@@ -1,3 +1,13 @@
+<p align="center">
+  <img src="frontend/public/demedia-logo.svg" alt="DeMedia Logo" width="120" />
+</p>
+
+<h1 align="center">DeMedia</h1>
+
+<p align="center">
+  Decentralized Publishing for the Creator Economy
+</p>
+
 # DeMedia - Decentralized Media Content Platform on Stellar
 
 DeMedia is a decentralized media content platform built on the Stellar testnet with Soroban smart contracts.
