@@ -14,6 +14,7 @@ https://www.youtube.com/watch?v=hcs871xpv-E
 - Live demo: https://de-media-xi.vercel.app/
 - Demo video (full MVP): https://www.youtube.com/watch?v=hcs871xpv-E
 - User feedback document: https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit?gid=1205493588#gid=1205493588
+- Google Form link: https://docs.google.com/forms/d/e/1FAIpQLSenLrFe8At5Vp8OUpLxGLAfRUHtRpnFHDhPhhjVNWokwEAIsg/viewform?usp=sharing&ouid=106184899408053478392
 
 ### User Wallet Addresses (5+)
 
@@ -25,15 +26,50 @@ Verifiable user wallet addresses (check each on Stellar Expert testnet):
 4. `GCC6OFBPL43QGAJLJDQIMKHA7MS7KPH3PJKABRDIAMW7MVTPDNCFKF6F`
 5. `GBVWV4DVBRTQ2Y3FHIQW7AN25FQDTYRFCI5BRIYFVY2SVVZZ3VFIK5CD`
 
-### User Feedback (Without Timestamp)
+### User Feedback (Compact)
 
-| Name | Stellar Wallet Address | Overall Satisfaction (v1) | Most Used Features | Performance (Speed/Stability) | Bugs/Crashes Encountered | Bug Bounty Feedback | Email |
-| :--- | :--- | :---: | :--- | :---: | :--- | :--- | :--- |
-| DEBASMIT BOSE | GDBMOOICQXCNUTYH7XFZ2XCGR7GYLG5UKHG5VRMWEL3YZ255LXBHMV6L | 4 | Content Feed/Discovery, Content Creation/Uploading, Settings/Configuration | 4 | No, rarely or never | the search option could be at the top of the list since that js something most users u suppose would do. Also sorting of the nfts would be a great lift | debasmitbos22@gmail.com |
-| Shivanjan Saha | GBRVG3Q65COSUGCQJFASYSF6BGOTA4FGWM33AAFSZWWB3PL3J2HV3GS5 | 4 | Content Creation/Uploading | 3 | Yes, occasionally | While uploading a document the preview is not showing and sometimes lagging | shivanjan2004@gmail.com |
-| Rupam Ghosh | GAJDI3UZB2JGUCDDHBUQKLXYI5336YSAUIP3SKIM5MZXXHIC3IS2NK46 | 5 | Content Feed/Discovery, User Profile Management, Content Creation/Uploading, User Experience, Settings/Configuration | 5 | No, rarely or never | Every feature properly working. I don't found any bugs | rupamgh32@gmail.com |
-| Himangshu Sharma | GCC6OFBPL43QGAJLJDQIMKHA7MS7KPH3PJKABRDIAMW7MVTPDNCFKF6F | 4 | User Experience | 3 | Yes, occasionally | Profile Picture is not showing as of now and after uploading the documents we can't preview | sharmahimangshu17@gmail.com |
-| Ruma Dey | GBVWV4DVBRTQ2Y3FHIQW7AN25FQDTYRFCI5BRIYFVY2SVVZZ3VFIK5CD | 4 | Content Feed/Discovery, Content Creation/Uploading, User Experience | 4 | No, rarely or never | When Uploading Document the preview is not showing in the gallery. | anonymousdark35@gmail.com |
+<small>
+
+| User | Wallet (Short) | Sat. | Perf. | Bugs | Key Feedback |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| Debasmit Bose | GDBMOO...MV6L | 4 | 4 | No | Prioritize search at top; add NFT sorting. |
+| Shivanjan Saha | GBRVG3...3GS5 | 4 | 3 | Yes | Document preview fails after upload; occasional lag. |
+| Rupam Ghosh | GAJDI3...NK46 | 5 | 5 | No | Core features working well. |
+| Himangshu Sharma | GCC6OF...KF6F | 4 | 3 | Yes | Profile picture visibility issue; no document preview. |
+| Ruma Dey | GBVWV4...K5CD | 4 | 4 | No | Document preview not visible in gallery. |
+
+</small>
+
+Feedback source (full responses):  
+https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit?gid=1205493588#gid=1205493588
+
+## Next Phase Improvement Plan (Based on User Feedback)
+
+Git commit link for implemented feedback fix (document upload preview):
+- https://github.com/BDutta18/DeMedia/commit/785c6f014f80aa9512fe87598547bdaf282d3310
+
+Planned improvements for Version 2:
+
+1. Upload + Gallery Reliability
+- Add backend-stored media type (`image/video/audio/document`) at upload time so preview rendering never depends on extension guessing.
+- Add preview smoke tests for all upload types (image, PDF/document, audio, video) before release.
+- Add retry + progressive loading UI for large uploads to reduce perceived lag during minting.
+
+2. Profile Media Stability
+- Add stronger avatar URL fallback and cache-busting for profile image refresh after updates.
+- Add a small profile integrity check that verifies avatar and user metadata links are resolvable.
+
+3. Discovery UX Upgrades
+- Move search to a top-priority position across content screens as requested by users.
+- Add sort controls (`Newest`, `Oldest`, `Most Viewed`, `Recently Minted`) for easier NFT browsing.
+
+4. Performance and Observability
+- Add client-side performance instrumentation for upload, preview render, and gallery load times.
+- Track error-rate metrics for preview failures and failed media fetches, then alert on regressions.
+
+5. Feedback Loop Process
+- Keep a rolling feedback table per release cycle and map each issue to status (`Planned`, `In Progress`, `Done`).
+- Publish changelog entries that explicitly reference resolved user-reported bugs.
 
 ## UI Screenshots
 
