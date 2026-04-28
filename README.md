@@ -19,12 +19,22 @@ https://de-media-xi.vercel.app/
 # Demo Video :
 https://www.youtube.com/watch?v=hcs871xpv-E
 
-## Required Submission Links
+## UI Screenshots
 
-- Live demo: https://de-media-xi.vercel.app/
-- Demo video (full MVP): https://www.youtube.com/watch?v=hcs871xpv-E
-- User feedback document: https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit?gid=1205493588#gid=1205493588
-- Google Form link: https://docs.google.com/forms/d/e/1FAIpQLSenLrFe8At5Vp8OUpLxGLAfRUHtRpnFHDhPhhjVNWokwEAIsg/viewform?usp=sharing&ouid=106184899408053478392
+### 1. Landing Page - Hero Section
+![Landing Page Hero](docs/screenshots/homepage-hero.png)
+
+### 2. Dashboard - Creator Overview
+![Dashboard Overview](docs/screenshots/dashboard-overview.png)
+
+### 3. Gallery - NFT Grid View
+![Gallery Grid](docs/screenshots/gallery-grid.png)
+
+### 4. Wallet - Digital Vault
+![Wallet Digital Vault](docs/screenshots/wallet-vault.png)
+
+### 5. Mobile Responsive View
+![Mobile Responsive View](docs/screenshots/mobile-responsive.png)
 
 ### User Wallet Addresses
 
@@ -124,22 +134,12 @@ Planned improvements for Version 2:
 - Keep a rolling feedback table per release cycle and map each issue to status (`Planned`, `In Progress`, `Done`).
 - Publish changelog entries that explicitly reference resolved user-reported bugs.
 
-## UI Screenshots
+## Required Submission Links
 
-### 1. Landing Page - Hero Section
-![Landing Page Hero](docs/screenshots/homepage-hero.png)
-
-### 2. Dashboard - Creator Overview
-![Dashboard Overview](docs/screenshots/dashboard-overview.png)
-
-### 3. Gallery - NFT Grid View
-![Gallery Grid](docs/screenshots/gallery-grid.png)
-
-### 4. Wallet - Digital Vault
-![Wallet Digital Vault](docs/screenshots/wallet-vault.png)
-
-### 5. Mobile Responsive View
-![Mobile Responsive View](docs/screenshots/mobile-responsive.png)
+- Live demo: https://de-media-xi.vercel.app/
+- Demo video (full MVP): https://www.youtube.com/watch?v=hcs871xpv-E
+- User feedback document: https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit?gid=1205493588#gid=1205493588
+- Google Form link: https://docs.google.com/forms/d/e/1FAIpQLSenLrFe8At5Vp8OUpLxGLAfRUHtRpnFHDhPhhjVNWokwEAIsg/viewform?usp=sharing&ouid=106184899408053478392
 
 ## What Is Fully Integrated Now
 
