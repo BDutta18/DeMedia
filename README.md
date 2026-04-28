@@ -13,10 +13,10 @@
 DeMedia is a decentralized media content platform built on the Stellar testnet with Soroban smart contracts.
 Creators can upload media, register its fingerprint on-chain, mint NFTs, and manage content ownership with wallet-based auth.
 
-# Deployed Link:
+## Deployed Link
 https://de-media-xi.vercel.app/
 
-# Demo Video :
+## Demo Video
 https://www.youtube.com/watch?v=hcs871xpv-E
 
 ## UI Screenshots
@@ -34,7 +34,7 @@ https://www.youtube.com/watch?v=hcs871xpv-E
 ![Wallet Digital Vault](docs/screenshots/wallet-vault.png)
 
 ### 5. Mobile Responsive View
-![Mobile Responsive View](docs/screenshots/mobile-responsive.png)
+<img width="671" height="1280" alt="Mobile Responsive View" src="https://github.com/user-attachments/assets/a82ad326-d3dd-4dee-bc60-d491b91492f5" />
 
 ### User Wallet Addresses
 
@@ -196,7 +196,6 @@ Planned improvements for Version 2:
   - `frontend/app/content/page.tsx`
   - `frontend/app/my-nfts/page.tsx`
   - `frontend/app/post/[id]/post-detail.tsx`
-- 
 
 ### Belt 4 (current implemented scope)
 
