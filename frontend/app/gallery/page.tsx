@@ -4,7 +4,7 @@ import type React from "react"
 import { useRouter } from "next/navigation"
 
 import { useState, useEffect, useRef } from "react"
-import { ExternalLink, Heart, Share2 } from "lucide-react"
+import { ExternalLink, Heart, Share2, FileText } from "lucide-react"
 import FuturisticNavbar from "@/components/futuristic-navbar"
 import ParallaxOrbBackground from "@/components/parallax-orb-background"
 import { resolveMediaUrl } from "@/lib/media"
@@ -23,10 +23,13 @@ interface NFT {
   artistName?: string
 }
 
+type MediaKind = "image" | "video" | "audio" | "document"
+
 export default function GalleryPage() {
   const [nfts, setNfts] = useState<NFT[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null)
+  const [mediaKindById, setMediaKindById] = useState<Record<string, MediaKind>>({})
   const cardsRef = useRef<(HTMLDivElement | null)[]>([])
   const router = useRouter()
 
@@ -80,6 +83,108 @@ export default function GalleryPage() {
 
     fetchNFTs()
   }, [])
+
+  useEffect(() => {
+    const inferFromUrl = (url: string): MediaKind => {
+      const value = url.toLowerCase()
+      if (value.includes(".mp4") || value.includes(".webm") || value.includes(".mov") || value.includes(".mkv")) return "video"
+      if (value.includes(".mp3") || value.includes(".wav") || value.includes(".ogg") || value.includes(".m4a")) return "audio"
+      if (value.includes(".pdf") || value.includes(".doc") || value.includes(".docx") || value.includes(".txt")) return "document"
+      return "image"
+    }
+
+    const inferFromContentType = (contentType: string): MediaKind => {
+      const ct = contentType.toLowerCase()
+      if (ct.includes("video/")) return "video"
+      if (ct.includes("audio/")) return "audio"
+      if (ct.includes("application/pdf") || ct.includes("application/msword") || ct.includes("application/vnd.openxmlformats-officedocument")) {
+        return "document"
+      }
+      return "image"
+    }
+
+    const detectMediaKinds = async () => {
+      if (!nfts.length) return
+
+      const entries = await Promise.all(
+        nfts.map(async (nft) => {
+          const mediaUrl = resolveMediaUrl(nft.imageURL)
+          const inferred = inferFromUrl(mediaUrl)
+
+          // Only probe when URL inference is uncertain (likely image by default).
+          if (inferred !== "image") return [nft._id, inferred] as const
+
+          try {
+            const response = await fetch(mediaUrl, { method: "HEAD" })
+            const contentType = response.headers.get("content-type")
+            if (contentType) return [nft._id, inferFromContentType(contentType)] as const
+          } catch {
+            // Fall back to image rendering when probing fails.
+          }
+
+          return [nft._id, inferred] as const
+        }),
+      )
+
+      setMediaKindById(Object.fromEntries(entries))
+    }
+
+    detectMediaKinds()
+  }, [nfts])
+
+  const renderMediaPreview = (nft: NFT, mode: "card" | "modal") => {
+    const mediaUrl = resolveMediaUrl(nft.imageURL)
+    const mediaKind = mediaKindById[nft._id] || "image"
+    const isCard = mode === "card"
+    const mediaClass = isCard ? "w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" : "w-full h-full object-cover"
+
+    if (mediaKind === "video") {
+      return <video src={mediaUrl} className={mediaClass} muted playsInline controls={!isCard} />
+    }
+
+    if (mediaKind === "audio") {
+      return (
+        <div className="w-full h-full bg-gradient-to-br from-slate-900 to-slate-700 flex items-center justify-center p-6">
+          <audio src={mediaUrl} controls className="w-full" />
+        </div>
+      )
+    }
+
+    if (mediaKind === "document") {
+      return (
+        <div className="w-full h-full bg-slate-950/80 flex flex-col items-center justify-center gap-3 p-4">
+          <FileText className="w-12 h-12 text-blue-400" />
+          <span className="text-sm text-gray-300 text-center">Document uploaded</span>
+          <a
+            href={mediaUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-cyan-400 hover:underline"
+            onClick={(e) => e.stopPropagation()}
+          >
+            Open document
+          </a>
+        </div>
+      )
+    }
+
+    return (
+      <img
+        src={mediaUrl}
+        alt={nft.name}
+        className={mediaClass}
+        onError={(e) => {
+          // If an item fails to render as image (common for docs without file extension),
+          // force this NFT into document preview mode.
+          if (mediaKindById[nft._id] !== "document") {
+            setMediaKindById((prev) => ({ ...prev, [nft._id]: "document" }))
+            return
+          }
+          e.currentTarget.src = "/placeholder.svg"
+        }}
+      />
+    )
+  }
 
   // Intersection Observer for entrance animations
   useEffect(() => {
@@ -200,14 +305,7 @@ export default function GalleryPage() {
                     <div className="relative">
                       {/* Image */}
                       <div className="relative aspect-square rounded-2xl overflow-hidden mb-4 shadow-2xl">
-                        <img
-                          src={resolveMediaUrl(nft.imageURL)}
-                          alt={nft.name}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                          onError={(e) => {
-                            e.currentTarget.src = "/placeholder.svg"
-                          }}
-                        />
+                        {renderMediaPreview(nft, "card")}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </div>
 
@@ -286,15 +384,7 @@ export default function GalleryPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Image */}
               <div className="relative aspect-square rounded-2xl overflow-hidden shadow-2xl">
-                <img
-                  src={resolveMediaUrl(selectedNFT.imageURL)}
-                  alt={selectedNFT.name}
-                  className="w-full h-full object-cover"
-                  style={{ animation: "subtle-rotate 20s linear infinite" }}
-                  onError={(e) => {
-                    e.currentTarget.src = "/placeholder.svg"
-                  }}
-                />
+                {renderMediaPreview(selectedNFT, "modal")}
               </div>
 
               {/* Details */}

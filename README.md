@@ -1,13 +1,3 @@
-<p align="center">
-  <img src="frontend/public/demedia-logo.svg" alt="DeMedia Logo" width="120" />
-</p>
-
-<h1 align="center">DeMedia</h1>
-
-<p align="center">
-  Decentralized Publishing for the Creator Economy
-</p>
-
 # DeMedia - Decentralized Media Content Platform on Stellar
 
 DeMedia is a decentralized media content platform built on the Stellar testnet with Soroban smart contracts.
@@ -18,6 +8,32 @@ https://de-media-xi.vercel.app/
 
 # Demo Video :
 https://www.youtube.com/watch?v=hcs871xpv-E
+
+## Required Submission Links
+
+- Live demo: https://de-media-xi.vercel.app/
+- Demo video (full MVP): https://www.youtube.com/watch?v=hcs871xpv-E
+- User feedback document: https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit?gid=1205493588#gid=1205493588
+
+### User Wallet Addresses (5+)
+
+Verifiable user wallet addresses (check each on Stellar Expert testnet):
+
+1. `GDBMOOICQXCNUTYH7XFZ2XCGR7GYLG5UKHG5VRMWEL3YZ255LXBHMV6L`
+2. `GBRVG3Q65COSUGCQJFASYSF6BGOTA4FGWM33AAFSZWWB3PL3J2HV3GS5`
+3. `GAJDI3UZB2JGUCDDHBUQKLXYI5336YSAUIP3SKIM5MZXXHIC3IS2NK46`
+4. `GCC6OFBPL43QGAJLJDQIMKHA7MS7KPH3PJKABRDIAMW7MVTPDNCFKF6F`
+5. `GBVWV4DVBRTQ2Y3FHIQW7AN25FQDTYRFCI5BRIYFVY2SVVZZ3VFIK5CD`
+
+### User Feedback (Without Timestamp)
+
+| Name | Stellar Wallet Address | Overall Satisfaction (v1) | Most Used Features | Performance (Speed/Stability) | Bugs/Crashes Encountered | Bug Bounty Feedback | Email |
+| :--- | :--- | :---: | :--- | :---: | :--- | :--- | :--- |
+| DEBASMIT BOSE | GDBMOOICQXCNUTYH7XFZ2XCGR7GYLG5UKHG5VRMWEL3YZ255LXBHMV6L | 4 | Content Feed/Discovery, Content Creation/Uploading, Settings/Configuration | 4 | No, rarely or never | the search option could be at the top of the list since that js something most users u suppose would do. Also sorting of the nfts would be a great lift | debasmitbos22@gmail.com |
+| Shivanjan Saha | GBRVG3Q65COSUGCQJFASYSF6BGOTA4FGWM33AAFSZWWB3PL3J2HV3GS5 | 4 | Content Creation/Uploading | 3 | Yes, occasionally | While uploading a document the preview is not showing and sometimes lagging | shivanjan2004@gmail.com |
+| Rupam Ghosh | GAJDI3UZB2JGUCDDHBUQKLXYI5336YSAUIP3SKIM5MZXXHIC3IS2NK46 | 5 | Content Feed/Discovery, User Profile Management, Content Creation/Uploading, User Experience, Settings/Configuration | 5 | No, rarely or never | Every feature properly working. I don't found any bugs | rupamgh32@gmail.com |
+| Himangshu Sharma | GCC6OFBPL43QGAJLJDQIMKHA7MS7KPH3PJKABRDIAMW7MVTPDNCFKF6F | 4 | User Experience | 3 | Yes, occasionally | Profile Picture is not showing as of now and after uploading the documents we can't preview | sharmahimangshu17@gmail.com |
+| Ruma Dey | GBVWV4DVBRTQ2Y3FHIQW7AN25FQDTYRFCI5BRIYFVY2SVVZZ3VFIK5CD | 4 | Content Feed/Discovery, Content Creation/Uploading, User Experience | 4 | No, rarely or never | When Uploading Document the preview is not showing in the gallery. | anonymousdark35@gmail.com |
 
 ## UI Screenshots
 
@@ -32,9 +48,6 @@ https://www.youtube.com/watch?v=hcs871xpv-E
 
 ### 4. Wallet - Digital Vault
 ![Wallet Digital Vault](docs/screenshots/wallet-vault.png)
-
-# Mobile Responsive:
-<img width="654" height="1280" alt="image" src="https://github.com/user-attachments/assets/224bd3b1-d17d-44cb-852c-2e6b3ac1a614" />
 
 ## What Is Fully Integrated Now
 

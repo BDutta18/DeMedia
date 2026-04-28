@@ -22,6 +22,8 @@ interface NFT {
   updatedAt: string
 }
 
+type MediaKind = "image" | "video" | "audio" | "document"
+
 export default function ContentLibraryPage() {
   const { isAuthenticated } = useAuth()
   const router = useRouter()
@@ -31,6 +33,56 @@ export default function ContentLibraryPage() {
   const [nfts, setNfts] = useState<NFT[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
+  const [mediaKindById, setMediaKindById] = useState<Record<string, MediaKind>>({})
+
+  const inferMediaKind = (url: string): MediaKind => {
+    const value = url.toLowerCase()
+    if (value.includes(".mp4") || value.includes(".webm") || value.includes(".mov") || value.includes(".mkv")) return "video"
+    if (value.includes(".mp3") || value.includes(".wav") || value.includes(".ogg") || value.includes(".m4a")) return "audio"
+    if (value.includes(".pdf") || value.includes(".doc") || value.includes(".docx") || value.includes(".txt")) return "document"
+    return "image"
+  }
+
+  const renderNftMedia = (nft: NFT, compact = false) => {
+    const mediaUrl = resolveMediaUrl(nft.imageURL)
+    const mediaKind = mediaKindById[nft._id] || inferMediaKind(mediaUrl)
+
+    if (mediaKind === "document") {
+      return (
+        <div className="w-full h-full bg-slate-950/80 flex flex-col items-center justify-center gap-2 p-3">
+          <FileText className={compact ? "w-6 h-6 text-blue-400" : "w-10 h-10 text-blue-400"} />
+          {!compact && <span className="text-xs text-gray-300">Document uploaded</span>}
+        </div>
+      )
+    }
+
+    if (mediaKind === "video") {
+      return <video src={mediaUrl} className="w-full h-full object-cover" muted playsInline controls={!compact} />
+    }
+
+    if (mediaKind === "audio") {
+      return (
+        <div className="w-full h-full bg-slate-950/80 flex items-center justify-center p-3">
+          <FileText className={compact ? "w-6 h-6 text-blue-400" : "w-10 h-10 text-blue-400"} />
+        </div>
+      )
+    }
+
+    return (
+      <img
+        src={mediaUrl}
+        alt={nft.name}
+        className="w-full h-full object-cover"
+        onError={(e) => {
+          if (mediaKindById[nft._id] !== "document") {
+            setMediaKindById((prev) => ({ ...prev, [nft._id]: "document" }))
+            return
+          }
+          e.currentTarget.src = "/placeholder.svg"
+        }}
+      />
+    )
+  }
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -365,14 +417,9 @@ export default function ContentLibraryPage() {
                           background: `linear-gradient(135deg, ${color}30 0%, ${color}10 100%)`,
                         }}
                       >
-                        <img
-                          src={resolveMediaUrl(nft.imageURL)}
-                          alt={nft.name}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                          onError={(e) => {
-                            e.currentTarget.src = "/placeholder.svg"
-                          }}
-                        />
+                        <div className="w-full h-full transition-transform duration-700 group-hover:scale-110">
+                          {renderNftMedia(nft)}
+                        </div>
 
                         <div
                           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
@@ -548,14 +595,7 @@ export default function ContentLibraryPage() {
                           border: `3px solid ${color}`,
                         }}
                       >
-                        <img
-                          src={resolveMediaUrl(nft.imageURL)}
-                          alt={nft.name}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.currentTarget.src = "/placeholder.svg"
-                          }}
-                        />
+                        {renderNftMedia(nft, true)}
                       </div>
 
                       <div
