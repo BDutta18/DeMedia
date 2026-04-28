@@ -26,7 +26,7 @@ https://www.youtube.com/watch?v=hcs871xpv-E
 - User feedback document: https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit?gid=1205493588#gid=1205493588
 - Google Form link: https://docs.google.com/forms/d/e/1FAIpQLSenLrFe8At5Vp8OUpLxGLAfRUHtRpnFHDhPhhjVNWokwEAIsg/viewform?usp=sharing&ouid=106184899408053478392
 
-### User Wallet Addresses (5+)
+### User Wallet Addresses
 
 Verifiable user wallet addresses (check each on Stellar Expert testnet):
 
