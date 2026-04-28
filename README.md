@@ -139,7 +139,8 @@ Planned improvements for Version 2:
 ![Wallet Digital Vault](docs/screenshots/wallet-vault.png)
 
 ### 5. Mobile Responsive View
-![Mobile Responsive View](docs/screenshots/mobile-responsive.png)
+<img width="671" height="1280" alt="image" src="https://github.com/user-attachments/assets/a82ad326-d3dd-4dee-bc60-d491b91492f5" />
+
 
 ## What Is Fully Integrated Now
 
