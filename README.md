@@ -25,7 +25,7 @@ Verifiable user wallet addresses (check each on Stellar Expert testnet):
 4. `GCC6OFBPL43QGAJLJDQIMKHA7MS7KPH3PJKABRDIAMW7MVTPDNCFKF6F`
 5. `GBVWV4DVBRTQ2Y3FHIQW7AN25FQDTYRFCI5BRIYFVY2SVVZZ3VFIK5CD`
 
-### User Feedback (Without Timestamp)
+### User Feedback
 
 | Name | Stellar Wallet Address | Overall Satisfaction (v1) | Most Used Features | Performance (Speed/Stability) | Bugs/Crashes Encountered | Bug Bounty Feedback | Email |
 | :--- | :--- | :---: | :--- | :---: | :--- | :--- | :--- |
