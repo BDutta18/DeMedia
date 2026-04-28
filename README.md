@@ -1,3 +1,13 @@
+<p align="center">
+  <img src="frontend/public/demedia-logo.svg" alt="DeMedia Logo" width="120" />
+</p>
+
+<h1 align="center">DeMedia</h1>
+
+<p align="center">
+  Decentralized Publishing for the Creator Economy
+</p>
+
 # DeMedia - Decentralized Media Content Platform on Stellar
 
 DeMedia is a decentralized media content platform built on the Stellar testnet with Soroban smart contracts.
@@ -26,21 +36,17 @@ Verifiable user wallet addresses (check each on Stellar Expert testnet):
 4. `GCC6OFBPL43QGAJLJDQIMKHA7MS7KPH3PJKABRDIAMW7MVTPDNCFKF6F`
 5. `GBVWV4DVBRTQ2Y3FHIQW7AN25FQDTYRFCI5BRIYFVY2SVVZZ3VFIK5CD`
 
-### User Feedback (Compact)
+### User Feedback (Actual Spreadsheet Responses)
 
-<small>
+| Name | Stellar Wallet Address (Full) | Actual Feedback Response |
+| :--- | :--- | :--- |
+| DEBASMIT BOSE | GDBMOOICQXCNUTYH7XFZ2XCGR7GYLG5UKHG5VRMWEL3YZ255LXBHMV6L | the search option could be at the top of the list since that js something most users u suppose would do. Also sorting of the nfts would be a great lift |
+| Shivanjan Saha | GBRVG3Q65COSUGCQJFASYSF6BGOTA4FGWM33AAFSZWWB3PL3J2HV3GS5 | While uploading a document the preview is not showing and sometimes lagging |
+| Rupam Ghosh | GAJDI3UZB2JGUCDDHBUQKLXYI5336YSAUIP3SKIM5MZXXHIC3IS2NK46 | Every feature properly working I don't found any bugs |
+| Himangshu Sharma | GCC6OFBPL43QGAJLJDQIMKHA7MS7KPH3PJKABRDIAMW7MVTPDNCFKF6F | Profile Picture is not showing as of now and after uploading the documents we can't preview |
+| Ruma Dey | GBVWV4DVBRTQ2Y3FHIQW7AN25FQDTYRFCI5BRIYFVY2SVVZZ3VFIK5CD | When Uploading Document the preview is not showing in the gallery. |
 
-| User | Wallet (Short) | Sat. | Perf. | Bugs | Key Feedback |
-| :--- | :--- | :---: | :---: | :---: | :--- |
-| Debasmit Bose | GDBMOO...MV6L | 4 | 4 | No | Prioritize search at top; add NFT sorting. |
-| Shivanjan Saha | GBRVG3...3GS5 | 4 | 3 | Yes | Document preview fails after upload; occasional lag. |
-| Rupam Ghosh | GAJDI3...NK46 | 5 | 5 | No | Core features working well. |
-| Himangshu Sharma | GCC6OF...KF6F | 4 | 3 | Yes | Profile picture visibility issue; no document preview. |
-| Ruma Dey | GBVWV4...K5CD | 4 | 4 | No | Document preview not visible in gallery. |
-
-</small>
-
-Feedback source (full responses):  
+Feedback source:
 https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit?gid=1205493588#gid=1205493588
 
 ## Next Phase Improvement Plan (Based on User Feedback)
