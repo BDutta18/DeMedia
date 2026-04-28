@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: zyncit-backend
+    name: demedia-backend
     runtime: node
     rootDir: backend
     buildCommand: npm install && npm run build
