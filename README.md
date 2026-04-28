@@ -38,13 +38,57 @@ Verifiable user wallet addresses (check each on Stellar Expert testnet):
 
 ### User Feedback (Actual Spreadsheet Responses)
 
-| Name | Stellar Wallet Address (Full) | Actual Feedback Response |
-| :--- | :--- | :--- |
-| DEBASMIT BOSE | GDBMOOICQXCNUTYH7XFZ2XCGR7GYLG5UKHG5VRMWEL3YZ255LXBHMV6L | the search option could be at the top of the list since that js something most users u suppose would do. Also sorting of the nfts would be a great lift |
-| Shivanjan Saha | GBRVG3Q65COSUGCQJFASYSF6BGOTA4FGWM33AAFSZWWB3PL3J2HV3GS5 | While uploading a document the preview is not showing and sometimes lagging |
-| Rupam Ghosh | GAJDI3UZB2JGUCDDHBUQKLXYI5336YSAUIP3SKIM5MZXXHIC3IS2NK46 | Every feature properly working I don't found any bugs |
-| Himangshu Sharma | GCC6OFBPL43QGAJLJDQIMKHA7MS7KPH3PJKABRDIAMW7MVTPDNCFKF6F | Profile Picture is not showing as of now and after uploading the documents we can't preview |
-| Ruma Dey | GBVWV4DVBRTQ2Y3FHIQW7AN25FQDTYRFCI5BRIYFVY2SVVZZ3VFIK5CD | When Uploading Document the preview is not showing in the gallery. |
+<table width="100%">
+  <thead>
+    <tr>
+      <th width="20%">Name</th>
+      <th width="38%">Stellar Wallet Address (Full)</th>
+      <th width="42%">Actual Feedback Response</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><sub>DEBASMIT BOSE</sub></td>
+      <td><sub>GDBMOOICQXCNUTYH7XFZ2XCGR7GYLG5UKHG5VRMWEL3YZ255LXBHMV6L</sub></td>
+      <td><sub>the search option could be at the top of the list since that js something most users u suppose would do. Also sorting of the nfts would be a great lift</sub></td>
+    </tr>
+    <tr>
+      <td><sub>Shivanjan Saha</sub></td>
+      <td><sub>GBRVG3Q65COSUGCQJFASYSF6BGOTA4FGWM33AAFSZWWB3PL3J2HV3GS5</sub></td>
+      <td><sub>While uploading a document the preview is not showing and sometimes lagging</sub></td>
+    </tr>
+    <tr>
+      <td><sub>Rupam Ghosh</sub></td>
+      <td><sub>GAJDI3UZB2JGUCDDHBUQKLXYI5336YSAUIP3SKIM5MZXXHIC3IS2NK46</sub></td>
+      <td><sub>Every feature properly working I don't found any bugs</sub></td>
+    </tr>
+    <tr>
+      <td><sub>Himangshu Sharma</sub></td>
+      <td><sub>GCC6OFBPL43QGAJLJDQIMKHA7MS7KPH3PJKABRDIAMW7MVTPDNCFKF6F</sub></td>
+      <td><sub>Profile Picture is not showing as of now and after uploading the documents we can't preview</sub></td>
+    </tr>
+    <tr>
+      <td><sub>Ruma Dey</sub></td>
+      <td><sub>GBVWV4DVBRTQ2Y3FHIQW7AN25FQDTYRFCI5BRIYFVY2SVVZZ3VFIK5CD</sub></td>
+      <td><sub>When Uploading Document the preview is not showing in the gallery.</sub></td>
+    </tr>
+    <tr>
+      <td><sub>Adrija Hati</sub></td>
+      <td><sub>GBTEUTHKT3ZT6NZI2FCTJCDKM6XH7GHVIU723GTJ4LHQBB4YHX5A6DWM</sub></td>
+      <td><sub>Good</sub></td>
+    </tr>
+    <tr>
+      <td><sub>Swastik Chatterjee</sub></td>
+      <td><sub>GCPMZX4LZHUH73UDTNMAJONJ6IQWA4UOXV3WXGXQSGDDSKGVAMADR7RF</sub></td>
+      <td><sub>Buying NFTs would be a great feature in Version 2</sub></td>
+    </tr>
+    <tr>
+      <td><sub>Samriddha Mukherjee</sub></td>
+      <td><sub>GANGX6WILRGPVTA3PO7JJHEJ3RYSVERIXDAZDY7GKPQ22MBNRGZENTB2</sub></td>
+      <td><sub>Nil</sub></td>
+    </tr>
+  </tbody>
+</table>
 
 Feedback source:
 https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit?gid=1205493588#gid=1205493588
@@ -90,6 +134,9 @@ Planned improvements for Version 2:
 
 ### 4. Wallet - Digital Vault
 ![Wallet Digital Vault](docs/screenshots/wallet-vault.png)
+
+### 5. Mobile Responsive View
+![Mobile Responsive View](docs/screenshots/mobile-responsive.png)
 
 ## What Is Fully Integrated Now
 
@@ -243,6 +290,10 @@ jobs:
       - name: Build contracts
         run: bash scripts/build.sh
 ```
+
+CI/CD Status:
+
+[![CI](https://github.com/BDutta18/DeMedia/actions/workflows/ci.yml/badge.svg)](https://github.com/BDutta18/DeMedia/actions/workflows/ci.yml)
 
 ## Core Architecture
 
