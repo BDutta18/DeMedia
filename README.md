@@ -108,8 +108,12 @@ https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimV
 
 ## Feedback-Driven Update Status (April 30, 2026)
 
-Implemented feedback commit ID (document preview reliability):
-- [`785c6f014f80aa9512fe87598547bdaf282d3310`](https://github.com/BDutta18/DeMedia/commit/785c6f014f80aa9512fe87598547bdaf282d3310)
+Implemented feedback commits:
+1. [`790064e`](https://github.com/BDutta18/DeMedia/commit/790064e) - Changed the UI to production-ready experience.
+2. [`789fce7`](https://github.com/BDutta18/DeMedia/commit/789fce7) - Implemented search-priority update from feedback and synced README/UI updates.
+3. [`785c6f0`](https://github.com/BDutta18/DeMedia/commit/785c6f0) - Document upload/preview fix based on user feedback.
+4. [`291098a`](https://github.com/BDutta18/DeMedia/commit/291098a) - NFT issue fixes related to gallery/content behavior.
+5. [`6b7795d`](https://github.com/BDutta18/DeMedia/commit/6b7795d) - Wallet and NFT reliability fixes.
 
 Feedback to action mapping:
 
@@ -123,7 +127,7 @@ Feedback to action mapping:
 
 3. Document preview not showing / gallery preview issues
 - Status: `In Progress`
-- Update: Existing fix committed in `785c6f...` and additional reliability hardening is ongoing for all media types.
+- Update: Core fix committed in `785c6f0` and additional reliability hardening is ongoing for all media types.
 
 4. Upload lag while handling documents
 - Status: `Planned`
