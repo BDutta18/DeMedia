@@ -25,7 +25,8 @@ Creators can upload media, register its fingerprint on-chain, mint NFTs, and man
 ![Gallery Grid](docs/screenshots/gallery-grid.png)
 
 ### 4. Wallet - Digital Vault
-![Wallet Digital Vault](docs/screenshots/wallet-vault.png)
+<img width="1795" height="785" alt="image" src="https://github.com/user-attachments/assets/4252556d-2ae3-48de-9ac7-6918f0af4a8e" />
+
 
 ### User Details (All 30 Feedback Responses)
 
