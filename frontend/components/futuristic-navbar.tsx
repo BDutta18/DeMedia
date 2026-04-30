@@ -13,28 +13,19 @@ import {
   LogOut,
   UserCircle,
   ImageIcon,
-  Moon,
-  Sun,
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useAuth } from "@/lib/auth-context"
 import { usePathname } from "next/navigation"
-import { useTheme } from "next-themes"
 
 export default function FuturisticNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const [mounted, setMounted] = useState(false)
   const { isAuthenticated, address, logout } = useAuth()
-  const { theme, setTheme } = useTheme()
   const pathname = usePathname()
   const isActivePath = (href: string) =>
     href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,16 +41,14 @@ export default function FuturisticNavbar() {
 
   const navItems = [
     { icon: Home, label: "Home", href: "/" },
+    { icon: Search, label: "Search", href: "/search" },
     { icon: ImageIcon, label: "Gallery", href: "/gallery" },
     { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
     { icon: Library, label: "Content", href: "/content" },
     { icon: Upload, label: "Upload", href: "/upload" },
     { icon: WalletIcon, label: "Wallet", href: "/wallet" },
     { icon: UserCircle, label: "Profile", href: "/profile" },
-    { icon: Search, label: "Search", href: "/search" },
   ]
-
-  const isDark = theme === "dark"
 
   return (
     <>
@@ -96,17 +85,9 @@ export default function FuturisticNavbar() {
           </div>
 
           <div className="hidden items-center gap-3 lg:flex">
-            <button
-              onClick={() => setTheme(isDark ? "light" : "dark")}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-border/70 bg-card"
-              aria-label="Toggle theme"
-            >
-              {mounted && isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </button>
-
             {isAuthenticated ? (
               <>
-                <div className="rounded-xl border border-border/70 bg-card px-3 py-2 text-xs font-mono text-muted-foreground">
+                <div className="rounded-xl border border-emerald-500/35 bg-emerald-500/10 px-3 py-2 text-xs font-mono text-emerald-600 dark:text-emerald-400">
                   {address?.slice(0, 6)}...{address?.slice(-4)}
                 </div>
                 <button
@@ -128,22 +109,13 @@ export default function FuturisticNavbar() {
             )}
           </div>
 
-          <div className="flex items-center gap-2 lg:hidden">
-            <button
-              onClick={() => setTheme(isDark ? "light" : "dark")}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/70 bg-card"
-              aria-label="Toggle theme"
-            >
-              {mounted && isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </button>
-            <button
-              onClick={() => setMobileMenuOpen((v) => !v)}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/70 bg-card"
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
-          </div>
+          <button
+            onClick={() => setMobileMenuOpen((v) => !v)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/70 bg-card lg:hidden"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </nav>
 

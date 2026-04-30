@@ -27,8 +27,15 @@ export default function GalleryPage() {
   const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null)
   const [mediaKindById, setMediaKindById] = useState<Record<string, MediaKind>>({})
   const [query, setQuery] = useState("")
-  const [sortBy, setSortBy] = useState<"newest" | "oldest" | "name">("newest")
+  const [sortBy, setSortBy] = useState<"newest" | "oldest" | "name" | "tokenAsc" | "tokenDesc" | "creator">("newest")
   const router = useRouter()
+  const totalAssets = nfts.length
+  const totalCreators = useMemo(() => new Set(nfts.map((nft) => nft.owner)).size, [nfts])
+  const latestMintedLabel = useMemo(() => {
+    if (!nfts.length) return "N/A"
+    const latestTs = Math.max(...nfts.map((nft) => new Date(nft.createdAt).getTime()))
+    return new Date(latestTs).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })
+  }, [nfts])
 
   useEffect(() => {
     const fetchNFTs = async () => {
@@ -98,7 +105,10 @@ export default function GalleryPage() {
     })
 
     filtered.sort((a, b) => {
+      if (sortBy === "creator") return (a.artistName || "").localeCompare(b.artistName || "")
       if (sortBy === "name") return a.name.localeCompare(b.name)
+      if (sortBy === "tokenAsc") return Number(a.tokenId) - Number(b.tokenId)
+      if (sortBy === "tokenDesc") return Number(b.tokenId) - Number(a.tokenId)
       if (sortBy === "oldest") return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     })
@@ -153,6 +163,14 @@ export default function GalleryPage() {
     )
   }
 
+  const getMediaKindLabel = (nft: NFT) => {
+    const kind = mediaKindById[nft._id] || "image"
+    if (kind === "video") return "Video"
+    if (kind === "audio") return "Audio"
+    if (kind === "document") return "Document"
+    return "Image"
+  }
+
   return (
     <main className="page-shell min-h-screen py-8 sm:py-10">
       <section className="panel-elevated p-6 sm:p-8">
@@ -179,14 +197,32 @@ export default function GalleryPage() {
               <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as "newest" | "oldest" | "name")}
+                onChange={(e) => setSortBy(e.target.value as "newest" | "oldest" | "name" | "tokenAsc" | "tokenDesc" | "creator")}
                 className="bg-transparent py-2.5 text-sm outline-none"
               >
                 <option value="newest">Newest</option>
                 <option value="oldest">Oldest</option>
                 <option value="name">Name A-Z</option>
+                <option value="creator">Creator A-Z</option>
+                <option value="tokenAsc">Token ID Low-High</option>
+                <option value="tokenDesc">Token ID High-Low</option>
               </select>
             </label>
+          </div>
+        </div>
+
+        <div className="mt-5 grid gap-3 sm:grid-cols-3">
+          <div className="rounded-xl border border-border/70 bg-background/70 p-3">
+            <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Assets</p>
+            <p className="mt-1 text-xl font-semibold">{totalAssets}</p>
+          </div>
+          <div className="rounded-xl border border-border/70 bg-background/70 p-3">
+            <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Creators</p>
+            <p className="mt-1 text-xl font-semibold">{totalCreators}</p>
+          </div>
+          <div className="rounded-xl border border-border/70 bg-background/70 p-3">
+            <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Latest Mint</p>
+            <p className="mt-1 text-xl font-semibold">{latestMintedLabel}</p>
           </div>
         </div>
       </section>
@@ -202,10 +238,16 @@ export default function GalleryPage() {
         ) : (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {filteredNFTs.map((nft) => (
-              <article key={nft._id} className="panel overflow-hidden transition hover:bg-secondary/45">
+              <article key={nft._id} className="panel group overflow-hidden transition hover:-translate-y-0.5 hover:bg-secondary/45 hover:shadow-[0_14px_30px_rgba(6,18,35,0.16)]">
                 <button onClick={() => setSelectedNFT(nft)} className="block w-full text-left">
-                  <div className="aspect-square overflow-hidden">
+                  <div className="relative aspect-square overflow-hidden">
                     {renderMediaPreview(nft, "card")}
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-black/60 to-transparent p-3 text-[11px] text-white/95 opacity-90 transition group-hover:opacity-100">
+                      <span className="rounded-full border border-white/25 bg-black/35 px-2 py-0.5 uppercase tracking-[0.08em]">
+                        {getMediaKindLabel(nft)}
+                      </span>
+                      <span className="font-mono">#{nft.tokenId}</span>
+                    </div>
                   </div>
                 </button>
 
@@ -217,7 +259,7 @@ export default function GalleryPage() {
 
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <span className="uppercase tracking-[0.08em]">{nft.artistName}</span>
-                    <span className="font-mono">#{nft.tokenId}</span>
+                    <span>{new Date(nft.createdAt).toLocaleDateString()}</span>
                   </div>
 
                   <div className="flex gap-2">
@@ -274,6 +316,10 @@ export default function GalleryPage() {
                   <div className="rounded-xl border border-border/70 bg-background/80 p-3">
                     <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Token ID</p>
                     <p className="mt-1 font-mono">#{selectedNFT.tokenId}</p>
+                  </div>
+                  <div className="rounded-xl border border-border/70 bg-background/80 p-3">
+                    <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Minted</p>
+                    <p className="mt-1 font-medium">{new Date(selectedNFT.createdAt).toLocaleString()}</p>
                   </div>
                   <div className="rounded-xl border border-border/70 bg-background/80 p-3">
                     <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Transaction</p>

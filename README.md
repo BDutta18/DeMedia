@@ -21,6 +21,19 @@ https://www.youtube.com/watch?v=hcs871xpv-E
 
 ## UI Screenshots
 
+### Latest UI Refresh (New)
+
+### 1. Landing Page - Production Hero (New)
+![Landing Page Hero New](docs/screenshots/homepage-hero-new.png)
+
+### 2. Gallery - Updated Experience (New)
+![Gallery Updated New](docs/screenshots/gallery-grid-new.png)
+
+### 3. Dashboard - Updated Creator Console (New)
+![Dashboard Updated New](docs/screenshots/dashboard-overview-new.png)
+
+### Existing Screens (Previous)
+
 ### 1. Landing Page - Hero Section
 ![Landing Page Hero](docs/screenshots/homepage-hero.png)
 

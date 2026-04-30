@@ -4,7 +4,6 @@ import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { AuthProvider } from "@/lib/auth-context"
 import FuturisticNavbar from "@/components/futuristic-navbar"
-import { ThemeProvider } from "@/components/theme-provider"
 
 export const metadata: Metadata = {
   title: "DeMedia - Decentralized Publishing Platform",
@@ -37,14 +36,12 @@ export default function RootLayout({
   const analyticsEnabled = process.env.NEXT_PUBLIC_ENABLE_VERCEL_ANALYTICS === "true"
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body className="font-sans antialiased">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <AuthProvider>
-            <FuturisticNavbar />
-            {children}
-          </AuthProvider>
-        </ThemeProvider>
+        <AuthProvider>
+          <FuturisticNavbar />
+          {children}
+        </AuthProvider>
         {analyticsEnabled ? <Analytics /> : null}
       </body>
     </html>

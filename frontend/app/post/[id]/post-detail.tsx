@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { ExternalLink, Share2, Heart, ArrowLeft, Check } from "lucide-react"
-import ParallaxOrbBackground from "@/components/parallax-orb-background"
+import { ArrowLeft, Check, ExternalLink, Heart, Share2 } from "lucide-react"
 import { mapWalletError } from "@/lib/errors"
 import { cacheGet, cacheSet } from "@/lib/cache"
 import { resolveMediaUrl } from "@/lib/media"
@@ -39,46 +38,30 @@ export default function PostDetail({ postId }: { postId: string }) {
           setLoading(false)
         }
 
-        console.log("[v0] Fetching NFT with ID:", postId)
         const response = await fetch("/api/nfts/all")
         const data = await response.json()
-        console.log("[v0] All NFTs response:", data)
 
         if (data.success) {
           const found = data.data.find((n: NFT) => n._id === postId)
-          console.log("[v0] Found NFT:", found)
 
           if (found) {
-            // Fetch artist name
             const profileResponse = await fetch(`/api/user/profile/${found.owner}`)
             const profileData = await profileResponse.json()
-            console.log("[v0] Profile data:", profileData)
 
-            setNft({
+            const enriched = {
               ...found,
               artistName:
                 profileData.success && profileData.user?.name
                   ? profileData.user.name
                   : `${found.owner.slice(0, 6)}...${found.owner.slice(-4)}`,
-            })
+            }
 
-            cacheSet(
-              `demedia_cache_nft_${postId}`,
-              {
-                ...found,
-                artistName:
-                  profileData.success && profileData.user?.name
-                    ? profileData.user.name
-                    : `${found.owner.slice(0, 6)}...${found.owner.slice(-4)}`,
-              },
-              60_000,
-            )
-          } else {
-            console.log("[v0] NFT not found with ID:", postId)
+            setNft(enriched)
+            cacheSet(`demedia_cache_nft_${postId}`, enriched, 60_000)
           }
         }
       } catch (error) {
-        console.error("[v0] Failed to fetch NFT:", error)
+        console.error("Failed to fetch NFT:", error)
       } finally {
         setLoading(false)
       }
@@ -87,6 +70,12 @@ export default function PostDetail({ postId }: { postId: string }) {
     fetchNFT()
   }, [postId])
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
   const sharePost = async () => {
     const url = window.location.href
     if (navigator.share) {
@@ -94,20 +83,14 @@ export default function PostDetail({ postId }: { postId: string }) {
         await navigator.share({
           title: nft?.name,
           text: nft?.description,
-          url: url,
+          url,
         })
-      } catch (error) {
+      } catch {
         copyToClipboard(url)
       }
     } else {
       copyToClipboard(url)
     }
-  }
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
   }
 
   const buyNow = async () => {
@@ -129,10 +112,7 @@ export default function PostDetail({ postId }: { postId: string }) {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          tokenId: Number(nft.tokenId),
-          priceInXLM: "1",
-        }),
+        body: JSON.stringify({ tokenId: Number(nft.tokenId), priceInXLM: "1" }),
       })
 
       const data = await response.json()
@@ -167,173 +147,154 @@ export default function PostDetail({ postId }: { postId: string }) {
 
   if (loading) {
     return (
-      <>
-        <ParallaxOrbBackground />        <main className="relative min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-gray-400">Loading NFT...</p>
-          </div>
-        </main>
-      </>
+      <main className="page-shell flex min-h-screen items-center justify-center py-16">
+        <div className="panel-elevated w-full max-w-md p-8 text-center">
+          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-primary/35 border-t-primary" />
+          <p className="mt-4 text-sm text-muted-foreground">Loading post...</p>
+        </div>
+      </main>
     )
   }
 
   if (!nft) {
     return (
-      <>
-        <ParallaxOrbBackground />        <main className="relative min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-white mb-4">Post Not Found</h1>
-            <button
-              onClick={() => router.push("/gallery")}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold hover:scale-105 transition-transform"
-            >
-              Back to Gallery
-            </button>
-          </div>
-        </main>
-      </>
+      <main className="page-shell flex min-h-screen items-center justify-center py-16">
+        <div className="panel-elevated w-full max-w-lg p-8 text-center">
+          <h1 className="font-[family-name:var(--font-display)] text-3xl font-semibold">Post not found</h1>
+          <p className="mt-2 text-sm text-muted-foreground">The requested post may have been removed or has an invalid URL.</p>
+          <button
+            onClick={() => router.push("/gallery")}
+            className="mt-6 inline-flex items-center rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+          >
+            Back to gallery
+          </button>
+        </div>
+      </main>
     )
   }
 
   return (
-    <>
-      <ParallaxOrbBackground />
-      <main className="relative min-h-screen pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Back
-          </button>
+    <main className="page-shell min-h-screen py-8 sm:py-10">
+      <button
+        onClick={() => router.back()}
+        className="mb-5 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back
+      </button>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Image Section */}
-            <div className="relative">
-              <div className="sticky top-32">
-                <div className="relative aspect-square rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
-                  <img
-                    src={resolveMediaUrl(nft.imageURL)}
-                    alt={nft.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = "/placeholder.svg"
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                </div>
+      <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+        <section className="panel-elevated p-4 sm:p-5">
+          <div className="overflow-hidden rounded-2xl border border-border/70">
+            <img
+              src={resolveMediaUrl(nft.imageURL)}
+              alt={nft.name}
+              className="aspect-square w-full object-cover"
+              onError={(e) => {
+                e.currentTarget.src = "/placeholder.svg"
+              }}
+            />
+          </div>
 
-                {/* Action Buttons */}
-                <div className="flex gap-4 mt-6">
-                  <button
-                    onClick={buyNow}
-                    disabled={purchaseStatus === "pending"}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r from-green-600 to-cyan-600 text-white font-semibold hover:scale-105 transition-transform disabled:opacity-70"
-                  >
-                    {purchaseStatus === "pending" ? "Buying..." : "Buy (1 XLM)"}
-                  </button>
-                  <button
-                    onClick={sharePost}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold hover:scale-105 transition-transform"
-                  >
-                    {copied ? <Check className="w-5 h-5" /> : <Share2 className="w-5 h-5" />}
-                    {copied ? "Copied!" : "Share"}
-                  </button>
-                  <button className="px-6 py-4 rounded-xl border border-white/10 bg-white/5 text-gray-400 hover:text-pink-400 hover:bg-pink-500/10 transition-all">
-                    <Heart className="w-5 h-5" />
-                  </button>
-                </div>
-                {purchaseMessage && (
-                  <p
-                    className={`mt-3 text-sm ${
-                      purchaseStatus === "success"
-                        ? "text-green-400"
-                        : purchaseStatus === "fail"
-                          ? "text-red-400"
-                          : "text-yellow-300"
-                    }`}
-                  >
-                    {purchaseMessage}
-                  </p>
-                )}
-              </div>
-            </div>
+          <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_1fr_auto]">
+            <button
+              onClick={buyNow}
+              disabled={purchaseStatus === "pending"}
+              className="inline-flex items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-70"
+            >
+              {purchaseStatus === "pending" ? "Buying..." : "Buy for 1 XLM"}
+            </button>
 
-            {/* Details Section */}
-            <div className="space-y-8">
+            <button
+              onClick={sharePost}
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-border/80 bg-card px-4 py-3 text-sm font-semibold"
+            >
+              {copied ? <Check className="h-4 w-4" /> : <Share2 className="h-4 w-4" />}
+              {copied ? "Copied" : "Share"}
+            </button>
+
+            <button className="inline-flex items-center justify-center rounded-xl border border-border/80 bg-card px-4 py-3 text-sm font-semibold">
+              <Heart className="h-4 w-4" />
+            </button>
+          </div>
+
+          {purchaseMessage && (
+            <p
+              className={`mt-3 text-sm ${
+                purchaseStatus === "success"
+                  ? "text-green-400"
+                  : purchaseStatus === "fail"
+                    ? "text-red-400"
+                    : "text-yellow-300"
+              }`}
+            >
+              {purchaseMessage}
+            </p>
+          )}
+        </section>
+
+        <section className="space-y-5">
+          <div className="panel p-6">
+            <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Post</p>
+            <h1 className="mt-2 font-[family-name:var(--font-display)] text-3xl font-semibold sm:text-4xl">{nft.name}</h1>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">{nft.description}</p>
+          </div>
+
+          <div className="panel p-6">
+            <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Creator</p>
+            <div className="mt-3 flex items-center justify-between gap-4">
               <div>
-                <h1 className="text-4xl sm:text-5xl font-black text-white mb-4">{nft.name}</h1>
-                <p className="text-lg text-gray-400 leading-relaxed">{nft.description}</p>
+                <p className="text-lg font-semibold">{nft.artistName}</p>
+                <p className="mt-1 font-mono text-xs text-muted-foreground">{`${nft.owner.slice(0, 6)}...${nft.owner.slice(-4)}`}</p>
               </div>
-
-              {/* Artist Info */}
-              <div className="glass rounded-2xl p-6">
-                <p className="text-sm text-gray-500 mb-2">Created by</p>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-xl font-bold text-white">
-                      {nft.artistName?.[0]}
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-white">{nft.artistName}</h3>
-                      <p className="text-sm text-gray-500 font-mono">{`${nft.owner.slice(0, 6)}...${nft.owner.slice(-4)}`}</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => router.push(`/profile/${nft.owner}`)}
-                    className="px-6 py-2 rounded-xl border border-blue-500/30 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-all"
-                  >
-                    View Profile
-                  </button>
-                </div>
-              </div>
-
-              {/* NFT Details */}
-              <div className="space-y-4">
-                <div className="glass rounded-2xl p-6">
-                  <p className="text-sm text-gray-500 mb-2">Created</p>
-                  <p className="text-white font-semibold">
-                    {new Date(nft.createdAt).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </p>
-                </div>
-
-                <div className="glass rounded-2xl p-6">
-                  <p className="text-sm text-gray-500 mb-2">IPFS Hash</p>
-                  <a
-                    href={nft.metadataURL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-400 font-mono text-sm hover:underline flex items-center gap-2"
-                  >
-                    {nft.ipfsHash.slice(0, 20)}...
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-
-                <div className="glass rounded-2xl p-6">
-                  <p className="text-sm text-gray-500 mb-2">Transaction Hash</p>
-                  <a
-                    href={`https://stellar.expert/explorer/testnet/tx/${nft.txHash}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-400 font-mono text-sm hover:underline flex items-center gap-2"
-                  >
-                    {nft.txHash.slice(0, 20)}...
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-              </div>
+              <button
+                onClick={() => router.push(`/profile/${nft.owner}`)}
+                className="inline-flex rounded-xl border border-border/80 bg-card px-4 py-2 text-sm font-semibold hover:bg-secondary"
+              >
+                View profile
+              </button>
             </div>
           </div>
-        </div>
-      </main>
-    </>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="panel p-5">
+              <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Created</p>
+              <p className="mt-2 text-sm font-medium">
+                {new Date(nft.createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+            </div>
+            <div className="panel p-5">
+              <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Token ID</p>
+              <p className="mt-2 font-mono text-sm">#{nft.tokenId}</p>
+            </div>
+          </div>
+
+          <div className="panel p-5">
+            <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">IPFS Metadata</p>
+            <a href={nft.metadataURL} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center gap-2 text-sm text-primary hover:underline">
+              {nft.ipfsHash.slice(0, 28)}...
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          </div>
+
+          <div className="panel p-5">
+            <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Transaction</p>
+            <a
+              href={`https://stellar.expert/explorer/testnet/tx/${nft.txHash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-flex items-center gap-2 font-mono text-sm text-primary hover:underline"
+            >
+              {nft.txHash.slice(0, 20)}...{nft.txHash.slice(-8)}
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          </div>
+        </section>
+      </div>
+    </main>
   )
 }
-
