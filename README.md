@@ -27,72 +27,40 @@ Creators can upload media, register its fingerprint on-chain, mint NFTs, and man
 ### 4. Wallet - Digital Vault
 ![Wallet Digital Vault](docs/screenshots/wallet-vault.png)
 
-### User Wallet Addresses
+### User Details (Feedback Respondents)
 
-Verifiable user wallet addresses (check each on Stellar Expert testnet):
-
-1. `GDBMOOICQXCNUTYH7XFZ2XCGR7GYLG5UKHG5VRMWEL3YZ255LXBHMV6L`
-2. `GBRVG3Q65COSUGCQJFASYSF6BGOTA4FGWM33AAFSZWWB3PL3J2HV3GS5`
-3. `GAJDI3UZB2JGUCDDHBUQKLXYI5336YSAUIP3SKIM5MZXXHIC3IS2NK46`
-4. `GCC6OFBPL43QGAJLJDQIMKHA7MS7KPH3PJKABRDIAMW7MVTPDNCFKF6F`
-5. `GBVWV4DVBRTQ2Y3FHIQW7AN25FQDTYRFCI5BRIYFVY2SVVZZ3VFIK5CD`
-6. `GBTEUTHKT3ZT6NZI2FCTJCDKM6XH7GHVIU723GTJ4LHQBB4YHX5A6DWM`
-7. `GCPMZX4LZHUH73UDTNMAJONJ6IQWA4UOXV3WXGXQSGDDSKGVAMADR7RF`
-8. `GANGX6WILRGPVTA3PO7JJHEJ3RYSVERIXDAZDY7GKPQ22MBNRGZENTB2`
-
-### User Feedback (Actual Spreadsheet Responses)
-
-<table width="100%">
-  <thead>
-    <tr>
-      <th width="20%">Name</th>
-      <th width="38%">Stellar Wallet Address (Full)</th>
-      <th width="42%">Actual Feedback Response</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><sub>DEBASMIT BOSE</sub></td>
-      <td><sub>GDBMOOICQXCNUTYH7XFZ2XCGR7GYLG5UKHG5VRMWEL3YZ255LXBHMV6L</sub></td>
-      <td><sub>the search option could be at the top of the list since that js something most users u suppose would do. Also sorting of the nfts would be a great lift</sub></td>
-    </tr>
-    <tr>
-      <td><sub>Shivanjan Saha</sub></td>
-      <td><sub>GBRVG3Q65COSUGCQJFASYSF6BGOTA4FGWM33AAFSZWWB3PL3J2HV3GS5</sub></td>
-      <td><sub>While uploading a document the preview is not showing and sometimes lagging</sub></td>
-    </tr>
-    <tr>
-      <td><sub>Rupam Ghosh</sub></td>
-      <td><sub>GAJDI3UZB2JGUCDDHBUQKLXYI5336YSAUIP3SKIM5MZXXHIC3IS2NK46</sub></td>
-      <td><sub>Every feature properly working I don't found any bugs</sub></td>
-    </tr>
-    <tr>
-      <td><sub>Himangshu Sharma</sub></td>
-      <td><sub>GCC6OFBPL43QGAJLJDQIMKHA7MS7KPH3PJKABRDIAMW7MVTPDNCFKF6F</sub></td>
-      <td><sub>Profile Picture is not showing as of now and after uploading the documents we can't preview</sub></td>
-    </tr>
-    <tr>
-      <td><sub>Ruma Dey</sub></td>
-      <td><sub>GBVWV4DVBRTQ2Y3FHIQW7AN25FQDTYRFCI5BRIYFVY2SVVZZ3VFIK5CD</sub></td>
-      <td><sub>When Uploading Document the preview is not showing in the gallery.</sub></td>
-    </tr>
-    <tr>
-      <td><sub>Adrija Hati</sub></td>
-      <td><sub>GBTEUTHKT3ZT6NZI2FCTJCDKM6XH7GHVIU723GTJ4LHQBB4YHX5A6DWM</sub></td>
-      <td><sub>Good</sub></td>
-    </tr>
-    <tr>
-      <td><sub>Swastik Chatterjee</sub></td>
-      <td><sub>GCPMZX4LZHUH73UDTNMAJONJ6IQWA4UOXV3WXGXQSGDDSKGVAMADR7RF</sub></td>
-      <td><sub>Buying NFTs would be a great feature in Version 2</sub></td>
-    </tr>
-    <tr>
-      <td><sub>Samriddha Mukherjee</sub></td>
-      <td><sub>GANGX6WILRGPVTA3PO7JJHEJ3RYSVERIXDAZDY7GKPQ22MBNRGZENTB2</sub></td>
-      <td><sub>Nil</sub></td>
-    </tr>
-  </tbody>
-</table>
+| Name | Email | Stellar Wallet Address |
+| :--- | :--- | :--- |
+| DEBASMIT BOSE | debasmitbos22@gmail.com | `GDBMOOICQXCNUTYH7XFZ2XCGR7GYLG5UKHG5VRMWEL3YZ255LXBHMV6L` |
+| Shivanjan Saha | shivanjan2004@gmail.com | `GBRVG3Q65COSUGCQJFASYSF6BGOTA4FGWM33AAFSZWWB3PL3J2HV3GS5` |
+| Rupam Ghosh | rupamgh32@gmail.com | `GAJDI3UZB2JGUCDDHBUQKLXYI5336YSAUIP3SKIM5MZXXHIC3IS2NK46` |
+| Himangshu Sharma | sharmahimangshu17@gmail.com | `GCC6OFBPL43QGAJLJDQIMKHA7MS7KPH3PJKABRDIAMW7MVTPDNCFKF6F` |
+| Ruma Dey | anonymousdark35@gmail.com | `GBVWV4DVBRTQ2Y3FHIQW7AN25FQDTYRFCI5BRIYFVY2SVVZZ3VFIK5CD` |
+| Adrija Hati | hati.1.adrija@gmail.com | `GBTEUTHKT3ZT6NZI2FCTJCDKM6XH7GHVIU723GTJ4LHQBB4YHX5A6DWM` |
+| Swastik Chatterjee | swastikchatterjee2006@gmail.com | `GCPMZX4LZHUH73UDTNMAJONJ6IQWA4UOXV3WXGXQSGDDSKGVAMADR7RF` |
+| Samriddha Mukherjee | samriddha.m31@gmail.com | `GANGX6WILRGPVTA3PO7JJHEJ3RYSVERIXDAZDY7GKPQ22MBNRGZENTB2` |
+| Subham Kumar Ojha | ojhas6667@gmail.com | `GDNAVI5ZZTXP5MLGG4VPVVK77YLXQPTVMRDIDQUABMY7SIYQIKHI2EG6` |
+| Manvi Rao | manvirao3408@gmail.com | `GCJ2H4AXWGUFTBXUMZGATYTVQTKZVRP4CUG6RW4YYQS3Q2VUKKT74QO6` |
+| Gourab Das | dgourab574@gmail.com | `GBRHOCMCWL7MDGYKYUBL46TLO2PG6HWW5FA4EARG55JGIVTJTF55C6PZ` |
+| Asmita Banerjee | asmitabanerjee@gmail.com | `GBVYT72WEZFZQMLPHNYJEH7BZ2ZPUWNF5VJBA5IVLMFLGQUSNBMAX2TO` |
+| SOURAV DAS | souravd25@gmail.com | `GCFESCZZKGOTPPEBN7VJWJIORR7UEZNUTU7DS36FGZAD4EFM7SXUBIR4` |
+| Riya Chakrobarty | codingjourney@gmail.com | `GB2F2IITHSA2O2G6WIUJNSQXPNTQWXO2H24ZULZQPQKN2AA4PXODAJVC` |
+| Goutam Dutta | duttagoutam18@gmail.com | `GDBXMGZNK4L6A5GR43BGYPIWBOXWEWXO77ANSTBZM2P3QFFZBCIRSGUW` |
+| Alokesh Dutta | alokeshdutta69@gmail.com | `GASBDDXPSHOKKU4JAD7F6O5XFCXMYG4UFCAYXMEPNL2F47XFIUMOEPO7` |
+| Washim Akhtar | imagoodboy@gmail.com | `GAW7GFJQUBEXJVNQ7PKS6AZ33NSBPFNVS6A5XP5MQTZRJSAT4TTYEIUB` |
+| Sahitya Bose | bosesahitya7@gmail.com | `GAUQI3ZWDMSFLWXEAF4BQLHNSNXI4PBGMFZ7OPZ3LIOM243G3T7LOHHJ` |
+| Sahil Khan | sahilkhan230@gmail.com | `GDHPFOZRBMNYYJ7XEIWXDOG6Y24SD6JWVJLCEBSPD6LZNA7ENCD2PTHX` |
+| Subho Ghosh | ghoshsubho9@gmail.com | `GALGZIGLZVS7Z7R2WD33UNPKCXZYGEWJ4OMZDPIK6LVQHLB5JBFSCLCG` |
+| Ziya Kumari | coderziya32@gmail.com | `GA6QXNIBL3WXD7QS6PSQPVGPF4UN4DJ7N7I3FA6VXQWNAES4SGAKFZFA` |
+| Sonu Dutta | sonudutta17@gmail.com | `GCHTO5KOROU4I3JI7NOOQSO5IFUX3TIRG5T32E3BTFUJABL3SIGWV26V` |
+| Adrij Dutta | adrij7@gmail.com | `GBFTBNCBOMRIAIN32MTO6J4TOMRSQIJZQXX7VBK2ICU5RPWOQHBPWOJ7` |
+| Sumit Kundu | sumitkundu@gmail.com | `GAWYJX5H5R56ELWUVGKHAWR2SGAMORDU22WEG3NBEHE2QU57XVKR4475` |
+| kaustav Roy | kaustavroy20@gmail.com | `GB2MCNGO62WZGHL5NOKKPGCNA6LBN32VX4PR2LZKZKUQYC7JORO37DZ7` |
+| Mandib Bhowmick | bhowmickmandib125@gmail.com | `GDRBW2AZKYRSWBCL3NAMLKLTZ5MWCKHCSYVAAF3TBAMG47NPR3QMM2YB` |
+| Avik Guha | guhaavik24@gmail.com | `GA6LENTHFAG3UY2HK7V24RBGYKIQTPLPG42G5QT26VILKB7KXLUR2ACI` |
+| Ruby Saini | rubythequeen@gmail.com | `GAQHH4552GI746UQWFBUR6H2K6G4CAY7PHTWIHLDY6NFO7BF33MNGL77` |
+| Ashok Kumar | kumarashok1997@gmail.com | `GDNR6QK7MO5Y3B5SDABQ4XGQ57UW4OQGZEUEGQKR4WUL2AFSMNHCUR4D` |
+| Satyabrata Dutta | dsatyabrata53@gmail.com | `GCKFV3G7OVJGJDBTXQ2HCRQHO4ORTBPYS2V5RFKDGKIQYDY5BTSPH4VN` |
 
 Feedback source:
 https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit?gid=1205493588#gid=1205493588
