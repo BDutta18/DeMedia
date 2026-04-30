@@ -106,33 +106,44 @@ Verifiable user wallet addresses (check each on Stellar Expert testnet):
 Feedback source:
 https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit?gid=1205493588#gid=1205493588
 
-## Next Phase Improvement Plan (Based on User Feedback)
+## Feedback-Driven Update Status (April 30, 2026)
 
-Git commit link for implemented feedback fix (document upload preview):
-- https://github.com/BDutta18/DeMedia/commit/785c6f014f80aa9512fe87598547bdaf282d3310
+Implemented feedback commit ID (document preview reliability):
+- [`785c6f014f80aa9512fe87598547bdaf282d3310`](https://github.com/BDutta18/DeMedia/commit/785c6f014f80aa9512fe87598547bdaf282d3310)
 
-Planned improvements for Version 2:
+Feedback to action mapping:
 
-1. Upload + Gallery Reliability
-- Add backend-stored media type (`image/video/audio/document`) at upload time so preview rendering never depends on extension guessing.
-- Add preview smoke tests for all upload types (image, PDF/document, audio, video) before release.
-- Add retry + progressive loading UI for large uploads to reduce perceived lag during minting.
+1. Search should be top-priority in navigation
+- Status: `Done`
+- Update: Search moved near the start of the navbar list for faster discovery.
 
-2. Profile Media Stability
-- Add stronger avatar URL fallback and cache-busting for profile image refresh after updates.
-- Add a small profile integrity check that verifies avatar and user metadata links are resolvable.
+2. Add stronger NFT sorting
+- Status: `Done`
+- Update: Gallery sorting now includes `Newest`, `Oldest`, `Name A-Z`, `Creator A-Z`, `Token ID Low-High`, `Token ID High-Low`.
 
-3. Discovery UX Upgrades
-- Move search to a top-priority position across content screens as requested by users.
-- Add sort controls (`Newest`, `Oldest`, `Most Viewed`, `Recently Minted`) for easier NFT browsing.
+3. Document preview not showing / gallery preview issues
+- Status: `In Progress`
+- Update: Existing fix committed in `785c6f...` and additional reliability hardening is ongoing for all media types.
 
-4. Performance and Observability
-- Add client-side performance instrumentation for upload, preview render, and gallery load times.
-- Track error-rate metrics for preview failures and failed media fetches, then alert on regressions.
+4. Upload lag while handling documents
+- Status: `Planned`
+- Update: Add progressive loading states and retry-friendly upload UX.
 
-5. Feedback Loop Process
-- Keep a rolling feedback table per release cycle and map each issue to status (`Planned`, `In Progress`, `Done`).
-- Publish changelog entries that explicitly reference resolved user-reported bugs.
+5. Profile picture not showing consistently
+- Status: `Planned`
+- Update: Add stronger avatar fallback and cache-busting refresh logic.
+
+6. UI should be improved
+- Status: `Done`
+- Update: Refined visual system across Home, Gallery, and Dashboard; refreshed README screenshots with current UI.
+
+7. Buying NFTs as a V2 feature
+- Status: `Planned (Version 2)`
+- Update: Marketplace purchase workflow extension tracked for next release cycle.
+
+8. General positive responses (`Good`, `Nil`, `No bugs found`)
+- Status: `Logged`
+- Update: Stability baseline is good; focus remains on preview reliability and UX polish.
 
 ## Required Submission Links
 
