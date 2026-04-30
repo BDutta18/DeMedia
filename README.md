@@ -31,36 +31,37 @@ Creators can upload media, register its fingerprint on-chain, mint NFTs, and man
 
 | S.No | Name | Email | Stellar Wallet Address |
 | :--- | :--- | :--- | :--- |
-| 1 | DEBASMIT BOSE | debasmitbos22@gmail.com | `GDBMOOICQXCNUTYH7XFZ2XCGR7GYLG5UKHG5VRMWEL3YZ255LXBHMV6L` |
-| 2 | Shivanjan Saha | shivanjan2004@gmail.com | `GBRVG3Q65COSUGCQJFASYSF6BGOTA4FGWM33AAFSZWWB3PL3J2HV3GS5` |
-| 3 | Rupam Ghosh | rupamgh32@gmail.com | `GAJDI3UZB2JGUCDDHBUQKLXYI5336YSAUIP3SKIM5MZXXHIC3IS2NK46` |
-| 4 | Himangshu Sharma | sharmahimangshu17@gmail.com | `GCC6OFBPL43QGAJLJDQIMKHA7MS7KPH3PJKABRDIAMW7MVTPDNCFKF6F` |
-| 5 | Ruma Dey | anonymousdark35@gmail.com | `GBVWV4DVBRTQ2Y3FHIQW7AN25FQDTYRFCI5BRIYFVY2SVVZZ3VFIK5CD` |
-| 6 | Adrija Hati | hati.1.adrija@gmail.com | `GBTEUTHKT3ZT6NZI2FCTJCDKM6XH7GHVIU723GTJ4LHQBB4YHX5A6DWM` |
-| 7 | Swastik Chatterjee | swastikchatterjee2006@gmail.com | `GCPMZX4LZHUH73UDTNMAJONJ6IQWA4UOXV3WXGXQSGDDSKGVAMADR7RF` |
-| 8 | Samriddha Mukherjee | samriddha.m31@gmail.com | `GANGX6WILRGPVTA3PO7JJHEJ3RYSVERIXDAZDY7GKPQ22MBNRGZENTB2` |
-| 9 | Subham Kumar Ojha | ojhas6667@gmail.com | `GDNAVI5ZZTXP5MLGG4VPVVK77YLXQPTVMRDIDQUABMY7SIYQIKHI2EG6` |
-| 10 | Manvi Rao | manvirao3408@gmail.com | `GCJ2H4AXWGUFTBXUMZGATYTVQTKZVRP4CUG6RW4YYQS3Q2VUKKT74QO6` |
-| 11 | Gourab Das | dgourab574@gmail.com | `GBRHOCMCWL7MDGYKYUBL46TLO2PG6HWW5FA4EARG55JGIVTJTF55C6PZ` |
-| 12 | Asmita Banerjee | asmitabanerjee@gmail.com | `GBVYT72WEZFZQMLPHNYJEH7BZ2ZPUWNF5VJBA5IVLMFLGQUSNBMAX2TO` |
-| 13 | SOURAV DAS | souravd25@gmail.com | `GCFESCZZKGOTPPEBN7VJWJIORR7UEZNUTU7DS36FGZAD4EFM7SXUBIR4` |
-| 14 | Riya Chakrobarty | codingjourney@gmail.com | `GB2F2IITHSA2O2G6WIUJNSQXPNTQWXO2H24ZULZQPQKN2AA4PXODAJVC` |
-| 15 | Goutam Dutta | duttagoutam18@gmail.com | `GDBXMGZNK4L6A5GR43BGYPIWBOXWEWXO77ANSTBZM2P3QFFZBCIRSGUW` |
-| 16 | Alokesh Dutta | alokeshdutta69@gmail.com | `GASBDDXPSHOKKU4JAD7F6O5XFCXMYG4UFCAYXMEPNL2F47XFIUMOEPO7` |
-| 17 | Washim Akhtar | imagoodboy@gmail.com | `GAW7GFJQUBEXJVNQ7PKS6AZ33NSBPFNVS6A5XP5MQTZRJSAT4TTYEIUB` |
-| 18 | Sahitya Bose | bosesahitya7@gmail.com | `GAUQI3ZWDMSFLWXEAF4BQLHNSNXI4PBGMFZ7OPZ3LIOM243G3T7LOHHJ` |
-| 19 | Sahil Khan | sahilkhan230@gmail.com | `GDHPFOZRBMNYYJ7XEIWXDOG6Y24SD6JWVJLCEBSPD6LZNA7ENCD2PTHX` |
-| 20 | Subho Ghosh | ghoshsubho9@gmail.com | `GALGZIGLZVS7Z7R2WD33UNPKCXZYGEWJ4OMZDPIK6LVQHLB5JBFSCLCG` |
-| 21 | Ziya Kumari | coderziya32@gmail.com | `GA6QXNIBL3WXD7QS6PSQPVGPF4UN4DJ7N7I3FA6VXQWNAES4SGAKFZFA` |
-| 22 | Sonu Dutta | sonudutta17@gmail.com | `GCHTO5KOROU4I3JI7NOOQSO5IFUX3TIRG5T32E3BTFUJABL3SIGWV26V` |
-| 23 | Adrij Dutta | adrij7@gmail.com | `GBFTBNCBOMRIAIN32MTO6J4TOMRSQIJZQXX7VBK2ICU5RPWOQHBPWOJ7` |
-| 24 | Sumit Kundu | sumitkundu@gmail.com | `GAWYJX5H5R56ELWUVGKHAWR2SGAMORDU22WEG3NBEHE2QU57XVKR4475` |
-| 25 | kaustav Roy | kaustavroy20@gmail.com | `GB2MCNGO62WZGHL5NOKKPGCNA6LBN32VX4PR2LZKZKUQYC7JORO37DZ7` |
-| 26 | Mandib Bhowmick | bhowmickmandib125@gmail.com | `GDRBW2AZKYRSWBCL3NAMLKLTZ5MWCKHCSYVAAF3TBAMG47NPR3QMM2YB` |
-| 27 | Avik Guha | guhaavik24@gmail.com | `GA6LENTHFAG3UY2HK7V24RBGYKIQTPLPG42G5QT26VILKB7KXLUR2ACI` |
-| 28 | Ruby Saini | rubythequeen@gmail.com | `GAQHH4552GI746UQWFBUR6H2K6G4CAY7PHTWIHLDY6NFO7BF33MNGL77` |
-| 29 | Ashok Kumar | kumarashok1997@gmail.com | `GDNR6QK7MO5Y3B5SDABQ4XGQ57UW4OQGZEUEGQKR4WUL2AFSMNHCUR4D` |
-| 30 | Satyabrata Dutta | dsatyabrata53@gmail.com | `GCKFV3G7OVJGJDBTXQ2HCRQHO4ORTBPYS2V5RFKDGKIQYDY5BTSPH4VN` |
+| 1 | DEBASMIT BOSE | debasmitbos22@gmail.com | `GDBMOO...HMV6L` |
+| 2 | Shivanjan Saha | shivanjan2004@gmail.com | `GBRVG3...V3GS5` |
+| 3 | Rupam Ghosh | rupamgh32@gmail.com | `GAJDI3...2NK46` |
+| 4 | Himangshu Sharma | sharmahimangshu17@gmail.com | `GCC6OF...KF6F` |
+| 5 | Ruma Dey | anonymousdark35@gmail.com | `GBVWV4...IK5CD` |
+| 6 | Adrija Hati | hati.1.adrija@gmail.com | `GBTEUT...A6DWM` |
+| 7 | Swastik Chatterjee | swastikchatterjee2006@gmail.com | `GCPMZX...DR7RF` |
+| 8 | Samriddha Mukherjee | samriddha.m31@gmail.com | `GANGX6...NTB2` |
+| 9 | Subham Kumar Ojha | ojhas6667@gmail.com | `GDNAVI...I2EG6` |
+| 10 | Manvi Rao | manvirao3408@gmail.com | `GCJ2H4...74QO6` |
+| 11 | Gourab Das | dgourab574@gmail.com | `GBRHOC...5C6PZ` |
+| 12 | Asmita Banerjee | asmitabanerjee@gmail.com | `GBVYT7...X2TO` |
+| 13 | SOURAV DAS | souravd25@gmail.com | `GCFESC...BIR4` |
+| 14 | Riya Chakrobarty | codingjourney@gmail.com | `GB2F2I...AJVC` |
+| 15 | Goutam Dutta | duttagoutam18@gmail.com | `GDBXMG...SGUW` |
+| 16 | Alokesh Dutta | alokeshdutta69@gmail.com | `GASBDD...EPO7` |
+| 17 | Washim Akhtar | imagoodboy@gmail.com | `GAW7GF...EIUB` |
+| 18 | Sahitya Bose | bosesahitya7@gmail.com | `GAUQI3...OHHJ` |
+| 19 | Sahil Khan | sahilkhan230@gmail.com | `GDHPFO...PTHX` |
+| 20 | Subho Ghosh | ghoshsubho9@gmail.com | `GALGZI...CLCG` |
+| 21 | Ziya Kumari | coderziya32@gmail.com | `GA6QXN...FZFA` |
+| 22 | Sonu Dutta | sonudutta17@gmail.com | `GCHTO5...V26V` |
+| 23 | Adrij Dutta | adrij7@gmail.com | `GBFTBN...WOJ7` |
+| 24 | Sumit Kundu | sumitkundu@gmail.com | `GAWYJX...4475` |
+| 25 | kaustav Roy | kaustavroy20@gmail.com | `GB2MCN...7DZ7` |
+| 26 | Mandib Bhowmick | bhowmickmandib125@gmail.com | `GDRBW2...M2YB` |
+| 27 | Avik Guha | guhaavik24@gmail.com | `GA6LEN...2ACI` |
+| 28 | Ruby Saini | rubythequeen@gmail.com | `GAQHH4...GL77` |
+| 29 | Ashok Kumar | kumarashok1997@gmail.com | `GDNR6Q...UR4D` |
+| 30 | Satyabrata Dutta | dsatyabrata53@gmail.com | `GCKFV3...H4VN` |
+Note: Wallet addresses are shortened for readability (`first6...last6`).
 Feedback source:
 https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit?gid=1205493588#gid=1205493588
 
@@ -114,6 +115,60 @@ Feedback to action mapping:
 - Demo video (full MVP): https://www.youtube.com/watch?v=hcs871xpv-E
 - User feedback document: https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit?gid=1205493588#gid=1205493588
 - Google Form link: https://docs.google.com/forms/d/e/1FAIpQLSenLrFe8At5Vp8OUpLxGLAfRUHtRpnFHDhPhhjVNWokwEAIsg/viewform?usp=sharing&ouid=106184899408053478392
+
+## Community Contribution
+
+- X (Twitter) community post: https://x.com/i/status/2049837455403282646
+  
+![Community Contribution Post](https://x.com/i/status/2049837455403282646/photo/1)
+
+## Metrics Monitoring Dashboard
+
+Monitoring dashboard and operational endpoints:
+
+- Product dashboard (UI): https://de-media-xi.vercel.app/dashboard
+- Wallet activity view (UI): https://de-media-xi.vercel.app/wallet
+- Transaction status API: `/api/tx/status/:txHash`
+- Realtime transaction stream (SSE): `/api/tx/events/stream`
+
+Tracked platform metrics:
+
+- Upload pipeline success/failure rate (upload, metadata, on-chain register, mint)
+- Transaction lifecycle (`pending`, `success`, `fail`)
+- NFT listing and fetch reliability
+- Wallet-auth verification success/error rates
+- API response stability for frontend proxy routes
+
+## Security Checklist (Completed)
+
+- `Done` Wallet signature-based authentication (`/api/wallet/verify`)
+- `Done` JWT-protected routes for user-specific operations
+- `Done` Centralized auth middleware validation for protected backend endpoints
+- `Done` Input validation and required-field checks in upload/profile/nft flows
+- `Done` Structured API error handling with status codes and failure messages
+- `Done` Secrets moved to environment variables (`JWT_SECRET`, `PRIVATE_KEY`, `PINATA_JWT`, DB URI)
+- `Done` Contract transaction finality checks before success confirmation
+- `Done` Server-side ownership checks before NFT price/sale updates
+- `Done` Testnet explorer verification references for deployment transactions
+- `Done` CI checks enabled via GitHub Actions workflow badge
+
+## Data Indexing
+
+Approach description:
+
+- Primary metadata is persisted in MongoDB and linked to on-chain transaction references.
+- NFT/content retrieval is indexed for app consumption through backend collection queries.
+- Name-based creator discovery is indexed through search query route handling.
+- On-chain finality state is indexed into app-readable status (`pending/success/fail`) for UI tracking.
+
+Endpoints and dashboard links:
+
+- All indexed NFTs feed: `/api/upload/find`
+- Current user NFTs: `/api/upload/my-nfts`
+- Creator search index endpoint: `/api/wallet/search?name=<query>`
+- Profile index endpoint: `/api/wallet/profile/:address`
+- Transaction status index endpoint: `/api/tx/status/:txHash`
+- Dashboard view for indexed insights: https://de-media-xi.vercel.app/dashboard
 
 ## What Is Fully Integrated Now
 
