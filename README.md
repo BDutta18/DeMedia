@@ -13,12 +13,6 @@
 DeMedia is a decentralized media content platform built on the Stellar testnet with Soroban smart contracts.
 Creators can upload media, register its fingerprint on-chain, mint NFTs, and manage content ownership with wallet-based auth.
 
-## Deployed Link
-https://de-media-xi.vercel.app/
-
-## Demo Video
-https://www.youtube.com/watch?v=hcs871xpv-E
-
 ## UI Screenshots
 
 ### 1. Landing Page - Hero Section
