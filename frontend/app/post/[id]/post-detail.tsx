@@ -102,6 +102,21 @@ export default function PostDetail({ postId }: { postId: string }) {
       return
     }
 
+    const storedCosignerToken = localStorage.getItem("demedia_cosigner_token")
+    const cosignerTokenInput = window.prompt(
+      "Enter cosigner JWT token (must be a different authenticated wallet):",
+      storedCosignerToken || "",
+    )
+
+    const cosignerToken = cosignerTokenInput?.trim()
+    if (!cosignerToken) {
+      setPurchaseStatus("fail")
+      setPurchaseMessage("Cosigner token is required for multisig purchase")
+      return
+    }
+
+    localStorage.setItem("demedia_cosigner_token", cosignerToken)
+
     setPurchaseStatus("pending")
     setPurchaseMessage("Submitting purchase transaction...")
 
@@ -111,6 +126,7 @@ export default function PostDetail({ postId }: { postId: string }) {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          "x-cosigner-authorization": `Bearer ${cosignerToken}`,
         },
         body: JSON.stringify({ tokenId: Number(nft.tokenId), priceInXLM: "1" }),
       })

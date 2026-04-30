@@ -27,7 +27,7 @@ Creators can upload media, register its fingerprint on-chain, mint NFTs, and man
 ### 4. Wallet - Digital Vault
 ![Wallet Digital Vault](docs/screenshots/wallet-vault.png)
 
-### User Details (Feedback Respondents)
+### User Details (Feedback Snapshot)
 
 | Name | Email | Stellar Wallet Address |
 | :--- | :--- | :--- |
@@ -41,27 +41,7 @@ Creators can upload media, register its fingerprint on-chain, mint NFTs, and man
 | Samriddha Mukherjee | samriddha.m31@gmail.com | `GANGX6...NTB2` |
 | Subham Kumar Ojha | ojhas6667@gmail.com | `GDNAVI...I2EG6` |
 | Manvi Rao | manvirao3408@gmail.com | `GCJ2H4...74QO6` |
-| Gourab Das | dgourab574@gmail.com | `GBRHOC...5C6PZ` |
-| Asmita Banerjee | asmitabanerjee@gmail.com | `GBVYT7...X2TO` |
-| SOURAV DAS | souravd25@gmail.com | `GCFESC...BIR4` |
-| Riya Chakrobarty | codingjourney@gmail.com | `GB2F2I...AJVC` |
-| Goutam Dutta | duttagoutam18@gmail.com | `GDBXMG...SGUW` |
-| Alokesh Dutta | alokeshdutta69@gmail.com | `GASBDD...EPO7` |
-| Washim Akhtar | imagoodboy@gmail.com | `GAW7GF...EIUB` |
-| Sahitya Bose | bosesahitya7@gmail.com | `GAUQI3...OHHJ` |
-| Sahil Khan | sahilkhan230@gmail.com | `GDHPFO...PTHX` |
-| Subho Ghosh | ghoshsubho9@gmail.com | `GALGZI...CLCG` |
-| Ziya Kumari | coderziya32@gmail.com | `GA6QXN...FZFA` |
-| Sonu Dutta | sonudutta17@gmail.com | `GCHTO5...V26V` |
-| Adrij Dutta | adrij7@gmail.com | `GBFTBN...WOJ7` |
-| Sumit Kundu | sumitkundu@gmail.com | `GAWYJX...4475` |
-| kaustav Roy | kaustavroy20@gmail.com | `GB2MCN...7DZ7` |
-| Mandib Bhowmick | bhowmickmandib125@gmail.com | `GDRBW2...M2YB` |
-| Avik Guha | guhaavik24@gmail.com | `GA6LEN...2ACI` |
-| Ruby Saini | rubythequeen@gmail.com | `GAQHH4...GL77` |
-| Ashok Kumar | kumarashok1997@gmail.com | `GDNR6Q...UR4D` |
-| Satyabrata Dutta | dsatyabrata53@gmail.com | `GCKFV3...H4VN` |
-Note: Wallet addresses are shortened for readability (`first6...last6`).
+Note: Snapshot shows 10 of 30 responses for desktop readability. Wallets are shortened (`first6...last6`).
 Feedback source:
 https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit?gid=1205493588#gid=1205493588
 
@@ -120,7 +100,54 @@ Feedback to action mapping:
 
 - X (Twitter) community post: https://x.com/i/status/2049837455403282646
   
-![Community Contribution Post](https://x.com/i/status/2049837455403282646/photo/1)
+![Community Contribution Post](docs/screenshots/community-contribution.jpg)
+
+## Black Belt Advanced Feature Implemented
+
+Selected feature: `Multi-signature Logic - Multi-party approval for transactions`
+
+Implementation summary:
+
+- Enforced 2-of-2 multisig on the main NFT buy path.
+- Added a dedicated multisig alias endpoint for the same flow.
+- A purchase now requires two distinct authenticated wallets:
+  - Buyer token (standard `Authorization: Bearer <buyerToken>`)
+  - Cosigner token (`x-cosigner-authorization: Bearer <cosignerToken>`)
+- The backend rejects the transaction if:
+  - cosigner is missing/invalid,
+  - buyer and cosigner are the same address,
+  - seller is used as cosigner,
+  - NFT is not for sale or invalid.
+
+Endpoint:
+
+- `POST /api/nft/buy` (main route, multisig enforced)
+- `POST /api/nft/buy-multisig` (alias route)
+
+Request body:
+
+```json
+{
+  "tokenId": 12,
+  "priceInXLM": "10.5"
+}
+```
+
+Successful response includes multisig proof:
+
+```json
+{
+  "success": true,
+  "txHash": "....",
+  "buyer": "G....",
+  "seller": "G....",
+  "royaltyEnabled": true,
+  "multisig": {
+    "mode": "2-of-2",
+    "approvals": ["G_BUYER...", "G_COSIGNER..."]
+  }
+}
+```
 
 ## Metrics Monitoring Dashboard
 
