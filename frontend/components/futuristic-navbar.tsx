@@ -62,7 +62,7 @@ export default function FuturisticNavbar() {
         <div className="page-shell flex h-16 items-center justify-between gap-2 sm:gap-4">
           <Link href="/" className="flex items-center gap-3">
             <img src="/demedia-logo.svg" alt="DeMedia" className="h-9 w-9" />
-            <span className="hidden font-[family-name:var(--font-display)] text-lg font-semibold tracking-tight text-foreground sm:inline">
+            <span className="font-[family-name:var(--font-display)] text-base font-semibold tracking-tight text-foreground sm:text-lg">
               DeMedia
             </span>
           </Link>
