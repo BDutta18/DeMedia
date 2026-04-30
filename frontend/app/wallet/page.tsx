@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react"
 import { useAuth } from "@/lib/auth-context"
-import FuturisticNavbar from "@/components/futuristic-navbar"
 import { Copy, Check, Download, UploadIcon, ExternalLink, Shield, Key, Coins, Clock, DollarSign } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Asset, Horizon, Networks, Operation, TransactionBuilder } from "@stellar/stellar-sdk"
@@ -324,9 +323,6 @@ export default function WalletPage() {
           top: mousePosition.y - 192,
         }}
       />
-
-      <FuturisticNavbar />
-
       <div className="relative z-20 px-4 pt-32 pb-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           {/* Page title */}
@@ -696,3 +692,5 @@ export default function WalletPage() {
     </div>
   )
 }
+
+

@@ -49,3 +49,4 @@ export default async function ProfilePage({ params }: PageProps) {
   const { address } = await params
   return <ProfileDetail address={address} />
 }
+

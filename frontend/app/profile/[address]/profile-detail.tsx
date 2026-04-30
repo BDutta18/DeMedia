@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Share2, ExternalLink, Check, Calendar, LinkIcon } from "lucide-react"
-import FuturisticNavbar from "@/components/futuristic-navbar"
 import ParallaxOrbBackground from "@/components/parallax-orb-background"
 import { resolveMediaUrl } from "@/lib/media"
 
@@ -104,9 +103,7 @@ export default function ProfileDetail({ address }: { address: string }) {
   if (loading) {
     return (
       <>
-        <ParallaxOrbBackground />
-        <FuturisticNavbar />
-        <main className="relative min-h-screen flex items-center justify-center">
+        <ParallaxOrbBackground />        <main className="relative min-h-screen flex items-center justify-center">
           <div className="text-center">
             <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-gray-400">Loading profile...</p>
@@ -120,9 +117,7 @@ export default function ProfileDetail({ address }: { address: string }) {
     console.log("[v0] Rendering Profile Not Found - user is:", user)
     return (
       <>
-        <ParallaxOrbBackground />
-        <FuturisticNavbar />
-        <main className="relative min-h-screen flex items-center justify-center">
+        <ParallaxOrbBackground />        <main className="relative min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-white mb-4">Profile Not Found</h1>
             <button
@@ -140,8 +135,6 @@ export default function ProfileDetail({ address }: { address: string }) {
   return (
     <>
       <ParallaxOrbBackground />
-      <FuturisticNavbar />
-
       <main className="relative min-h-screen pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Profile Header */}
@@ -262,3 +255,4 @@ export default function ProfileDetail({ address }: { address: string }) {
     </>
   )
 }
+

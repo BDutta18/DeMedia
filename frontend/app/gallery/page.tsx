@@ -1,12 +1,8 @@
 "use client"
 
-import type React from "react"
 import { useRouter } from "next/navigation"
-
-import { useState, useEffect, useRef } from "react"
-import { ExternalLink, Heart, Share2, FileText } from "lucide-react"
-import FuturisticNavbar from "@/components/futuristic-navbar"
-import ParallaxOrbBackground from "@/components/parallax-orb-background"
+import { useEffect, useMemo, useState } from "react"
+import { ArrowRight, ExternalLink, FileText, Search, Share2, SlidersHorizontal, X } from "lucide-react"
 import { resolveMediaUrl } from "@/lib/media"
 
 interface NFT {
@@ -30,40 +26,29 @@ export default function GalleryPage() {
   const [loading, setLoading] = useState(true)
   const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null)
   const [mediaKindById, setMediaKindById] = useState<Record<string, MediaKind>>({})
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([])
+  const [query, setQuery] = useState("")
+  const [sortBy, setSortBy] = useState<"newest" | "oldest" | "name">("newest")
   const router = useRouter()
 
   useEffect(() => {
     const fetchNFTs = async () => {
       try {
-        console.log("[v0] Fetching NFTs from /api/nfts/all")
         const response = await fetch("/api/nfts/all")
         const data = await response.json()
-        console.log("[v0] NFTs response:", data)
 
         if (data.success) {
           const nftsWithArtists = await Promise.all(
             data.data.map(async (nft: NFT) => {
               try {
-                console.log(`[v0] Fetching profile for owner: ${nft.owner}`)
                 const profileResponse = await fetch(`/api/user/profile/${nft.owner}`)
                 const profileData = await profileResponse.json()
-                console.log(`[v0] Profile data for ${nft.owner}:`, profileData)
-
-                // Check if we got a valid user with a name
                 const artistName =
                   profileData.success && profileData.user?.name
                     ? profileData.user.name
                     : `${nft.owner.slice(0, 6)}...${nft.owner.slice(-4)}`
 
-                console.log(`[v0] Artist name for ${nft.owner}: ${artistName}`)
-
-                return {
-                  ...nft,
-                  artistName,
-                }
-              } catch (error) {
-                console.error(`[v0] Error fetching profile for ${nft.owner}:`, error)
+                return { ...nft, artistName }
+              } catch {
                 return {
                   ...nft,
                   artistName: `${nft.owner.slice(0, 6)}...${nft.owner.slice(-4)}`,
@@ -71,11 +56,10 @@ export default function GalleryPage() {
               }
             }),
           )
-          console.log("[v0] NFTs with artist names:", nftsWithArtists)
           setNfts(nftsWithArtists)
         }
       } catch (error) {
-        console.error("[v0] Failed to fetch NFTs:", error)
+        console.error("Failed to fetch NFTs:", error)
       } finally {
         setLoading(false)
       }
@@ -93,77 +77,66 @@ export default function GalleryPage() {
       return "image"
     }
 
-    const inferFromContentType = (contentType: string): MediaKind => {
-      const ct = contentType.toLowerCase()
-      if (ct.includes("video/")) return "video"
-      if (ct.includes("audio/")) return "audio"
-      if (ct.includes("application/pdf") || ct.includes("application/msword") || ct.includes("application/vnd.openxmlformats-officedocument")) {
-        return "document"
-      }
-      return "image"
-    }
-
     const detectMediaKinds = async () => {
       if (!nfts.length) return
-
-      const entries = await Promise.all(
-        nfts.map(async (nft) => {
-          const mediaUrl = resolveMediaUrl(nft.imageURL)
-          const inferred = inferFromUrl(mediaUrl)
-
-          // Only probe when URL inference is uncertain (likely image by default).
-          if (inferred !== "image") return [nft._id, inferred] as const
-
-          try {
-            const response = await fetch(mediaUrl, { method: "HEAD" })
-            const contentType = response.headers.get("content-type")
-            if (contentType) return [nft._id, inferFromContentType(contentType)] as const
-          } catch {
-            // Fall back to image rendering when probing fails.
-          }
-
-          return [nft._id, inferred] as const
-        }),
-      )
-
+      const entries = nfts.map((nft) => [nft._id, inferFromUrl(resolveMediaUrl(nft.imageURL))] as const)
       setMediaKindById(Object.fromEntries(entries))
     }
 
     detectMediaKinds()
   }, [nfts])
 
+  const filteredNFTs = useMemo(() => {
+    const normalized = query.trim().toLowerCase()
+    const filtered = nfts.filter((nft) => {
+      if (!normalized) return true
+      return (
+        nft.name.toLowerCase().includes(normalized) ||
+        nft.description.toLowerCase().includes(normalized) ||
+        (nft.artistName || "").toLowerCase().includes(normalized)
+      )
+    })
+
+    filtered.sort((a, b) => {
+      if (sortBy === "name") return a.name.localeCompare(b.name)
+      if (sortBy === "oldest") return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    })
+
+    return filtered
+  }, [nfts, query, sortBy])
+
+  const sharePost = async (nft: NFT) => {
+    const url = `${window.location.origin}/post/${nft._id}`
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: nft.name, text: nft.description, url })
+      } catch {
+        navigator.clipboard.writeText(url)
+      }
+    } else {
+      navigator.clipboard.writeText(url)
+    }
+  }
+
   const renderMediaPreview = (nft: NFT, mode: "card" | "modal") => {
     const mediaUrl = resolveMediaUrl(nft.imageURL)
     const mediaKind = mediaKindById[nft._id] || "image"
-    const isCard = mode === "card"
-    const mediaClass = isCard ? "w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" : "w-full h-full object-cover"
+    const baseClass = mode === "card" ? "h-full w-full object-cover" : "h-full w-full object-cover"
 
-    if (mediaKind === "video") {
-      return <video src={mediaUrl} className={mediaClass} muted playsInline controls={!isCard} />
-    }
-
+    if (mediaKind === "video") return <video src={mediaUrl} className={baseClass} muted playsInline controls={mode === "modal"} />
     if (mediaKind === "audio") {
       return (
-        <div className="w-full h-full bg-gradient-to-br from-slate-900 to-slate-700 flex items-center justify-center p-6">
+        <div className="flex h-full w-full items-center justify-center bg-secondary p-5">
           <audio src={mediaUrl} controls className="w-full" />
         </div>
       )
     }
-
     if (mediaKind === "document") {
       return (
-        <div className="w-full h-full bg-slate-950/80 flex flex-col items-center justify-center gap-3 p-4">
-          <FileText className="w-12 h-12 text-blue-400" />
-          <span className="text-sm text-gray-300 text-center">Document uploaded</span>
-          <a
-            href={mediaUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-cyan-400 hover:underline"
-            onClick={(e) => e.stopPropagation()}
-          >
-            Open document
-          </a>
+        <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-secondary p-5 text-center">
+          <FileText className="h-10 w-10 text-primary" />
+          <span className="text-sm text-muted-foreground">Document asset</span>
         </div>
       )
     }
@@ -172,261 +145,162 @@ export default function GalleryPage() {
       <img
         src={mediaUrl}
         alt={nft.name}
-        className={mediaClass}
+        className={baseClass}
         onError={(e) => {
-          // If an item fails to render as image (common for docs without file extension),
-          // force this NFT into document preview mode.
-          if (mediaKindById[nft._id] !== "document") {
-            setMediaKindById((prev) => ({ ...prev, [nft._id]: "document" }))
-            return
-          }
           e.currentTarget.src = "/placeholder.svg"
         }}
       />
     )
   }
 
-  // Intersection Observer for entrance animations
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry, index) => {
-          if (entry.isIntersecting) {
-            entry.target.setAttribute("data-in", "true")
-          } else {
-            entry.target.removeAttribute("data-in")
-          }
-        })
-      },
-      { threshold: 0.1 },
-    )
-
-    cardsRef.current.forEach((card) => {
-      if (card) observer.observe(card)
-    })
-
-    return () => observer.disconnect()
-  }, [nfts])
-
-  // 3D tilt effect on hover
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, index: number) => {
-    const card = cardsRef.current[index]
-    if (!card) return
-
-    const rect = card.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-
-    const centerX = rect.width / 2
-    const centerY = rect.height / 2
-
-    const rotateX = ((y - centerY) / centerY) * 10
-    const rotateY = ((x - centerX) / centerX) * 10
-
-    card.style.transform = `perspective(1000px) rotateX(${-rotateX}deg) rotateY(${rotateY}deg) translateZ(20px)`
-  }
-
-  const handleMouseLeave = (index: number) => {
-    const card = cardsRef.current[index]
-    if (!card) return
-    card.style.transform = "perspective(1000px) rotateX(0) rotateY(0) translateZ(0)"
-  }
-
-  const sharePost = async (nft: NFT) => {
-    const url = `${window.location.origin}/post/${nft._id}`
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: nft.name,
-          text: nft.description,
-          url: url,
-        })
-      } catch (error) {
-        navigator.clipboard.writeText(url)
-      }
-    } else {
-      navigator.clipboard.writeText(url)
-    }
-  }
-
   return (
-    <>
-      <ParallaxOrbBackground />
-
-      <FuturisticNavbar />
-
-      <main className="relative min-h-screen pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-16">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-wider mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-              Liquid Parallax Gallery
-            </h1>
-            <p className="text-gray-400 text-lg">Collect the light. Walk the archive.</p>
+    <main className="page-shell min-h-screen py-8 sm:py-10">
+      <section className="panel-elevated p-6 sm:p-8">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Gallery</p>
+            <h1 className="mt-2 font-[family-name:var(--font-display)] text-3xl font-semibold sm:text-4xl">DeMedia Asset Gallery</h1>
+            <p className="mt-2 max-w-2xl text-sm text-muted-foreground sm:text-base">
+              Browse tokenized media, discover creators, and inspect collectible metadata across the marketplace.
+            </p>
           </div>
 
-          {loading ? (
-            <div className="text-center text-gray-400 py-20">
-              <div className="inline-block h-16 w-16 animate-spin rounded-full border-4 border-blue-500/20 border-t-blue-500" />
-              <p className="mt-4">Loading NFTs...</p>
-            </div>
-          ) : (
-            <div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-              style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
-            >
-              {nfts.map((nft, index) => (
-                <div
-                  key={nft._id}
-                  ref={(el) => {
-                    cardsRef.current[index] = el
-                  }}
-                  className="group relative opacity-0 translate-y-6 transition-all duration-700 data-[in=true]:opacity-100 data-[in=true]:translate-y-0"
-                  style={{
-                    transitionDelay: `${index * 100}ms`,
-                    animation: `float ${6 + (index % 3)}s ease-in-out infinite`,
-                    animationDelay: `${index * 0.5}s`,
-                  }}
-                  onMouseMove={(e) => handleMouseMove(e, index)}
-                  onMouseLeave={() => handleMouseLeave(index)}
-                >
-                  {/* Magnetic hover glow */}
-                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-400/20 via-purple-500/20 to-cyan-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl" />
+          <div className="grid w-full gap-3 sm:grid-cols-[1fr_auto] lg:w-auto">
+            <label className="relative block min-w-[260px]">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search name, artist, description"
+                className="w-full rounded-xl border border-border/70 bg-background pl-9 pr-3 py-2.5 text-sm outline-none ring-0 focus:border-primary"
+              />
+            </label>
+            <label className="inline-flex items-center gap-2 rounded-xl border border-border/70 bg-card px-3">
+              <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as "newest" | "oldest" | "name")}
+                className="bg-transparent py-2.5 text-sm outline-none"
+              >
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="name">Name A-Z</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </section>
 
-                  {/* Glass card */}
-                  <div
-                    className="relative rounded-3xl border border-white/10 bg-black/40 p-4 backdrop-blur-xl shadow-[0_20px_40px_rgba(0,0,0,0.45)] transition-all duration-300 hover:shadow-[0_30px_60px_rgba(0,0,0,0.6)] cursor-pointer"
-                    onClick={() => setSelectedNFT(nft)}
-                  >
-                    {/* Gradient accent ring on hover */}
-                    <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-blue-400 via-purple-500 to-blue-400 blur-sm" />
+      <section className="mt-5">
+        {loading ? (
+          <div className="panel p-10 text-center text-muted-foreground">Loading assets...</div>
+        ) : filteredNFTs.length === 0 ? (
+          <div className="panel p-10 text-center">
+            <h2 className="text-lg font-semibold">No assets found</h2>
+            <p className="mt-2 text-sm text-muted-foreground">Try another search term or clear filters.</p>
+          </div>
+        ) : (
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredNFTs.map((nft) => (
+              <article key={nft._id} className="panel overflow-hidden transition hover:bg-secondary/45">
+                <button onClick={() => setSelectedNFT(nft)} className="block w-full text-left">
+                  <div className="aspect-square overflow-hidden">
+                    {renderMediaPreview(nft, "card")}
+                  </div>
+                </button>
 
-                    {/* Inner content */}
-                    <div className="relative">
-                      {/* Image */}
-                      <div className="relative aspect-square rounded-2xl overflow-hidden mb-4 shadow-2xl">
-                        {renderMediaPreview(nft, "card")}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      </div>
+                <div className="space-y-3 p-4">
+                  <div>
+                    <h3 className="line-clamp-1 text-base font-semibold">{nft.name}</h3>
+                    <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{nft.description}</p>
+                  </div>
 
-                      {/* Metadata */}
-                      <div className="space-y-2 mb-4">
-                        <h3 className="text-xl font-bold text-white truncate">{nft.name}</h3>
-                        <p className="text-sm text-gray-400 line-clamp-2">{nft.description}</p>
-                        <div className="flex items-center justify-between pt-2 border-t border-white/10">
-                          <div className="flex flex-col">
-                            <span className="text-xs text-gray-500 uppercase">Artist</span>
-                            <span className="text-sm text-white font-semibold">{nft.artistName}</span>
-                          </div>
-                          <div className="flex flex-col items-end">
-                            <span className="text-xs text-gray-500 uppercase">Token</span>
-                            <span className="text-sm text-blue-400 font-mono">#{nft.tokenId}</span>
-                          </div>
-                        </div>
-                      </div>
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span className="uppercase tracking-[0.08em]">{nft.artistName}</span>
+                    <span className="font-mono">#{nft.tokenId}</span>
+                  </div>
 
-                      {/* CTA buttons */}
-                      <div className="flex gap-2">
-                        <button
-                          className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-blue-500/30 bg-blue-500/10 text-blue-400 text-sm hover:bg-blue-500/20 transition-all"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            router.push(`/post/${nft._id}`)
-                          }}
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                          View
-                        </button>
-                        <button
-                          className="p-2 rounded-xl border border-white/10 bg-white/5 text-gray-400 hover:text-pink-400 hover:bg-pink-500/10 transition-all"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                          }}
-                        >
-                          <Heart className="w-4 h-4" />
-                        </button>
-                        <button
-                          className="p-2 rounded-xl border border-white/10 bg-white/5 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 transition-all"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            sharePost(nft)
-                          }}
-                        >
-                          <Share2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
+                  <div className="flex gap-2">
+                    <button
+                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-border/70 bg-card px-3 py-2 text-sm font-medium hover:bg-secondary"
+                      onClick={() => router.push(`/post/${nft._id}`)}
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      View post
+                    </button>
+                    <button
+                      className="inline-flex items-center justify-center rounded-lg border border-border/70 bg-card px-3 py-2 text-sm font-medium hover:bg-secondary"
+                      onClick={() => sharePost(nft)}
+                    >
+                      <Share2 className="h-4 w-4" />
+                    </button>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </main>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
 
-      {/* Detail Modal */}
       {selectedNFT && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl animate-in fade-in duration-300"
-          onClick={() => setSelectedNFT(null)}
-        >
-          <div
-            className="relative max-w-5xl w-full rounded-3xl border border-white/10 bg-black/60 backdrop-blur-2xl p-8 shadow-2xl animate-in zoom-in-95 duration-300"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setSelectedNFT(null)}
-              className="absolute top-4 right-4 w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-            >
-              ✕
-            </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4" onClick={() => setSelectedNFT(null)}>
+          <div className="panel-elevated max-h-[90vh] w-full max-w-4xl overflow-auto p-6 sm:p-8" onClick={(e) => e.stopPropagation()}>
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-xl font-semibold">Asset details</h2>
+              <button
+                onClick={() => setSelectedNFT(null)}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border/70 bg-card"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Image */}
-              <div className="relative aspect-square rounded-2xl overflow-hidden shadow-2xl">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="aspect-square overflow-hidden rounded-xl border border-border/70">
                 {renderMediaPreview(selectedNFT, "modal")}
               </div>
 
-              {/* Details */}
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div>
-                  <h2 className="text-3xl font-bold text-white mb-2">{selectedNFT.name}</h2>
-                  <p className="text-gray-400">{selectedNFT.description}</p>
+                  <h3 className="text-2xl font-semibold">{selectedNFT.name}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{selectedNFT.description}</p>
                 </div>
 
-                <div className="space-y-3">
-                  <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-xs text-gray-500 uppercase mb-1">Artist</p>
-                    <p className="text-white font-semibold text-lg">{selectedNFT.artistName}</p>
+                <div className="space-y-3 text-sm">
+                  <div className="rounded-xl border border-border/70 bg-background/80 p-3">
+                    <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Artist</p>
+                    <p className="mt-1 font-medium">{selectedNFT.artistName}</p>
                   </div>
-
-                  <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-xs text-gray-500 uppercase mb-1">Token ID</p>
-                    <p className="text-blue-400 font-mono text-sm">#{selectedNFT.tokenId}</p>
+                  <div className="rounded-xl border border-border/70 bg-background/80 p-3">
+                    <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Token ID</p>
+                    <p className="mt-1 font-mono">#{selectedNFT.tokenId}</p>
                   </div>
-
-                  <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-xs text-gray-500 uppercase mb-1">Transaction</p>
+                  <div className="rounded-xl border border-border/70 bg-background/80 p-3">
+                    <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Transaction</p>
                     <a
                       href={`https://stellar.expert/explorer/testnet/tx/${selectedNFT.txHash}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-400 font-mono text-sm hover:underline flex items-center gap-2"
+                      className="mt-1 inline-flex items-center gap-2 font-mono text-primary hover:underline"
                     >
                       {selectedNFT.txHash.slice(0, 10)}...{selectedNFT.txHash.slice(-8)}
-                      <ExternalLink className="w-3 h-3" />
+                      <ExternalLink className="h-3 w-3" />
                     </a>
                   </div>
                 </div>
 
-                <button className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold hover:scale-105 transition-transform">
-                  View on Marketplace
+                <button
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground"
+                  onClick={() => router.push(`/post/${selectedNFT._id}`)}
+                >
+                  Open full post
+                  <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
             </div>
           </div>
         </div>
       )}
-    </>
+    </main>
   )
 }

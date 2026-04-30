@@ -4,7 +4,6 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { Upload, Check, FileText, X } from "lucide-react"
-import FuturisticNavbar from "@/components/futuristic-navbar"
 import { useAuth } from "@/lib/auth-context"
 import { useRouter } from "next/navigation"
 import { resolveMediaUrl } from "@/lib/media"
@@ -149,9 +148,6 @@ export default function UploadMintPage() {
           />
         ))}
       </div>
-
-      <FuturisticNavbar />
-
       <main className="relative min-h-screen pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-[100vw] overflow-x-hidden">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
@@ -467,3 +463,5 @@ export default function UploadMintPage() {
     </>
   )
 }
+
+

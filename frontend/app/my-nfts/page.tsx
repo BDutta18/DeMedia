@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { useAuth } from "@/lib/auth-context"
 import { useRouter } from "next/navigation"
 import { ExternalLink, Trash2, Upload, Share2 } from "lucide-react"
-import FuturisticNavbar from "@/components/futuristic-navbar"
 import ParallaxOrbBackground from "@/components/parallax-orb-background"
 import { cacheGet, cacheSet } from "@/lib/cache"
 import { resolveMediaUrl } from "@/lib/media"
@@ -94,9 +93,6 @@ export default function MyNFTsPage() {
   return (
     <>
       <ParallaxOrbBackground />
-
-      <FuturisticNavbar />
-
       <main className="relative min-h-screen pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
@@ -186,3 +182,5 @@ export default function MyNFTsPage() {
     </>
   )
 }
+
+

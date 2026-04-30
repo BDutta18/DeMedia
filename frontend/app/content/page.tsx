@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Search, Filter, FileText, ImageIcon, Clock, TrendingUp, ExternalLink, Share2 } from "lucide-react"
-import FuturisticNavbar from "@/components/futuristic-navbar"
 import { useAuth } from "@/lib/auth-context"
 import { cacheGet, cacheSet } from "@/lib/cache"
 import { resolveMediaUrl } from "@/lib/media"
@@ -157,9 +156,7 @@ export default function ContentLibraryPage() {
   if (loading) {
     return (
       <>
-        <div className="fixed inset-0 bg-[#0a0a0f]" />
-        <FuturisticNavbar />
-        <main className="relative min-h-screen pt-32 flex items-center justify-center">
+        <div className="fixed inset-0 bg-[#0a0a0f]" />        <main className="relative min-h-screen pt-32 flex items-center justify-center">
           <div className="text-center">
             <div className="w-16 h-16 border-4 border-[#3b82f6] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-gray-400 text-lg">Loading your creations...</p>
@@ -225,9 +222,6 @@ export default function ContentLibraryPage() {
           }}
         />
       </div>
-
-      <FuturisticNavbar />
-
       <main className="relative min-h-screen pt-24 sm:pt-28 md:pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-[100vw] overflow-x-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 sm:mb-16">
@@ -642,3 +636,5 @@ export default function ContentLibraryPage() {
     </>
   )
 }
+
+

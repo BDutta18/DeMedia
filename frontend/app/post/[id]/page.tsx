@@ -50,3 +50,4 @@ export default async function PostPage({ params }: PageProps) {
   const { id } = await params
   return <PostDetail postId={id} />
 }
+

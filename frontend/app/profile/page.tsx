@@ -7,7 +7,6 @@ import { useAuth } from "@/lib/auth-context"
 import { useRouter } from "next/navigation"
 import IdentityMatrixBackground from "@/components/identity-matrix-background"
 import { Upload, Save, RotateCcw, CheckCircle, AlertCircle, User, Mail, FileText, ImageIcon, ExternalLink } from "lucide-react"
-import FuturisticNavbar from "@/components/futuristic-navbar"
 import { resolveMediaUrl } from "@/lib/media"
 interface ProfileData {
   name: string
@@ -263,9 +262,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-4">
-      <FuturisticNavbar />
-      <IdentityMatrixBackground />
+    <div className="min-h-screen pt-24 pb-12 px-4">      <IdentityMatrixBackground />
 
       <div className="max-w-6xl mx-auto mb-12 text-center animate-in fade-in slide-in-from-top duration-700">
         <h1 className="text-4xl md:text-6xl font-[family-name:var(--font-display)] font-black mb-4 bg-gradient-to-r from-[#00d4ff] via-[#7c3aed] to-[#fbbf24] bg-clip-text text-transparent">
@@ -619,3 +616,5 @@ export default function ProfilePage() {
     </div>
   )
 }
+
+

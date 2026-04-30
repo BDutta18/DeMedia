@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { ExternalLink, Share2, Heart, ArrowLeft, Check } from "lucide-react"
-import FuturisticNavbar from "@/components/futuristic-navbar"
 import ParallaxOrbBackground from "@/components/parallax-orb-background"
 import { mapWalletError } from "@/lib/errors"
 import { cacheGet, cacheSet } from "@/lib/cache"
@@ -169,9 +168,7 @@ export default function PostDetail({ postId }: { postId: string }) {
   if (loading) {
     return (
       <>
-        <ParallaxOrbBackground />
-        <FuturisticNavbar />
-        <main className="relative min-h-screen flex items-center justify-center">
+        <ParallaxOrbBackground />        <main className="relative min-h-screen flex items-center justify-center">
           <div className="text-center">
             <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-gray-400">Loading NFT...</p>
@@ -184,9 +181,7 @@ export default function PostDetail({ postId }: { postId: string }) {
   if (!nft) {
     return (
       <>
-        <ParallaxOrbBackground />
-        <FuturisticNavbar />
-        <main className="relative min-h-screen flex items-center justify-center">
+        <ParallaxOrbBackground />        <main className="relative min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-white mb-4">Post Not Found</h1>
             <button
@@ -204,8 +199,6 @@ export default function PostDetail({ postId }: { postId: string }) {
   return (
     <>
       <ParallaxOrbBackground />
-      <FuturisticNavbar />
-
       <main className="relative min-h-screen pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <button
@@ -343,3 +336,4 @@ export default function PostDetail({ postId }: { postId: string }) {
     </>
   )
 }
+

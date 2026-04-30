@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { Search, ExternalLink, ImageIcon } from "lucide-react"
-import FuturisticNavbar from "@/components/futuristic-navbar"
 import ParallaxOrbBackground from "@/components/parallax-orb-background"
 import { useRouter } from "next/navigation"
 
@@ -58,9 +57,6 @@ export default function SearchPage() {
   return (
     <>
       <ParallaxOrbBackground />
-
-      <FuturisticNavbar />
-
       <main className="relative min-h-screen pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
@@ -154,3 +150,5 @@ export default function SearchPage() {
     </>
   )
 }
+
+

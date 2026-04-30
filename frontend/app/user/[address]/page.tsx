@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { useParams } from "next/navigation"
 import { Calendar, ExternalLink } from "lucide-react"
-import FuturisticNavbar from "@/components/futuristic-navbar"
 import ParallaxOrbBackground from "@/components/parallax-orb-background"
 import { getBackendApiBaseUrl } from "@/lib/backend-url"
 import { resolveMediaUrl } from "@/lib/media"
@@ -71,9 +70,7 @@ export default function UserProfilePage() {
   if (loading) {
     return (
       <>
-        <ParallaxOrbBackground />
-        <FuturisticNavbar />
-        <main className="relative min-h-screen flex items-center justify-center">
+        <ParallaxOrbBackground />        <main className="relative min-h-screen flex items-center justify-center">
           <div className="text-center text-gray-400">
             <div className="inline-block h-16 w-16 animate-spin rounded-full border-4 border-blue-500/20 border-t-blue-500 mb-4" />
             <p>Loading profile...</p>
@@ -86,9 +83,7 @@ export default function UserProfilePage() {
   if (!user) {
     return (
       <>
-        <ParallaxOrbBackground />
-        <FuturisticNavbar />
-        <main className="relative min-h-screen flex items-center justify-center">
+        <ParallaxOrbBackground />        <main className="relative min-h-screen flex items-center justify-center">
           <div className="text-center text-gray-400">
             <p>User not found</p>
           </div>
@@ -100,9 +95,6 @@ export default function UserProfilePage() {
   return (
     <>
       <ParallaxOrbBackground />
-
-      <FuturisticNavbar />
-
       <main className="relative min-h-screen pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Profile Header */}
@@ -205,3 +197,4 @@ export default function UserProfilePage() {
     </>
   )
 }
+
