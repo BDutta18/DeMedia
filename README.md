@@ -21,33 +21,20 @@ https://www.youtube.com/watch?v=hcs871xpv-E
 
 ## UI Screenshots
 
-### Latest UI Refresh (New)
-
-### 1. Landing Page - Production Hero (New)
-![Landing Page Hero New](docs/screenshots/homepage-hero-new.png)
-
-### 2. Gallery - Updated Experience (New)
-![Gallery Updated New](docs/screenshots/gallery-grid-new.png)
-
-### 3. Dashboard - Updated Creator Console (New)
-![Dashboard Updated New](docs/screenshots/dashboard-overview-new.png)
-
-### Existing Screens (Previous)
-
 ### 1. Landing Page - Hero Section
 ![Landing Page Hero](docs/screenshots/homepage-hero.png)
+Source: `Screenshot 2026-04-30 174136.png`
 
 ### 2. Dashboard - Creator Overview
 ![Dashboard Overview](docs/screenshots/dashboard-overview.png)
+Source: `Screenshot 2026-04-30 174203.png`
 
 ### 3. Gallery - NFT Grid View
 ![Gallery Grid](docs/screenshots/gallery-grid.png)
+Source: `Screenshot 2026-04-30 174233.png`
 
 ### 4. Wallet - Digital Vault
 ![Wallet Digital Vault](docs/screenshots/wallet-vault.png)
-
-### 5. Mobile Responsive View
-<img width="671" height="1280" alt="Mobile Responsive View" src="https://github.com/user-attachments/assets/a82ad326-d3dd-4dee-bc60-d491b91492f5" />
 
 ### User Wallet Addresses
 
