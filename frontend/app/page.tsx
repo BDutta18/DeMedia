@@ -55,8 +55,8 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen pb-16">
-      <section className="page-shell py-12 sm:py-16 lg:py-20">
-        <div className="panel-elevated overflow-hidden p-8 sm:p-10 lg:p-14">
+      <section className="page-shell py-8 sm:py-16 lg:py-20">
+        <div className="panel-elevated overflow-hidden p-5 sm:p-10 lg:p-14">
           <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
             <div>
               <span className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-secondary px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
@@ -64,7 +64,7 @@ export default function HomePage() {
                 Production-grade creator infrastructure
               </span>
 
-              <h1 className="mt-5 text-balance font-[family-name:var(--font-display)] text-4xl font-semibold leading-tight sm:text-5xl lg:text-6xl">
+              <h1 className="mt-5 text-balance font-[family-name:var(--font-display)] text-3xl font-semibold leading-tight sm:text-5xl lg:text-6xl">
                 Run your digital media business on-chain, without compromise.
               </h1>
 
@@ -148,7 +148,7 @@ export default function HomePage() {
 
       {featuredNFTs.length > 0 && (
         <section className="page-shell py-10 sm:py-14">
-          <div className="mb-6 flex items-end justify-between gap-4">
+          <div className="mb-6 flex flex-col items-start gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Featured</p>
               <h2 className="mt-2 font-[family-name:var(--font-display)] text-2xl font-semibold sm:text-3xl">

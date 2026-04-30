@@ -1,12 +1,14 @@
 "use client"
 
 import Link from "next/link"
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import {
   ArrowUpRight,
   BarChart3,
   CheckCircle2,
   Coins,
+  Copy,
+  Check,
   Eye,
   FileText,
   ImageIcon,
@@ -20,6 +22,7 @@ import { useAuth } from "@/lib/auth-context"
 
 export default function DashboardPage() {
   const { isAuthenticated, address } = useAuth()
+  const [copied, setCopied] = useState(false)
 
   const walletLabel = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Not connected"
 
@@ -45,6 +48,17 @@ export default function DashboardPage() {
     { title: "New follower", subtitle: "Wallet connected to your profile", time: "8h ago" },
     { title: "Collection update", subtitle: "3 assets listed in gallery", time: "1d ago" },
   ]
+
+  const copyWallet = async () => {
+    if (!address) return
+    try {
+      await navigator.clipboard.writeText(address)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1200)
+    } catch (error) {
+      console.error("Failed to copy wallet address", error)
+    }
+  }
 
   return (
     <main className="page-shell min-h-screen py-8 sm:py-10">
@@ -99,7 +113,19 @@ export default function DashboardPage() {
           <div className="space-y-3">
             <div className="rounded-xl border border-border/70 bg-background/80 p-4">
               <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Wallet</p>
-              <p className="mt-2 font-mono text-sm">{walletLabel}</p>
+              <div className="mt-2 flex items-center justify-between gap-3">
+                <p className={`truncate font-mono text-sm ${address ? "text-emerald-400" : "text-muted-foreground"}`}>{walletLabel}</p>
+                {address && (
+                  <button
+                    onClick={copyWallet}
+                    className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/70 bg-card hover:bg-secondary"
+                    aria-label="Copy wallet address"
+                    title="Copy wallet address"
+                  >
+                    {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4 text-muted-foreground" />}
+                  </button>
+                )}
+              </div>
             </div>
             <div className="rounded-xl border border-border/70 bg-background/80 p-4">
               <div className="flex items-center justify-between">

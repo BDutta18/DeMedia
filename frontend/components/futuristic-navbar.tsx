@@ -59,10 +59,10 @@ export default function FuturisticNavbar() {
             : "border-transparent bg-background/55 backdrop-blur"
         }`}
       >
-        <div className="page-shell flex h-16 items-center justify-between gap-4">
+        <div className="page-shell flex h-16 items-center justify-between gap-2 sm:gap-4">
           <Link href="/" className="flex items-center gap-3">
             <img src="/demedia-logo.svg" alt="DeMedia" className="h-9 w-9" />
-            <span className="font-[family-name:var(--font-display)] text-lg font-semibold tracking-tight text-foreground">
+            <span className="hidden font-[family-name:var(--font-display)] text-lg font-semibold tracking-tight text-foreground sm:inline">
               DeMedia
             </span>
           </Link>
@@ -122,6 +122,11 @@ export default function FuturisticNavbar() {
       {mobileMenuOpen && (
         <div className="border-b border-border/70 bg-background/95 px-4 py-4 backdrop-blur lg:hidden">
           <div className="page-shell grid gap-2">
+            {isAuthenticated && (
+              <div className="mb-2 rounded-xl border border-emerald-500/35 bg-emerald-500/10 px-3 py-2 text-center text-xs font-mono text-emerald-600 dark:text-emerald-400">
+                {address?.slice(0, 6)}...{address?.slice(-4)}
+              </div>
+            )}
             {navItems.map((item) => (
               <Link
                 key={item.href}

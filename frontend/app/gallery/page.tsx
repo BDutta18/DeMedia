@@ -76,6 +76,32 @@ export default function GalleryPage() {
   }, [])
 
   useEffect(() => {
+    const inferFromValue = (value: string): MediaKind => {
+      const normalized = value.toLowerCase()
+      if (normalized.includes(".mp4") || normalized.includes(".webm") || normalized.includes(".mov") || normalized.includes(".mkv")) return "video"
+      if (normalized.includes(".mp3") || normalized.includes(".wav") || normalized.includes(".ogg") || normalized.includes(".m4a")) return "audio"
+      if (
+        normalized.includes(".pdf") ||
+        normalized.includes(".doc") ||
+        normalized.includes(".docx") ||
+        normalized.includes(".txt") ||
+        normalized.includes(".ppt") ||
+        normalized.includes(".pptx") ||
+        normalized.includes(".xls") ||
+        normalized.includes(".xlsx")
+      ) return "document"
+      return "image"
+    }
+
+    const inferFromNft = (nft: NFT): MediaKind => {
+      const candidates = [resolveMediaUrl(nft.imageURL), nft.metadataURL, nft.name, nft.description]
+      for (const value of candidates) {
+        const inferred = inferFromValue(value || "")
+        if (inferred !== "image") return inferred
+      }
+      return "image"
+    }
+
     const inferFromUrl = (url: string): MediaKind => {
       const value = url.toLowerCase()
       if (value.includes(".mp4") || value.includes(".webm") || value.includes(".mov") || value.includes(".mkv")) return "video"
@@ -86,7 +112,11 @@ export default function GalleryPage() {
 
     const detectMediaKinds = async () => {
       if (!nfts.length) return
-      const entries = nfts.map((nft) => [nft._id, inferFromUrl(resolveMediaUrl(nft.imageURL))] as const)
+      const entries = nfts.map((nft) => {
+        const primary = inferFromNft(nft)
+        if (primary !== "image") return [nft._id, primary] as const
+        return [nft._id, inferFromUrl(resolveMediaUrl(nft.imageURL))] as const
+      })
       setMediaKindById(Object.fromEntries(entries))
     }
 
@@ -133,6 +163,9 @@ export default function GalleryPage() {
     const mediaUrl = resolveMediaUrl(nft.imageURL)
     const mediaKind = mediaKindById[nft._id] || "image"
     const baseClass = mode === "card" ? "h-full w-full object-cover" : "h-full w-full object-cover"
+    const likelyDocumentAsset = [mediaUrl, nft.metadataURL, nft.name, nft.description].some((value) =>
+      (value || "").toLowerCase().match(/\.(pdf|doc|docx|txt|ppt|pptx|xls|xlsx)\b/),
+    )
 
     if (mediaKind === "video") return <video src={mediaUrl} className={baseClass} muted playsInline controls={mode === "modal"} />
     if (mediaKind === "audio") {
@@ -157,6 +190,10 @@ export default function GalleryPage() {
         alt={nft.name}
         className={baseClass}
         onError={(e) => {
+          if (likelyDocumentAsset && mediaKindById[nft._id] !== "document") {
+            setMediaKindById((prev) => ({ ...prev, [nft._id]: "document" }))
+            return
+          }
           e.currentTarget.src = "/placeholder.svg"
         }}
       />
