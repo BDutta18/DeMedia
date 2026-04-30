@@ -127,8 +127,8 @@ Feedback to action mapping:
 ## Community Contribution
 
 - X (Twitter) community post: https://x.com/i/status/2049837455403282646
-  
-![Community Contribution Post](docs/screenshots/community-contribution.jpg)
+  <img width="1156" height="1280" alt="image" src="https://github.com/user-attachments/assets/87ce392e-c1a8-4000-bbdf-6b3776e1c3a2" />
+
 
 ## Black Belt Advanced Feature Implemented
 
