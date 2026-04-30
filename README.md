@@ -17,15 +17,12 @@ Creators can upload media, register its fingerprint on-chain, mint NFTs, and man
 
 ### 1. Landing Page - Hero Section
 ![Landing Page Hero](docs/screenshots/homepage-hero.png)
-Source: `Screenshot 2026-04-30 174136.png`
 
 ### 2. Dashboard - Creator Overview
 ![Dashboard Overview](docs/screenshots/dashboard-overview.png)
-Source: `Screenshot 2026-04-30 174203.png`
 
 ### 3. Gallery - NFT Grid View
 ![Gallery Grid](docs/screenshots/gallery-grid.png)
-Source: `Screenshot 2026-04-30 174233.png`
 
 ### 4. Wallet - Digital Vault
 ![Wallet Digital Vault](docs/screenshots/wallet-vault.png)
@@ -103,11 +100,12 @@ https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimV
 ## Feedback-Driven Update Status (April 30, 2026)
 
 Implemented feedback commits:
-1. [`790064e`](https://github.com/BDutta18/DeMedia/commit/790064e) - Changed the UI to production-ready experience.
-2. [`789fce7`](https://github.com/BDutta18/DeMedia/commit/789fce7) - Implemented search-priority update from feedback and synced README/UI updates.
-3. [`785c6f0`](https://github.com/BDutta18/DeMedia/commit/785c6f0) - Document upload/preview fix based on user feedback.
-4. [`291098a`](https://github.com/BDutta18/DeMedia/commit/291098a) - NFT issue fixes related to gallery/content behavior.
-5. [`6b7795d`](https://github.com/BDutta18/DeMedia/commit/6b7795d) - Wallet and NFT reliability fixes.
+1. [`0729e62`](https://github.com/BDutta18/DeMedia/commit/0729e62) - Additional UI improvements from user feedback iteration.
+2. [`790064e`](https://github.com/BDutta18/DeMedia/commit/790064e) - Changed the UI to production-ready experience.
+3. [`789fce7`](https://github.com/BDutta18/DeMedia/commit/789fce7) - Implemented search-priority update from feedback and synced README/UI updates.
+4. [`785c6f0`](https://github.com/BDutta18/DeMedia/commit/785c6f0) - Document upload/preview fix based on user feedback.
+5. [`291098a`](https://github.com/BDutta18/DeMedia/commit/291098a) - NFT issue fixes related to gallery/content behavior.
+6. [`6b7795d`](https://github.com/BDutta18/DeMedia/commit/6b7795d) - Wallet and NFT reliability fixes.
 
 Feedback to action mapping:
 
