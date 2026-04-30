@@ -124,9 +124,9 @@ Feedback to action mapping:
 - User feedback document: https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit?gid=1205493588#gid=1205493588
 - Google Form link: https://docs.google.com/forms/d/e/1FAIpQLSenLrFe8At5Vp8OUpLxGLAfRUHtRpnFHDhPhhjVNWokwEAIsg/viewform?usp=sharing&ouid=106184899408053478392
 
-## Community Contribution
+# Community Contribution
 
-- X (Twitter) community post: https://x.com/i/status/2049837455403282646
+## X (Twitter) community post: https://x.com/i/status/2049837455403282646
   <img width="1156" height="1280" alt="image" src="https://github.com/user-attachments/assets/87ce392e-c1a8-4000-bbdf-6b3776e1c3a2" />
 
 
