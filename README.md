@@ -178,12 +178,10 @@ Successful response includes multisig proof:
 }
 ```
 
-## Metrics Monitoring Dashboard
+## Metrics Dashboard : 
 
-Monitoring dashboard and operational endpoints:
+Metric dashboard and operational endpoints:
 
-- Product dashboard (UI): https://de-media-xi.vercel.app/dashboard
-- Wallet activity view (UI): https://de-media-xi.vercel.app/wallet
 - Transaction status API: `/api/tx/status/:txHash`
 - Realtime transaction stream (SSE): `/api/tx/events/stream`
 
@@ -194,6 +192,9 @@ Tracked platform metrics:
 - NFT listing and fetch reliability
 - Wallet-auth verification success/error rates
 - API response stability for frontend proxy routes
+
+# Monitoring Dashboard :
+
 
 ## Security Checklist (Completed)
 
