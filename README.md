@@ -45,6 +45,11 @@ Tracked platform metrics:
 ### 4. Wallet - Digital Vault
 <img width="1795" height="785" alt="image" src="https://github.com/user-attachments/assets/4252556d-2ae3-48de-9ac7-6918f0af4a8e" />
 
+### 5. Mobile Responsive
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/219bbe04-3b49-4b9a-81bc-202792fe576c" width="250" />
+  <img src="https://github.com/user-attachments/assets/8bb9d098-bd18-49a5-b73f-4121335b12c2" width="250" />
+</p>
 
 ### User Details (All 30 Feedback Responses)
 
