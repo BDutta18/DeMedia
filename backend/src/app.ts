@@ -7,6 +7,7 @@ import uploadRoutes from "./routes/upload.Routes";
 import metadataRoutes from "./routes/metadata.Routes";
 import nftRoutes from "./routes/nft.Routes";
 import txRoutes from "./routes/tx.Routes";
+import healthRoutes from "./routes/health.Routes";
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/nft", metadataRoutes);
 app.use("/api/nft", nftRoutes);
 app.use("/api/tx", txRoutes);
+app.use("/api/health", healthRoutes);
 
 
 
