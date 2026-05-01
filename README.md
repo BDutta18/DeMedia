@@ -13,6 +13,24 @@
 DeMedia is a decentralized media content platform built on the Stellar testnet with Soroban smart contracts.
 Creators can upload media, register its fingerprint on-chain, mint NFTs, and manage content ownership with wallet-based auth.
 
+## Metrics Dashboard : 
+<img width="1896" height="1078" alt="Screenshot 2026-05-01 123230" src="https://github.com/user-attachments/assets/cbe7933b-d6f2-451d-bce9-636e9c763029" />
+
+Metric dashboard and operational endpoints: https://demedia.onrender.com/api/health
+- Transaction status API: `/api/tx/status/:txHash`
+- Realtime transaction stream (SSE): `/api/tx/events/stream`
+
+Tracked platform metrics:
+
+- Upload pipeline success/failure rate (upload, metadata, on-chain register, mint)
+- Transaction lifecycle (`pending`, `success`, `fail`)
+- NFT listing and fetch reliability
+- Wallet-auth verification success/error rates
+- API response stability for frontend proxy routes
+
+ # Monitoring Dashboard :
+ <img width="1882" height="1074" alt="Screenshot 2026-05-01 123345" src="https://github.com/user-attachments/assets/2b3fcc79-52b2-4160-898d-7fc82b142d23" />
+
 ## UI Screenshots
 
 ### 1. Landing Page - Hero Section
@@ -177,25 +195,6 @@ Successful response includes multisig proof:
   }
 }
 ```
-
-## Metrics Dashboard : 
-
-Metric dashboard and operational endpoints:
-
-- Transaction status API: `/api/tx/status/:txHash`
-- Realtime transaction stream (SSE): `/api/tx/events/stream`
-
-Tracked platform metrics:
-
-- Upload pipeline success/failure rate (upload, metadata, on-chain register, mint)
-- Transaction lifecycle (`pending`, `success`, `fail`)
-- NFT listing and fetch reliability
-- Wallet-auth verification success/error rates
-- API response stability for frontend proxy routes
-
-# Monitoring Dashboard :
-
-
 ## Security Checklist (Completed)
 
 - `Done` Wallet signature-based authentication (`/api/wallet/verify`)
