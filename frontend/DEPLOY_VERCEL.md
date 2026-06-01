@@ -6,7 +6,7 @@
    - `NEXT_PUBLIC_API_BASE_URL=https://demedia.onrender.com`
 4. Deploy.
 
-This project includes [`vercel.json`](/C:/Users/BITTU/OneDrive/Documents/Desktop/DeMedia-main/frontend/vercel.json), which forces:
+This project includes [`vercel.json`](./vercel.json), which forces:
 
-- `pnpm install --frozen-lockfile`
-- `pnpm run build`
+- `npm ci`
+- `npm run build`
