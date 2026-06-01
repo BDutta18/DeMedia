@@ -118,32 +118,10 @@ Feedback to action mapping:
 ## Required Submission Links
 
 - Live demo: https://de-media-xi.vercel.app/
-- Demo video (full MVP): https://www.youtube.com/watch?v=hcs871xpv-E
+- Demo video (full MVP): https://youtu.be/gBS61AKJD3o?si=G3xP5QT_Rj6Er_up
 - User feedback document: https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit?gid=1205493588#gid=1205493588
 - Google Form link: https://docs.google.com/forms/d/e/1FAIpQLSenLrFe8At5Vp8OUpLxGLAfRUHtRpnFHDhPhhjVNWokwEAIsg/viewform?usp=sharing&ouid=106184899408053478392
 
-# Community Contribution
-
-## X (Twitter) community post: https://x.com/i/status/2049837455403282646
-  <img width="1156" height="1280" alt="image" src="https://github.com/user-attachments/assets/87ce392e-c1a8-4000-bbdf-6b3776e1c3a2" />
-
-
-## Black Belt Advanced Feature Implemented
-
-Selected feature: `Multi-signature Logic - Multi-party approval for transactions`
-
-Implementation summary:
-
-- Enforced 2-of-2 multisig on the main NFT buy path.
-- Added a dedicated multisig alias endpoint for the same flow.
-- A purchase now requires two distinct authenticated wallets:
-  - Buyer token (standard `Authorization: Bearer <buyerToken>`)
-  - Cosigner token (`x-cosigner-authorization: Bearer <cosignerToken>`)
-- The backend rejects the transaction if:
-  - cosigner is missing/invalid,
-  - buyer and cosigner are the same address,
-  - seller is used as cosigner,
-  - NFT is not for sale or invalid.
 
 Endpoint:
 
@@ -219,12 +197,6 @@ Endpoints and dashboard links:
 - Explorer links are aligned to the active network configuration, and the mainnet contract is linked below.
 
 Note: Real-time buyer/seller settlement beyond current prototype scope is intentionally not claimed here.
-
-## CI/CD Pipeline
-
-CI/CD Status:
-
-[![CI](https://github.com/BDutta18/DeMedia/actions/workflows/ci.yml/badge.svg)](https://github.com/BDutta18/DeMedia/actions/workflows/ci.yml)
 
 ## Core Architecture
 
