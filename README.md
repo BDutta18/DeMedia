@@ -25,11 +25,11 @@
 
 | Homepage | Gallery |
 |:---:|:---:|
-| <img src="YOUR_HOMEPAGE_SCREENSHOT_URL" alt="Homepage" width="400" /> | <img src="YOUR_GALLERY_SCREENSHOT_URL" alt="Gallery" width="400" /> |
+| <img src="https://github.com/user-attachments/assets/cf7a13f0-7af3-43af-aee9-4aa302d1c140" alt="Homepage" width="400" /> | <img src="https://github.com/user-attachments/assets/9490cba9-d328-479e-8270-cb3aed37b51f" alt="Gallery" width="400" /> |
 
 | Dashboard | Mobile View |
 |:---:|:---:|
-| <img src="YOUR_DASHBOARD_SCREENSHOT_URL" alt="Dashboard" width="400" /> | <img src="YOUR_MOBILE_SCREENSHOT_URL" alt="Mobile View" width="200" /> |
+| <img src="https://github.com/user-attachments/assets/886fea58-ba26-431b-ac04-dcea322c41bf" alt="Dashboard" width="400" /> | <img src="https://github.com/user-attachments/assets/151ed43d-20dc-4b57-912b-0c3f71430f3f" alt="Mobile View" width="200" /> |
 
 ---
 
