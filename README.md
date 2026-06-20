@@ -8,6 +8,11 @@
   Decentralized Publishing for the Creator Economy
 </p>
 
+<p align="center">
+  <a href="https://stellar.org"><img src="https://img.shields.io/badge/Stellar-Mainnet-7B2D8B?style=for-the-badge&logo=stellar" alt="Stellar Mainnet" /></a>
+  <a href="https://stellar.org"><img src="https://img.shields.io/badge/Stellar-Testnet-7B2D8B?style=for-the-badge&logo=stellar" alt="Stellar Testnet" /></a>
+</p>
+
 # DeMedia - Decentralized Media Content Platform on Stellar
 
 DeMedia is a decentralized media content platform built on Stellar with Soroban smart contracts.
@@ -253,6 +258,14 @@ cd ../frontend
 npm install
 npm run dev
 ```
+
+## CI/CD Pipeline
+
+| Badge | Status |
+| :--- | :--- |
+| **CI Workflow** | [![CI](https://github.com/BDutta18/DeMedia/actions/workflows/ci.yml/badge.svg)](https://github.com/BDutta18/DeMedia/actions/workflows/ci.yml) |
+| **Backend Tests** | [![Backend Tests](https://img.shields.io/badge/Backend%20Tests-3%20passing-brightgreen)](https://github.com/BDutta18/DeMedia/actions/workflows/ci.yml) |
+| **Frontend Build** | [![Frontend Build](https://img.shields.io/badge/Frontend%20Build-passing-brightgreen)](https://github.com/BDutta18/DeMedia/actions/workflows/ci.yml) |
 
 ## Verification Commands
 
