@@ -2,7 +2,6 @@
 
 import {
   Search,
-  LogIn,
   Menu,
   X,
   LayoutDashboard,
@@ -14,6 +13,7 @@ import {
   ImageIcon,
   WalletCards,
 } from "lucide-react"
+import { Wallet } from "lucide-react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useAuth } from "@/lib/auth-context"
@@ -100,8 +100,8 @@ export default function FuturisticNavbar() {
                 href="/auth"
                 className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
               >
-                <LogIn className="h-4 w-4" />
-                Sign in
+                <Wallet className="h-4 w-4" />
+                Connect Wallet
               </Link>
             )}
           </div>
@@ -157,8 +157,8 @@ export default function FuturisticNavbar() {
                 href="/auth"
                 className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
               >
-                <LogIn className="h-4 w-4" />
-                Sign in
+                <Wallet className="h-4 w-4" />
+                Connect Wallet
               </Link>
             )}
           </div>
