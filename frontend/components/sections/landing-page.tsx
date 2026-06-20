@@ -50,9 +50,6 @@ function Hero() {
         <BrandLockup />
       </div>
       <div className="relative z-10 mx-auto flex min-h-[100vh] max-w-7xl flex-col items-center justify-center px-4 text-center">
-        <p className="rounded-full border border-white/15 bg-white/[0.06] px-4 py-2 text-xs tracking-[0.18em] text-zinc-300">
-          DEMEDIA PROTOCOL
-        </p>
         <h1 className="mt-7 max-w-5xl text-balance text-5xl font-semibold leading-[1.02] sm:text-6xl lg:text-8xl">
           Own Your Content.
           <br />
