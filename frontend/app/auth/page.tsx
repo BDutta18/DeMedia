@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { AlertCircle, Check, ExternalLink, ShieldCheck, Wallet, Zap } from "lucide-react"
+import { AlertCircle, Check, ExternalLink, Loader2, ShieldCheck, Wallet, Zap } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/lib/auth-context"
 import { connectWallet, getSupportedWallets, getWalletNetwork, isFreighterInstalled, signWalletMessage } from "@/lib/wallet-kit"
@@ -48,6 +48,17 @@ function normalizeSignature(value: string) {
   return value
 }
 
+const stepLabels: Record<AuthStatus, { title: string; desc: string }> = {
+  detect: { title: "Wallet required", desc: "Install Freighter to use your Stellar identity." },
+  connect: { title: "Connect to continue", desc: "DeMedia uses a one-time wallet signature. No password is stored." },
+  connecting: { title: "Connecting wallet", desc: "Opening Freighter to connect your Stellar account." },
+  sign: { title: "Confirm ownership", desc: "Review the connected address, then sign a gasless message." },
+  "awaiting-signature": { title: "Awaiting signature", desc: "Check Freighter to sign the verification message." },
+  verifying: { title: "Verifying signature", desc: "Confirming your identity on the network." },
+  success: { title: "You're signed in", desc: "Redirecting to your workspace..." },
+  error: { title: "Connection failed", desc: "Please try again." },
+}
+
 export default function AuthPage() {
   const router = useRouter()
   const { login } = useAuth()
@@ -63,7 +74,6 @@ export default function AuthPage() {
 
   useEffect(() => {
     setIsSecureOrigin(window.location.protocol === "https:" || window.location.hostname === "localhost")
-
     ;(async () => {
       try {
         const [wallets, freighter] = await Promise.all([getSupportedWallets(), isFreighterInstalled()])
@@ -83,22 +93,19 @@ export default function AuthPage() {
       setMessage("Install or enable a Stellar wallet to continue.")
       return
     }
+    setStatus("connecting")
+    setMessage("")
+    try {
+      const result = await connectWallet()
+      if (!result.address) throw new Error("No wallet address returned")
 
-      setStatus("connecting")
-      setMessage("")
-      try {
-        const result = await connectWallet()
-        if (!result.address) throw new Error("No wallet address returned")
-        try {
-          const walletNetwork = await getWalletNetwork()
-          if (walletNetwork.networkPassphrase !== networkConfig.passphrase) {
-            throw new Error(`Please switch Freighter to ${networkConfig.label}.`)
-          }
-        } catch (error) {
-          if (error instanceof Error && error.message.includes(networkConfig.label)) throw error
-        }
-        setAddress(result.address)
-        setStatus("sign")
+      const walletNetwork = await getWalletNetwork()
+      if (walletNetwork.networkPassphrase !== networkConfig.passphrase) {
+        throw new Error(`Please switch Freighter to ${networkConfig.label}.`)
+      }
+
+      setAddress(result.address)
+      setStatus("sign")
     } catch (error) {
       setStatus("error")
       setMessage(mapWalletError(error).message || "Wallet connection failed.")
@@ -131,41 +138,25 @@ export default function AuthPage() {
         signature: normalizeSignature(resolvedSignature),
         signedMessage: resolvedSignature,
       }
-      const verifyUrl = backendBaseUrl ? `${backendBaseUrl}/api/wallet/verify` : "/api/auth/verify"
-      let verifyResponse: Response
-      try {
-        verifyResponse = await fetch(verifyUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        })
-      } catch {
-        verifyResponse = await fetch("/api/auth/verify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        })
-      }
-      const data = await verifyResponse.json().catch(() => ({}))
-      if (!verifyResponse.ok || !data.token) throw new Error(data.message || data.error || "Verification failed.")
+      const verifyUrl = "/api/auth/verify"
+      const res = await fetch(verifyUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || !data.token) throw new Error(data.message || data.error || "Verification failed.")
+
       login(data.address, data.token)
       setStatus("success")
-      window.setTimeout(async () => {
-        try {
-          const profileResponse = await fetch(`/api/user/profile/${data.address}`)
-          const profileData = await profileResponse.json().catch(() => ({}))
-          const profile = profileData?.user
-          const hasProfile = Boolean(
-            profileResponse.ok &&
-              profileData?.success &&
-              profile &&
-              (profile.name || profile.avatar || profile.bio || profile.banner || profile.showcaseTitle),
-          )
-          router.push(hasProfile ? "/dashboard" : "/profile?setup=1")
-        } catch {
-          router.push("/profile?setup=1")
-        }
-      }, 900)
+
+      const profileRes = await fetch(`/api/user/profile/${data.address}`).catch(() => null)
+      const profileData = profileRes ? await profileRes.json().catch(() => ({})) : {}
+      const profile = profileData?.user
+      const hasProfile = Boolean(
+        profileRes?.ok && profileData?.success && profile && (profile.name || profile.avatar || profile.bio || profile.banner || profile.showcaseTitle),
+      )
+      router.push(hasProfile ? "/dashboard" : "/profile?setup=1")
     } catch (error) {
       setStatus("error")
       setMessage(mapWalletError(error).message || "Signature verification failed.")
@@ -173,16 +164,21 @@ export default function AuthPage() {
   }
 
   const busy = ["connecting", "awaiting-signature", "verifying"].includes(status)
+  const step = stepLabels[status]
+
   const buttonLabel =
-    status === "detect"
-      ? "Install Freighter"
-      : status === "sign"
-        ? "Sign Message"
-        : busy
-          ? "Working..."
-          : status === "success"
-            ? "Opening Dashboard"
-            : "Connect Wallet"
+    status === "detect" ? "Install Freighter" :
+    status === "sign" ? "Sign Message" :
+    status === "success" ? "Opening Dashboard" :
+    status === "error" ? "Try Again" :
+    "Connect Wallet"
+
+  const handleButtonClick = () => {
+    if (status === "detect") window.open("https://freighter.app/", "_blank")
+    else if (status === "sign") sign()
+    else if (status === "error") setStatus("connect")
+    else connect()
+  }
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#05070f] text-white">
@@ -223,31 +219,41 @@ export default function AuthPage() {
           <div className="relative rounded-[2rem] border border-white/10 bg-black/45 p-6 shadow-[0_30px_100px_rgba(0,0,0,0.45)] backdrop-blur-xl">
             <div className="flex items-start justify-between gap-4">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.06]">
-                {status === "success" ? <Check className="h-7 w-7 text-emerald-300" /> : status === "error" ? <AlertCircle className="h-7 w-7 text-red-300" /> : <Wallet className="h-7 w-7 text-cyan-200" />}
+                {busy ? (
+                  <Loader2 className="h-7 w-7 text-cyan-200 animate-spin" />
+                ) : status === "success" ? (
+                  <Check className="h-7 w-7 text-emerald-300" />
+                ) : status === "error" ? (
+                  <AlertCircle className="h-7 w-7 text-red-300" />
+                ) : (
+                  <Wallet className="h-7 w-7 text-cyan-200" />
+                )}
               </div>
               <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-xs font-medium text-zinc-300">
-                Secure login
+                {busy ? "In progress" : status === "success" ? "Done" : "Secure login"}
               </span>
             </div>
 
-            <h2 className="mt-6 text-3xl font-semibold tracking-tight">
-              {status === "detect" ? "Wallet required" : status === "sign" ? "Confirm ownership" : status === "success" ? "You're signed in" : "Connect to continue"}
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-zinc-400">
-              {status === "sign"
-                ? "Review the connected address, then sign a gasless message."
-                : status === "detect"
-                  ? "Install Freighter to use your Stellar identity."
-                  : "DeMedia uses a one-time wallet signature. No password is stored."}
-            </p>
+            <h2 className="mt-6 text-3xl font-semibold tracking-tight">{step.title}</h2>
+            <p className="mt-3 text-sm leading-6 text-zinc-400">{step.desc}</p>
 
-            {message ? <p className="mt-4 rounded-2xl border border-red-400/30 bg-red-500/10 p-3 text-sm text-red-100">{message}</p> : null}
+            {address && status === "sign" ? (
+              <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+                <p className="text-xs text-zinc-500">Connected address</p>
+                <p className="mt-1 font-mono text-sm text-cyan-200">{address.slice(0, 8)}...{address.slice(-6)}</p>
+              </div>
+            ) : null}
+
+            {message ? (
+              <p className="mt-4 rounded-2xl border border-red-400/30 bg-red-500/10 p-3 text-sm text-red-100">{message}</p>
+            ) : null}
 
             <button
-              onClick={status === "detect" ? () => window.open("https://freighter.app/", "_blank") : status === "sign" ? sign : connect}
+              onClick={handleButtonClick}
               disabled={busy || status === "success"}
               className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-cyan-100 disabled:opacity-60"
             >
+              {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
               {buttonLabel}
               {status === "detect" ? <ExternalLink className="h-4 w-4" /> : null}
             </button>

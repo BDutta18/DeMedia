@@ -16,31 +16,37 @@ import { FREIGHTER_ID } from "@creit.tech/stellar-wallets-kit/modules/freighter"
 import { defaultModules } from "@creit.tech/stellar-wallets-kit/modules/utils"
 import { getNetworkConfig, useNetworkStore } from "@/lib/network-store"
 
-let initialized = false
-let initializedNetwork: string | null = null
-
 type WalletAddressResult = { address: string }
-type WalletSignMessageResult = { signedMessage: string | null; signerAddress: string }
+type WalletSignMessageResult = { signedMessage: string; signerAddress: string }
 type WalletSignTransactionResult = { signedTxXdr: string; signerAddress: string }
 type WalletNetworkResult = { network: string; networkPassphrase: string }
-type FreighterResponse = { error?: string } & Record<string, unknown>
 
-const hasFreighterError = (response: FreighterResponse): response is FreighterResponse & { error: string } =>
-  typeof response.error === "string" && response.error.length > 0
+const timeout = <T>(promise: Promise<T>, ms: number): Promise<T> =>
+  Promise.race([
+    promise,
+    new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Request timed out")), ms)),
+  ])
+
+const withRetry = async <T>(fn: () => Promise<T>, retries = 2): Promise<T> => {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      return await fn()
+    } catch (err) {
+      if (i === retries) throw err
+      await new Promise((r) => setTimeout(r, 300 * (i + 1)))
+    }
+  }
+  throw new Error("Unexpected retry exit")
+}
 
 const getKit = () => {
   const selectedNetwork = useNetworkStore.getState().network
   const config = getNetworkConfig(selectedNetwork)
-
-  if (!initialized || initializedNetwork !== config.passphrase) {
-    StellarWalletsKit.init({
-      selectedWalletId: FREIGHTER_ID,
-      modules: defaultModules(),
-      network: config.isTestnet ? Networks.TESTNET : Networks.PUBLIC,
-    })
-    initialized = true
-    initializedNetwork = config.passphrase
-  }
+  StellarWalletsKit.init({
+    selectedWalletId: FREIGHTER_ID,
+    modules: defaultModules(),
+    network: config.isTestnet ? Networks.TESTNET : Networks.PUBLIC,
+  })
   return StellarWalletsKit
 }
 
@@ -48,42 +54,35 @@ const getSelectedNetworkConfig = () => getNetworkConfig(useNetworkStore.getState
 
 export const getSupportedWallets = async () => {
   try {
-    return await getKit().refreshSupportedWallets()
+    return await timeout(getKit().refreshSupportedWallets(), 3000)
   } catch {
-    // Keep auth screen resilient if wallet-kit module probing fails in browser-specific contexts.
     return []
   }
 }
 
 export const connectWallet = async () => {
   try {
-    const accessResponse = (await freighterRequestAccess()) as FreighterResponse
-    if (hasFreighterError(accessResponse)) {
-      throw new Error(accessResponse.error)
-    }
-
-    const address = typeof accessResponse.address === "string" ? accessResponse.address : ""
-    if (address) return { address }
+    const accessResponse: { address?: string; error?: string } = await timeout(
+      freighterRequestAccess() as unknown as Promise<Record<string, unknown>>,
+      5000,
+    )
+    if (accessResponse?.error) throw new Error(accessResponse.error)
+    if (accessResponse?.address) return { address: accessResponse.address }
   } catch (error) {
-    // If Freighter is installed but access fails, surface the real reason.
-    let hasFreighterExtension = false
+    let hasFreighter = false
     try {
-      const connectedResponse = (await freighterIsConnected()) as FreighterResponse
-      hasFreighterExtension = !hasFreighterError(connectedResponse)
+      const connected = await timeout(freighterIsConnected() as unknown as Promise<Record<string, unknown>>, 2000)
+      hasFreighter = !connected?.error
     } catch {
-      // Ignore this check and continue with wallet-kit fallback.
+      // not available, fall through
     }
-    if (hasFreighterExtension) throw error
+    if (hasFreighter) throw error
   }
 
   const kit = getKit()
-  const result = await kit.authModal()
+  const result = await timeout(kit.authModal(), 10000)
+  if (result?.address) return result
 
-  if (result && typeof result === "object" && "address" in result && typeof result.address === "string") {
-    return result
-  }
-
-  // Some wallets resolve auth without returning the address payload.
   const fallback = await kit.getAddress()
   if (fallback?.address) return fallback
 
@@ -92,42 +91,30 @@ export const connectWallet = async () => {
 
 export const getWalletAddress = async () => {
   try {
-    const addressResponse = (await freighterGetAddress()) as FreighterResponse
-    if (!hasFreighterError(addressResponse) && typeof addressResponse.address === "string" && addressResponse.address) {
-      return { address: addressResponse.address } satisfies WalletAddressResult
-    }
+    const result: Record<string, unknown> = await freighterGetAddress() as unknown as Record<string, unknown>
+    if (!result?.error && result?.address) return { address: result.address as string }
   } catch {
-    // Fall back to wallet-kit below.
+    // fall back to wallet-kit
   }
-
   return getKit().getAddress()
 }
 
 export const signWalletMessage = async (message: string, address?: string) => {
   const config = getSelectedNetworkConfig()
   try {
-    const signMessageCompat = freighterSignMessage as unknown as (
-      value: string,
-      opts: Record<string, string>
-    ) => Promise<unknown>
-
-    const signResponse = (await signMessageCompat(message, {
-      networkPassphrase: config.passphrase,
-      ...(address ? { address } : {}),
-    })) as FreighterResponse
-
-    if (hasFreighterError(signResponse)) {
-      throw new Error(signResponse.error)
-    }
-
-    if (typeof signResponse.signedMessage === "string" && typeof signResponse.signerAddress === "string") {
-      return {
-        signedMessage: signResponse.signedMessage,
-        signerAddress: signResponse.signerAddress,
-      } satisfies WalletSignMessageResult
+    const result: { signedMessage?: string; signerAddress?: string; error?: string } = await timeout(
+      freighterSignMessage(message, {
+        networkPassphrase: config.passphrase,
+        ...(address ? { address } : {}),
+      }) as unknown as Promise<Record<string, unknown>>,
+      30000,
+    )
+    if (result?.error) throw new Error(result.error)
+    if (result?.signedMessage && result?.signerAddress) {
+      return { signedMessage: result.signedMessage, signerAddress: result.signerAddress }
     }
   } catch {
-    // Fall back to wallet-kit below.
+    // fall back to wallet-kit
   }
 
   return getKit().signMessage(message, {
@@ -139,23 +126,19 @@ export const signWalletMessage = async (message: string, address?: string) => {
 export const signWalletTransaction = async (xdr: string, address?: string) => {
   const config = getSelectedNetworkConfig()
   try {
-    const signResponse = (await freighterSignTransaction(xdr, {
-      networkPassphrase: config.passphrase,
-      ...(address ? { address } : {}),
-    })) as FreighterResponse
-
-    if (hasFreighterError(signResponse)) {
-      throw new Error(signResponse.error)
-    }
-
-    if (typeof signResponse.signedTxXdr === "string" && typeof signResponse.signerAddress === "string") {
-      return {
-        signedTxXdr: signResponse.signedTxXdr,
-        signerAddress: signResponse.signerAddress,
-      } satisfies WalletSignTransactionResult
+    const result: { signedTxXdr?: string; signerAddress?: string; error?: string } = await timeout(
+      freighterSignTransaction(xdr, {
+        networkPassphrase: config.passphrase,
+        ...(address ? { address } : {}),
+      }) as unknown as Promise<Record<string, unknown>>,
+      30000,
+    )
+    if (result?.error) throw new Error(result.error)
+    if (result?.signedTxXdr && result?.signerAddress) {
+      return { signedTxXdr: result.signedTxXdr, signerAddress: result.signerAddress }
     }
   } catch {
-    // Fall back to wallet-kit below.
+    // fall back to wallet-kit
   }
 
   return getKit().signTransaction(xdr, {
@@ -166,21 +149,16 @@ export const signWalletTransaction = async (xdr: string, address?: string) => {
 
 export const getWalletNetwork = async () => {
   try {
-    const networkResponse = (await freighterGetNetwork()) as FreighterResponse
-    if (
-      !hasFreighterError(networkResponse) &&
-      typeof networkResponse.network === "string" &&
-      typeof networkResponse.networkPassphrase === "string"
-    ) {
-      return {
-        network: networkResponse.network,
-        networkPassphrase: networkResponse.networkPassphrase,
-      } satisfies WalletNetworkResult
+    const result: { network?: string; networkPassphrase?: string; error?: string } = await timeout(
+      freighterGetNetwork() as unknown as Promise<Record<string, unknown>>,
+      5000,
+    )
+    if (!result?.error && result?.network && result?.networkPassphrase) {
+      return { network: result.network, networkPassphrase: result.networkPassphrase }
     }
   } catch {
-    // Fall back to wallet-kit below.
+    // fall back to wallet-kit
   }
-
   return getKit().getNetwork()
 }
 
@@ -192,31 +170,20 @@ export const isFreighterInstalled = async () => {
   if (typeof window === "undefined") return false
 
   try {
-    const connectedResponse = (await freighterIsConnected()) as FreighterResponse
-    if (!hasFreighterError(connectedResponse)) return true
+    const result: { error?: string } = await timeout(
+      freighterIsConnected() as unknown as Promise<Record<string, unknown>>,
+      2000,
+    )
+    if (!result?.error) return true
   } catch {
-    // Ignore errors and continue with legacy checks.
+    // not available via API, try wallet-kit
   }
 
-  const hasFreighterOnWindow = Boolean((window as Window & { freighter?: unknown }).freighter)
-  if (hasFreighterOnWindow) return true
-
-  // Additional check: try to access window Freighter directly
-  try {
-    if (typeof (window as any).freighter !== "undefined") return true
-  } catch {
-    // Ignore errors
-  }
-
-  // Try connected wallets from stellar-wallets-kit
   try {
     const kit = getKit()
-    const supported = await kit.refreshSupportedWallets()
-    const freighter = supported.find(w => w.id === FREIGHTER_ID)
-    if (freighter?.isAvailable) return true
+    const supported = await timeout(kit.refreshSupportedWallets(), 3000)
+    return supported.some((w) => w.id === FREIGHTER_ID && w.isAvailable)
   } catch {
-    // Ignore errors
+    return false
   }
-
-  return false
 }
