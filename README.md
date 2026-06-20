@@ -13,24 +13,92 @@
   <a href="https://stellar.org"><img src="https://img.shields.io/badge/Stellar-Testnet-7B2D8B?style=for-the-badge&logo=stellar" alt="Stellar Testnet" /></a>
 </p>
 
-# DeMedia - Decentralized Media Content Platform on Stellar
+<p align="center">
+  <a href="https://de-media-xi.vercel.app/">Live Demo</a> •
+  <a href="https://youtu.be/gBS61AKJD3o">Demo Video</a> •
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSenLrFe8At5Vp8OUpLxGLAfRUHtRpnFHDhPhhjVNWokwEAIsg/viewform">Feedback Form</a>
+</p>
 
-DeMedia is a decentralized media content platform built on Stellar with Soroban smart contracts.
-The current architecture keeps only the minimal content registry on-chain and moves the expensive NFT, royalty, escrow, and subscription flows off-chain.
+---
 
-Metric dashboard and operational endpoints: https://demedia.onrender.com/api/health
-- Transaction status API: `/api/tx/status/:txHash`
-- Realtime transaction stream (SSE): `/api/tx/events/stream`
+## Screenshots
 
-Tracked platform metrics:
+| Homepage | Gallery |
+|:---:|:---:|
+| <img src="YOUR_HOMEPAGE_SCREENSHOT_URL" alt="Homepage" width="400" /> | <img src="YOUR_GALLERY_SCREENSHOT_URL" alt="Gallery" width="400" /> |
 
-- Upload pipeline success/failure rate (upload, metadata, on-chain register, mint)
-- Transaction lifecycle (`pending`, `success`, `fail`)
-- NFT listing and fetch reliability
-- Wallet-auth verification success/error rates
-- API response stability for frontend proxy routes
+| Dashboard | Mobile View |
+|:---:|:---:|
+| <img src="YOUR_DASHBOARD_SCREENSHOT_URL" alt="Dashboard" width="400" /> | <img src="YOUR_MOBILE_SCREENSHOT_URL" alt="Mobile View" width="200" /> |
 
-### User Details (All 30 Feedback Responses)
+---
+
+DeMedia is a decentralized media content platform built on Stellar with Soroban smart contracts. The current architecture keeps only the minimal content registry on-chain and moves the expensive NFT, royalty, escrow, and subscription flows off-chain.
+
+## Table of Contents
+
+- [Architecture](#core-architecture)
+- [Screenshots](#screenshots)
+- [CI/CD Pipeline](#cicd-pipeline)
+- [Security Checklist](#security-checklist)
+- [Smart Contracts](#smart-contracts)
+- [Feedback Updates](#feedback-driven-updates)
+- [API Endpoints](#api-endpoints)
+- [Data Indexing](#data-indexing)
+- [Environment Variables](#environment)
+- [Local Development](#local-development)
+- [Required Links](#required-submission-links)
+
+## Core Architecture
+
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend** | Next.js 16 + TypeScript (`frontend/`) |
+| **Backend** | Express + TypeScript (`backend/`) |
+| **Smart Contracts** | Soroban Rust (`contracts/`) |
+| **Database** | MongoDB |
+| **Storage** | Pinata / IPFS |
+| **Wallet** | Freighter + StellarWalletsKit |
+| **Hosting** | Vercel (frontend) + Render (backend) |
+
+## CI/CD Pipeline
+
+| Badge | Status |
+| :--- | :--- |
+| **CI Workflow** | [![CI](https://github.com/BDutta18/DeMedia/actions/workflows/ci.yml/badge.svg)](https://github.com/BDutta18/DeMedia/actions/workflows/ci.yml) |
+| **Backend Tests** | [![Backend Tests](https://img.shields.io/badge/Backend%20Tests-3%20passing-brightgreen)](https://github.com/BDutta18/DeMedia/actions/workflows/ci.yml) |
+| **Frontend Build** | [![Frontend Build](https://img.shields.io/badge/Frontend%20Build-passing-brightgreen)](https://github.com/BDutta18/DeMedia/actions/workflows/ci.yml) |
+
+## Security Checklist
+
+- [x] Wallet signature-based authentication (`/api/wallet/verify`)
+- [x] JWT-protected routes for user-specific operations
+- [x] Centralized auth middleware validation for protected backend endpoints
+- [x] Input validation and required-field checks in upload/profile/nft flows
+- [x] Structured API error handling with status codes and failure messages
+- [x] Secrets moved to environment variables (`JWT_SECRET`, `PRIVATE_KEY`, `PINATA_JWT`, DB URI)
+- [x] Contract transaction finality checks before success confirmation
+- [x] Server-side ownership checks before NFT price/sale updates
+- [x] Testnet explorer verification references for deployment transactions
+- [x] CI checks enabled via GitHub Actions workflow badge
+
+## Smart Contracts
+
+### Mainnet
+
+| Contract | Address |
+| :--- | :--- |
+| **ContentRegistry** | `CCHCKK24M5DPUCS3AMLS3SC5DFU42L6YXLN7PH5NFQ7EX63COGJSBIRM` |
+
+**Deployment Tx:** [`902b83a2c792d4b48ce53d710cc54d245ce49b4c3adfb67bdff0ff14a8f2a5e0`](https://stellar.expert/explorer/public/tx/902b83a2c792d4b48ce53d710cc54d245ce49b4c3adfb67bdff0ff14a8f2a5e0)
+
+### Testnet
+
+Testnet deployments are generated locally with [`scripts/deploy-testnet.sh`](scripts/deploy-testnet.sh). The script writes a `deployment/testnet-deployment.json` artifact containing the testnet contract ID and deploy transaction hash.
+
+## Feedback-Driven Updates
+
+### User Details (30 Feedback Responses)
 
 <table>
   <thead>
@@ -73,68 +141,49 @@ Tracked platform metrics:
     <tr><td><sub>Satyabrata Dutta</sub></td><td><sub>dsatyabrata53@gmail.com</sub></td><td><sub>GCKFV3G7OVJGJDBTXQ2HCRQHO4ORTBPYS2V5RFKDGKIQYDY5BTSPH4VN</sub></td></tr>
   </tbody>
 </table>
-Feedback source:
-https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit?gid=1205493588#gid=1205493588
 
-## Feedback-Driven Update Status (April 30, 2026)
+Feedback source: [Google Sheets](https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit?gid=1205493588#gid=1205493588)
 
-Implemented feedback commits:
-1. [`0729e62`](https://github.com/BDutta18/DeMedia/commit/0729e62) - Additional UI improvements from user feedback iteration.
-2. [`790064e`](https://github.com/BDutta18/DeMedia/commit/790064e) - Changed the UI to production-ready experience.
-3. [`789fce7`](https://github.com/BDutta18/DeMedia/commit/789fce7) - Implemented search-priority update from feedback and synced README/UI updates.
-4. [`785c6f0`](https://github.com/BDutta18/DeMedia/commit/785c6f0) - Document upload/preview fix based on user feedback.
-5. [`291098a`](https://github.com/BDutta18/DeMedia/commit/291098a) - NFT issue fixes related to gallery/content behavior.
-6. [`6b7795d`](https://github.com/BDutta18/DeMedia/commit/6b7795d) - Wallet and NFT reliability fixes.
+### Implemented Changes
 
-Feedback to action mapping:
+| # | Feedback | Status | Commit |
+| :--- | :--- | :--- | :--- |
+| 1 | Search should be top-priority in navigation | Done | [`0729e62`](https://github.com/BDutta18/DeMedia/commit/0729e62) |
+| 2 | Add stronger NFT sorting | Done | [`790064e`](https://github.com/BDutta18/DeMedia/commit/790064e) |
+| 3 | Document preview / gallery preview issues | In Progress | [`785c6f0`](https://github.com/BDutta18/DeMedia/commit/785c6f0) |
+| 4 | Upload lag while handling documents | Planned | — |
+| 5 | Profile picture not showing consistently | Planned | — |
+| 6 | UI should be improved | Done | [`789fce7`](https://github.com/BDutta18/DeMedia/commit/789fce7) |
+| 7 | Buying NFTs as a V2 feature | Planned (V2) | — |
+| 8 | General positive feedback | Logged | — |
 
-1. Search should be top-priority in navigation
-- Status: `Done`
-- Update: Search moved near the start of the navbar list for faster discovery.
+## API Endpoints
 
-2. Add stronger NFT sorting
-- Status: `Done`
-- Update: Gallery sorting now includes `Newest`, `Oldest`, `Name A-Z`, `Creator A-Z`, `Token ID Low-High`, `Token ID High-Low`.
+### Public
 
-3. Document preview not showing / gallery preview issues
-- Status: `In Progress`
-- Update: Core fix committed in `785c6f0` and additional reliability hardening is ongoing for all media types.
+| Endpoint | Description |
+| :--- | :--- |
+| `GET /api/health` | Metric dashboard & health check |
+| `GET /api/tx/status/:txHash` | Transaction status lookup |
+| `GET /api/tx/events/stream` | Realtime transaction stream (SSE) |
 
-4. Upload lag while handling documents
-- Status: `Planned`
-- Update: Add progressive loading states and retry-friendly upload UX.
+### Auth
 
-5. Profile picture not showing consistently
-- Status: `Planned`
-- Update: Add stronger avatar fallback and cache-busting refresh logic.
+| Endpoint | Description |
+| :--- | :--- |
+| `POST /api/wallet/verify` | Wallet signature verification |
+| `GET /api/auth/verify` | JWT verification (Next.js proxy) |
 
-6. UI should be improved
-- Status: `Done`
-- Update: Refined visual system across Home, Gallery, and Dashboard.
+### NFTs
 
-7. Buying NFTs as a V2 feature
-- Status: `Planned (Version 2)`
-- Update: Marketplace purchase workflow extension tracked for next release cycle.
+| Endpoint | Description |
+| :--- | :--- |
+| `GET /api/upload/find` | All indexed NFTs feed |
+| `GET /api/upload/my-nfts` | Current user NFTs |
+| `POST /api/nft/buy` | Purchase NFT (multisig enforced) |
+| `POST /api/nft/buy-multisig` | Purchase NFT alias |
 
-8. General positive responses (`Good`, `Nil`, `No bugs found`)
-- Status: `Logged`
-- Update: Stability baseline is good; focus remains on preview reliability and UX polish.
-
-## Required Submission Links
-
-- Live demo: https://de-media-xi.vercel.app/
-- Demo video (full MVP): https://youtu.be/gBS61AKJD3o?si=G3xP5QT_Rj6Er_up
-- User feedback document: https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit?gid=1205493588#gid=1205493588
-- Google Form link: https://docs.google.com/forms/d/e/1FAIpQLSenLrFe8At5Vp8OUpLxGLAfRUHtRpnFHDhPhhjVNWokwEAIsg/viewform?usp=sharing&ouid=106184899408053478392
-
-
-Endpoint:
-
-- `POST /api/nft/buy` (main route, multisig enforced)
-- `POST /api/nft/buy-multisig` (alias route)
-
-Request body:
-
+**`POST /api/nft/buy` request:**
 ```json
 {
   "tokenId": 12,
@@ -142,8 +191,7 @@ Request body:
 }
 ```
 
-Successful response includes multisig proof:
-
+**Successful response:**
 ```json
 {
   "success": true,
@@ -157,122 +205,74 @@ Successful response includes multisig proof:
   }
 }
 ```
-## Security Checklist (Completed)
 
-- `Done` Wallet signature-based authentication (`/api/wallet/verify`)
-- `Done` JWT-protected routes for user-specific operations
-- `Done` Centralized auth middleware validation for protected backend endpoints
-- `Done` Input validation and required-field checks in upload/profile/nft flows
-- `Done` Structured API error handling with status codes and failure messages
-- `Done` Secrets moved to environment variables (`JWT_SECRET`, `PRIVATE_KEY`, `PINATA_JWT`, DB URI)
-- `Done` Contract transaction finality checks before success confirmation
-- `Done` Server-side ownership checks before NFT price/sale updates
-- `Done` Testnet explorer verification references for deployment transactions
-- `Done` CI checks enabled via GitHub Actions workflow badge
+### Users
+
+| Endpoint | Description |
+| :--- | :--- |
+| `GET /api/wallet/search?name=<query>` | Creator search by name |
+| `GET /api/wallet/profile/:address` | Profile details by address |
 
 ## Data Indexing
-
-Approach description:
 
 - Primary metadata is persisted in MongoDB and linked to on-chain transaction references.
 - NFT/content retrieval is indexed for app consumption through backend collection queries.
 - Name-based creator discovery is indexed through search query route handling.
 - On-chain finality state is indexed into app-readable status (`pending/success/fail`) for UI tracking.
 
-Endpoints and dashboard links:
+## What's Fully Integrated
 
-- All indexed NFTs feed: `/api/upload/find`
-- Current user NFTs: `/api/upload/my-nfts`
-- Creator search index endpoint: `/api/wallet/search?name=<query>`
-- Profile index endpoint: `/api/wallet/profile/:address`
-- Transaction status index endpoint: `/api/tx/status/:txHash`
-- Dashboard view for indexed insights: https://de-media-xi.vercel.app/dashboard
-
-## What Is Fully Integrated Now
-
-- One upload action now runs a complete backend pipeline:
+- One upload action runs a complete backend pipeline:
   1. Media upload to IPFS (Pinata)
   2. Metadata creation + upload to IPFS
-- 3. Content fingerprint registration on the minimal on-chain `ContentRegistry`
-- 4. NFT mint, royalty, escrow, and subscription state handled off-chain in MongoDB / backend services
-- 5. MongoDB state sync (including off-chain references)
-- Wallet disconnect is wired end-to-end (`Freighter/StellarWalletsKit disconnect` + local app logout).
+  3. Content fingerprint registration on the minimal on-chain `ContentRegistry`
+  4. NFT mint, royalty, escrow, and subscription state handled off-chain in MongoDB / backend services
+  5. MongoDB state sync (including off-chain references)
+- Wallet disconnect is wired end-to-end (Freighter/StellarWalletsKit disconnect + local app logout).
 - Purchase path is validated in the backend and recorded off-chain.
-- Frontend API routes now use a single normalized backend base URL helper.
-- Explorer links are aligned to the active network configuration, and the mainnet contract is linked below.
+- Frontend API routes use a single normalized backend base URL helper.
+- Explorer links are aligned to the active network configuration.
 
-Note: Real-time buyer/seller settlement beyond current prototype scope is intentionally not claimed here.
+## Environment Variables
 
-## Core Architecture
-
-- Frontend: Next.js + TypeScript (`frontend/`)
-- Backend: Express + TypeScript (`backend/`)
-- Contracts: Soroban Rust contracts (`contracts/`)
-- Contract integration layer: `backend/src/contract-integration.ts` (details in `CONTRACT_INTEGRATION.md`)
-- DB: MongoDB
-- Storage: Pinata/IPFS
-- Wallet: Freighter and StellarWalletsKit
-
-## Current Mainnet Contract
-
-| Contract | Address |
+| Variable | Description |
 | :--- | :--- |
-| ContentRegistry | `CCHCKK24M5DPUCS3AMLS3SC5DFU42L6YXLN7PH5NFQ7EX63COGJSBIRM` |
+| `NEXT_PUBLIC_API_BASE_URL` | Backend base URL for frontend |
+| `RPC_URL` | Stellar RPC endpoint |
+| `PRIVATE_KEY` | Backend signing key |
+| `PINATA_JWT` | Pinata IPFS JWT |
+| `PINATA_GATEWAY` | Pinata gateway URL |
+| `JWT_SECRET` | JWT signing secret |
+| `MONGO_URI` | MongoDB connection string |
+| `CONTRACT_ADDRESS_CONTENTREGISTRY` | ContentRegistry contract ID |
 
-## Deployment Verification (Stellar Mainnet)
-
-| Contract | Deployment Tx |
-| :--- | :--- |
-| ContentRegistry | [902b83a2c792d4b48ce53d710cc54d245ce49b4c3adfb67bdff0ff14a8f2a5e0](https://stellar.expert/explorer/public/tx/902b83a2c792d4b48ce53d710cc54d245ce49b4c3adfb67bdff0ff14a8f2a5e0) |
-
-## Testnet Deployment
-
-Testnet deployments are generated locally with [scripts/deploy-testnet.sh](scripts/deploy-testnet.sh).
-The script writes a `deployment/testnet-deployment.json` artifact containing the testnet contract ID and deploy transaction hash after a successful run.
-
-If you want the README to show a frozen testnet contract address and transaction hash, run the testnet deploy script once and copy the generated values into this section.
-
-## Environment
-
-Set these values before running locally:
-
-- `NEXT_PUBLIC_API_BASE_URL`
-- `RPC_URL`
-- `PRIVATE_KEY`
-- `PINATA_JWT`
-- `PINATA_GATEWAY`
-- `JWT_SECRET`
-- `MONGO_URI`
-- `CONTRACT_ADDRESS_CONTENTREGISTRY`
-
-## Local Run
+## Local Development
 
 ```bash
-# backend
+# Clone and install backend
 cd backend
 npm install
 npm run dev
 
-# frontend
+# In a separate terminal — frontend
 cd ../frontend
 npm install
 npm run dev
 ```
 
-## CI/CD Pipeline
-
-| Badge | Status |
-| :--- | :--- |
-| **CI Workflow** | [![CI](https://github.com/BDutta18/DeMedia/actions/workflows/ci.yml/badge.svg)](https://github.com/BDutta18/DeMedia/actions/workflows/ci.yml) |
-| **Backend Tests** | [![Backend Tests](https://img.shields.io/badge/Backend%20Tests-3%20passing-brightgreen)](https://github.com/BDutta18/DeMedia/actions/workflows/ci.yml) |
-| **Frontend Build** | [![Frontend Build](https://img.shields.io/badge/Frontend%20Build-passing-brightgreen)](https://github.com/BDutta18/DeMedia/actions/workflows/ci.yml) |
-
-## Verification Commands
+### Verification
 
 ```bash
-# backend tests (includes 3 passing tests)
+# Backend tests (3 passing)
 cd backend && npm test
 
-# frontend build
+# Frontend build check
 cd frontend && npm run build
 ```
+
+## Required Submission Links
+
+- **Live demo:** https://de-media-xi.vercel.app/
+- **Demo video (full MVP):** https://youtu.be/gBS61AKJD3o
+- **User feedback document:** https://docs.google.com/spreadsheets/d/1NCXxc8W2l84xPI76iBJHE5T7vbewJjRJimM3TimVu1A/edit
+- **Google Form:** https://docs.google.com/forms/d/e/1FAIpQLSenLrFe8At5Vp8OUpLxGLAfRUHtRpnFHDhPhhjVNWokwEAIsg/viewform
