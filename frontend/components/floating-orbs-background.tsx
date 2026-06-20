@@ -12,8 +12,12 @@ export default function FloatingOrbsBackground() {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    canvas.width = window.innerWidth * dpr
+    canvas.height = window.innerHeight * dpr
+    ctx.scale(dpr, dpr)
+    const width = () => window.innerWidth
+    const height = () => window.innerHeight
 
     const orbs: Array<{
       x: number
@@ -24,39 +28,40 @@ export default function FloatingOrbsBackground() {
       color: string
     }> = []
 
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 5; i++) {
       orbs.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        radius: Math.random() * 150 + 100,
-        color: ["#3b82f6", "#0284c7", "#dc2626"][Math.floor(Math.random() * 3)],
+        x: Math.random() * width(),
+        y: Math.random() * height(),
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: (Math.random() - 0.5) * 0.2,
+        radius: Math.random() * 120 + 80,
+        color: ["#3b82f6", "#0284c7", "#dc2626"][i % 3],
       })
     }
 
     let animationId: number
 
     const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      ctx.clearRect(0, 0, width(), height())
 
-      orbs.forEach((orb) => {
+      for (let i = 0; i < orbs.length; i++) {
+        const orb = orbs[i]
         orb.x += orb.vx
         orb.y += orb.vy
 
-        if (orb.x - orb.radius < 0 || orb.x + orb.radius > canvas.width) orb.vx *= -1
-        if (orb.y - orb.radius < 0 || orb.y + orb.radius > canvas.height) orb.vy *= -1
+        if (orb.x - orb.radius < 0 || orb.x + orb.radius > width()) orb.vx *= -1
+        if (orb.y - orb.radius < 0 || orb.y + orb.radius > height()) orb.vy *= -1
 
         const gradient = ctx.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, orb.radius)
-        gradient.addColorStop(0, orb.color + "40")
-        gradient.addColorStop(0.5, orb.color + "20")
+        gradient.addColorStop(0, orb.color + "30")
+        gradient.addColorStop(0.5, orb.color + "15")
         gradient.addColorStop(1, orb.color + "00")
 
         ctx.fillStyle = gradient
         ctx.beginPath()
         ctx.arc(orb.x, orb.y, orb.radius, 0, Math.PI * 2)
         ctx.fill()
-      })
+      }
 
       animationId = requestAnimationFrame(animate)
     }
@@ -64,10 +69,10 @@ export default function FloatingOrbsBackground() {
     animate()
 
     const handleResize = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      canvas.width = window.innerWidth * dpr
+      canvas.height = window.innerHeight * dpr
+      ctx.scale(dpr, dpr)
     }
-
     window.addEventListener("resize", handleResize)
 
     return () => {

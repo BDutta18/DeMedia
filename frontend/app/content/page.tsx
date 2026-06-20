@@ -82,6 +82,8 @@ export default function ContentPage() {
                 <img
                   src={resolveMediaUrl(item.imageURL)}
                   alt={item.name}
+                  loading="lazy"
+                  decoding="async"
                   className="h-56 w-full object-cover transition duration-500 group-hover:scale-105"
                   onError={(event) => {
                     event.currentTarget.src = "/placeholder.svg"

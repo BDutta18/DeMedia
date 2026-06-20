@@ -12,13 +12,17 @@ export default function OrbitBackground() {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    canvas.width = window.innerWidth * dpr
+    canvas.height = window.innerHeight * dpr
+    ctx.scale(dpr, dpr)
+    const width = () => window.innerWidth
+    const height = () => window.innerHeight
 
-    // Orbiting particles in circular paths
+    const centerX = width() / 2
+    const centerY = height() / 2
+
     const orbitals: Array<{
-      x: number
-      y: number
       radius: number
       angle: number
       speed: number
@@ -26,18 +30,12 @@ export default function OrbitBackground() {
       color: string
     }> = []
 
-    const centerX = canvas.width / 2
-    const centerY = canvas.height / 2
-
-    // Create orbital particles
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 35; i++) {
       orbitals.push({
-        x: centerX,
-        y: centerY,
-        radius: 100 + Math.random() * 400,
+        radius: 100 + Math.random() * 300,
         angle: Math.random() * Math.PI * 2,
-        speed: 0.0005 + Math.random() * 0.002,
-        size: 1 + Math.random() * 3,
+        speed: 0.0005 + Math.random() * 0.0015,
+        size: 0.8 + Math.random() * 2,
         color: ["#3b82f6", "#0284c7", "#dc2626"][Math.floor(Math.random() * 3)],
       })
     }
@@ -45,23 +43,21 @@ export default function OrbitBackground() {
     let animationId: number
 
     const animate = () => {
-      ctx.fillStyle = "rgba(10, 10, 15, 0.05)"
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.fillStyle = "rgba(10, 10, 15, 0.08)"
+      ctx.fillRect(0, 0, width(), height())
 
-      orbitals.forEach((orbital) => {
-        orbital.angle += orbital.speed
+      for (let i = 0; i < orbitals.length; i++) {
+        const o = orbitals[i]
+        o.angle += o.speed
 
-        const x = orbital.x + Math.cos(orbital.angle) * orbital.radius
-        const y = orbital.y + Math.sin(orbital.angle) * orbital.radius
+        const x = centerX + Math.cos(o.angle) * o.radius
+        const y = centerY + Math.sin(o.angle) * o.radius
 
+        ctx.fillStyle = o.color
         ctx.beginPath()
-        ctx.arc(x, y, orbital.size, 0, Math.PI * 2)
-        ctx.fillStyle = orbital.color
-        ctx.shadowBlur = 20
-        ctx.shadowColor = orbital.color
+        ctx.arc(x, y, o.size, 0, Math.PI * 2)
         ctx.fill()
-        ctx.shadowBlur = 0
-      })
+      }
 
       animationId = requestAnimationFrame(animate)
     }
@@ -69,10 +65,10 @@ export default function OrbitBackground() {
     animate()
 
     const handleResize = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      canvas.width = window.innerWidth * dpr
+      canvas.height = window.innerHeight * dpr
+      ctx.scale(dpr, dpr)
     }
-
     window.addEventListener("resize", handleResize)
 
     return () => {

@@ -37,7 +37,7 @@ function Hero() {
   return (
     <section ref={ref} className="relative min-h-[110vh] overflow-hidden">
       <img
-        src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=2400&q=90"
+        src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=2400&q=75"
         alt="Creators collaborating around digital content"
         className="absolute inset-0 h-full w-full object-cover opacity-35"
       />
@@ -136,6 +136,8 @@ function VisualGallery() {
                 <img
                   src={photo.src}
                   alt={`${photo.label} for DeMedia`}
+                  loading="lazy"
+                  decoding="async"
                   className="h-[300px] w-full object-cover transition duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_45%,rgba(0,0,0,0.6)_100%)]" />

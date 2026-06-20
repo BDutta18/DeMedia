@@ -37,37 +37,24 @@ export default function ProfileDetail({ address }: { address: string }) {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        console.log("[v0] Fetching profile for address:", address)
-
         const [profileRes, nftsRes] = await Promise.all([fetch(`/api/user/profile/${address}`), fetch("/api/nfts/all")])
 
         const profileData = await profileRes.json()
         const nftsData = await nftsRes.json()
 
-        console.log("[v0] Profile API response:", profileData)
-        console.log("[v0] Profile response keys:", Object.keys(profileData))
-        console.log("[v0] Profile success:", profileData.success)
-        console.log("[v0] Profile user:", profileData.user)
-        console.log("[v0] NFTs API response:", nftsData)
-
         if (profileData && profileData.user) {
-          console.log("[v0] Setting user data:", profileData.user)
           setUser(profileData.user)
-        } else {
-          console.log("[v0] Profile fetch failed or user is null. Full response:", JSON.stringify(profileData))
         }
 
         if (nftsData.success && nftsData.data) {
           const userNfts = nftsData.data.filter(
             (nft: NFT & { owner: string }) => nft.owner.toLowerCase() === address.toLowerCase(),
           )
-          console.log("[v0] Filtered NFTs for user:", userNfts)
           setNfts(userNfts)
         }
       } catch (error) {
-        console.error("[v0] Failed to fetch profile:", error)
+        console.error(error)
       } finally {
-        console.log("[v0] Setting loading to false")
         setLoading(false)
       }
     }
@@ -98,8 +85,6 @@ export default function ProfileDetail({ address }: { address: string }) {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  console.log("[v0] Current render state - loading:", loading, "user:", user, "nfts count:", nfts.length)
-
   if (loading) {
     return (
       <>
@@ -114,7 +99,6 @@ export default function ProfileDetail({ address }: { address: string }) {
   }
 
   if (!user) {
-    console.log("[v0] Rendering Profile Not Found - user is:", user)
     return (
       <>
         <ParallaxOrbBackground />        <main className="relative min-h-screen flex items-center justify-center">

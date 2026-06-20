@@ -12,10 +12,13 @@ export default function ParallaxOrbBackground() {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    canvas.width = window.innerWidth * dpr
+    canvas.height = window.innerHeight * dpr
+    ctx.scale(dpr, dpr)
+    const width = window.innerWidth
+    const height = window.innerHeight
 
-    // Far layer - large blurred gradient orbs
     const farOrbs: Array<{
       x: number
       y: number
@@ -24,28 +27,16 @@ export default function ParallaxOrbBackground() {
       speedY: number
     }> = []
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 3; i++) {
       farOrbs.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 300 + 200,
-        color: ["#3b82f6", "#7c3aed", "#fbbf24"][Math.floor(Math.random() * 3)],
-        speedY: (Math.random() - 0.5) * 0.2,
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 200 + 150,
+        color: ["#3b82f6", "#7c3aed", "#fbbf24"][i],
+        speedY: (Math.random() - 0.5) * 0.15,
       })
     }
 
-    // Mid layer - faint diagonal grid
-    const gridLines: Array<{ x: number; y: number; length: number; angle: number }> = []
-    for (let i = 0; i < 30; i++) {
-      gridLines.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        length: Math.random() * 100 + 50,
-        angle: Math.random() * Math.PI,
-      })
-    }
-
-    // Front layer - tiny floating particles
     const particles: Array<{
       x: number
       y: number
@@ -54,96 +45,78 @@ export default function ParallaxOrbBackground() {
       opacity: number
     }> = []
 
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < 40; i++) {
       particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 2 + 1,
-        speedY: (Math.random() - 0.5) * 1.2,
-        opacity: Math.random() * 0.5 + 0.2,
+        x: Math.random() * width,
+        y: Math.random() * height,
+        size: Math.random() * 1.5 + 0.5,
+        speedY: (Math.random() - 0.5) * 0.8,
+        opacity: Math.random() * 0.4 + 0.1,
       })
     }
 
     let scrollY = 0
 
-    const handleScroll = () => {
-      scrollY = window.scrollY
-    }
-
-    window.addEventListener("scroll", handleScroll)
-
-    let animationFrame: number
+    let rafId: number
+    let frame = 0
 
     const animate = () => {
-      ctx.fillStyle = "rgba(10, 10, 15, 0.08)"
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      frame++
+      ctx.clearRect(0, 0, width, height)
 
-      // Draw far layer orbs with parallax 0.2x
       farOrbs.forEach((orb) => {
         orb.y += orb.speedY
-        if (orb.y < -orb.radius) orb.y = canvas.height + orb.radius
-        if (orb.y > canvas.height + orb.radius) orb.y = -orb.radius
+        if (orb.y < -orb.radius) orb.y = height + orb.radius
+        if (orb.y > height + orb.radius) orb.y = -orb.radius
 
         const parallaxY = orb.y - scrollY * 0.2
 
         const gradient = ctx.createRadialGradient(orb.x, parallaxY, 0, orb.x, parallaxY, orb.radius)
-        gradient.addColorStop(0, `${orb.color}40`)
-        gradient.addColorStop(0.5, `${orb.color}10`)
+        gradient.addColorStop(0, `${orb.color}30`)
+        gradient.addColorStop(0.5, `${orb.color}08`)
         gradient.addColorStop(1, "transparent")
 
         ctx.fillStyle = gradient
-        ctx.filter = "blur(40px)"
         ctx.fillRect(orb.x - orb.radius, parallaxY - orb.radius, orb.radius * 2, orb.radius * 2)
-        ctx.filter = "none"
       })
 
-      // Draw mid layer grid with parallax 0.5x
-      ctx.strokeStyle = "#ffffff"
-      ctx.globalAlpha = 0.05
-      ctx.lineWidth = 1
-
-      gridLines.forEach((line) => {
-        const parallaxY = line.y - scrollY * 0.5
-        ctx.beginPath()
-        ctx.moveTo(line.x, parallaxY)
-        ctx.lineTo(line.x + Math.cos(line.angle) * line.length, parallaxY + Math.sin(line.angle) * line.length)
-        ctx.stroke()
-      })
-
-      ctx.globalAlpha = 1
-
-      // Draw front layer particles with parallax 1.2x
+      ctx.fillStyle = "#ffffff"
       particles.forEach((particle) => {
         particle.y += particle.speedY
-        if (particle.y < 0) particle.y = canvas.height
-        if (particle.y > canvas.height) particle.y = 0
+        if (particle.y < 0) particle.y = height
+        if (particle.y > height) particle.y = 0
 
         const parallaxY = particle.y - scrollY * 1.2
-
+        ctx.globalAlpha = particle.opacity
         ctx.beginPath()
         ctx.arc(particle.x, parallaxY, particle.size, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(255, 255, 255, ${particle.opacity})`
         ctx.fill()
       })
+      ctx.globalAlpha = 1
 
-      animationFrame = requestAnimationFrame(animate)
+      rafId = requestAnimationFrame(animate)
     }
 
     animate()
 
-    const handleResize = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+    const handleScroll = () => {
+      scrollY = window.scrollY
     }
+    window.addEventListener("scroll", handleScroll, { passive: true })
 
+    const handleResize = () => {
+      canvas.width = window.innerWidth * dpr
+      canvas.height = window.innerHeight * dpr
+      ctx.scale(dpr, dpr)
+    }
     window.addEventListener("resize", handleResize)
 
     return () => {
-      cancelAnimationFrame(animationFrame)
+      cancelAnimationFrame(rafId)
       window.removeEventListener("resize", handleResize)
       window.removeEventListener("scroll", handleScroll)
     }
   }, [])
 
-  return <canvas ref={canvasRef} className="fixed inset-0 z-0" style={{ mixBlendMode: "screen" }} />
+  return <canvas ref={canvasRef} className="fixed inset-0 z-0" />
 }

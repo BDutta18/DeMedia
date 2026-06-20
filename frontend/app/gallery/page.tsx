@@ -74,6 +74,8 @@ export default function GalleryPage() {
                   <img
                     src={resolveMediaUrl(nft.imageURL)}
                     alt={nft.name}
+                    loading="lazy"
+                    decoding="async"
                     className={`${index % 3 === 0 ? "h-80" : "h-60"} w-full object-cover transition duration-500 group-hover:scale-[1.04]`}
                     onError={(event) => {
                       event.currentTarget.src = "/placeholder.svg"

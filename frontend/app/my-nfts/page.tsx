@@ -139,6 +139,8 @@ export default function MyNFTsPage() {
                       <img
                         src={resolveMediaUrl(nft.imageURL)}
                         alt={nft.name}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         onError={(e) => {
                           e.currentTarget.src = "/placeholder.svg"

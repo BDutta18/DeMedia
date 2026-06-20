@@ -12,10 +12,13 @@ export default function ArchiveBackground() {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    canvas.width = window.innerWidth * dpr
+    canvas.height = window.innerHeight * dpr
+    ctx.scale(dpr, dpr)
+    const width = () => window.innerWidth
+    const height = () => window.innerHeight
 
-    // Liquid wave particles
     const waves: Array<{
       x: number
       y: number
@@ -26,76 +29,71 @@ export default function ArchiveBackground() {
       alpha: number
     }> = []
 
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < 50; i++) {
       waves.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: 2 + Math.random() * 4,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
+        x: Math.random() * width(),
+        y: Math.random() * height(),
+        radius: 1.5 + Math.random() * 3,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
         color: ["#3b82f6", "#0284c7", "#dc2626", "#1e40af"][Math.floor(Math.random() * 4)],
-        alpha: 0.3 + Math.random() * 0.7,
+        alpha: 0.3 + Math.random() * 0.5,
       })
     }
 
     let animationId: number
+    let frame = 0
 
     const animate = () => {
-      ctx.fillStyle = "rgba(10, 10, 15, 0.1)"
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      frame++
+      ctx.fillStyle = "rgba(10, 10, 15, 0.12)"
+      ctx.fillRect(0, 0, width(), height())
 
-      waves.forEach((wave, i) => {
-        wave.x += wave.vx
-        wave.y += wave.vy
+      for (let i = 0; i < waves.length; i++) {
+        const w = waves[i]
+        w.x += w.vx
+        w.y += w.vy
 
-        if (wave.x < 0 || wave.x > canvas.width) wave.vx *= -1
-        if (wave.y < 0 || wave.y > canvas.height) wave.vy *= -1
+        if (w.x < 0 || w.x > width()) w.vx *= -1
+        if (w.y < 0 || w.y > height()) w.vy *= -1
 
-        // Draw wave particle with glow
+        ctx.globalAlpha = w.alpha
+        ctx.fillStyle = w.color
         ctx.beginPath()
-        ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2)
-        ctx.fillStyle = wave.color
-        ctx.globalAlpha = wave.alpha
-        ctx.shadowBlur = 30
-        ctx.shadowColor = wave.color
+        ctx.arc(w.x, w.y, w.radius, 0, Math.PI * 2)
         ctx.fill()
-        ctx.shadowBlur = 0
-        ctx.globalAlpha = 1
 
-        // Connect nearby particles with gradient lines
-        for (let j = i + 1; j < waves.length; j++) {
-          const other = waves[j]
-          const dx = wave.x - other.x
-          const dy = wave.y - other.y
-          const distance = Math.sqrt(dx * dx + dy * dy)
+        if (frame % 3 === 0) {
+          for (let j = i + 1; j < waves.length; j++) {
+            const other = waves[j]
+            const dx = w.x - other.x
+            const dy = w.y - other.y
+            const dist = Math.sqrt(dx * dx + dy * dy)
 
-          if (distance < 200) {
-            const gradient = ctx.createLinearGradient(wave.x, wave.y, other.x, other.y)
-            gradient.addColorStop(0, wave.color)
-            gradient.addColorStop(1, other.color)
-
-            ctx.beginPath()
-            ctx.moveTo(wave.x, wave.y)
-            ctx.lineTo(other.x, other.y)
-            ctx.strokeStyle = gradient
-            ctx.globalAlpha = (1 - distance / 200) * 0.2
-            ctx.lineWidth = 1
-            ctx.stroke()
-            ctx.globalAlpha = 1
+            if (dist < 200) {
+              ctx.beginPath()
+              ctx.moveTo(w.x, w.y)
+              ctx.lineTo(other.x, other.y)
+              ctx.strokeStyle = w.color
+              ctx.globalAlpha = (1 - dist / 200) * 0.12
+              ctx.lineWidth = 0.5
+              ctx.stroke()
+            }
           }
         }
-      })
+      }
 
+      ctx.globalAlpha = 1
       animationId = requestAnimationFrame(animate)
     }
 
     animate()
 
     const handleResize = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      canvas.width = window.innerWidth * dpr
+      canvas.height = window.innerHeight * dpr
+      ctx.scale(dpr, dpr)
     }
-
     window.addEventListener("resize", handleResize)
 
     return () => {

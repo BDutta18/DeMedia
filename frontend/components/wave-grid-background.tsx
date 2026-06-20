@@ -12,8 +12,12 @@ export default function WaveGridBackground() {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    canvas.width = window.innerWidth * dpr
+    canvas.height = window.innerHeight * dpr
+    ctx.scale(dpr, dpr)
+    const width = () => window.innerWidth
+    const height = () => window.innerHeight
 
     const particles: Array<{
       x: number
@@ -25,71 +29,70 @@ export default function WaveGridBackground() {
       opacity: number
     }> = []
 
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 60; i++) {
       particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        size: Math.random() * 3 + 1,
+        x: Math.random() * width(),
+        y: Math.random() * height(),
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        size: Math.random() * 2 + 0.5,
         color: ["#3b82f6", "#0284c7", "#dc2626"][Math.floor(Math.random() * 3)],
-        opacity: Math.random() * 0.5 + 0.3,
+        opacity: Math.random() * 0.4 + 0.2,
       })
     }
 
     let animationId: number
+    let frame = 0
 
     const animate = () => {
-      ctx.fillStyle = "rgba(10, 10, 15, 0.1)"
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      frame++
+      ctx.fillStyle = "rgba(10, 10, 15, 0.15)"
+      ctx.fillRect(0, 0, width(), height())
 
-      particles.forEach((particle, i) => {
-        particle.x += particle.vx
-        particle.y += particle.vy
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i]
+        p.x += p.vx
+        p.y += p.vy
 
-        if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1
-        if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1
+        if (p.x < 0 || p.x > width()) p.vx *= -1
+        if (p.y < 0 || p.y > height()) p.vy *= -1
 
-        // Draw particle
+        ctx.fillStyle = p.color
+        ctx.globalAlpha = p.opacity
         ctx.beginPath()
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
-        ctx.fillStyle = particle.color
-        ctx.globalAlpha = particle.opacity
-        ctx.shadowBlur = 15
-        ctx.shadowColor = particle.color
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
         ctx.fill()
 
-        // Draw connections
-        particles.forEach((other, j) => {
-          if (i === j) return
-          const dx = particle.x - other.x
-          const dy = particle.y - other.y
-          const distance = Math.sqrt(dx * dx + dy * dy)
+        if (frame % 2 === 0) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = p.x - particles[j].x
+            const dy = p.y - particles[j].y
+            const dist = Math.sqrt(dx * dx + dy * dy)
 
-          if (distance < 150) {
-            ctx.beginPath()
-            ctx.moveTo(particle.x, particle.y)
-            ctx.lineTo(other.x, other.y)
-            ctx.strokeStyle = particle.color
-            ctx.globalAlpha = (1 - distance / 150) * 0.2
-            ctx.lineWidth = 0.5
-            ctx.stroke()
+            if (dist < 150) {
+              ctx.strokeStyle = p.color
+              ctx.globalAlpha = (1 - dist / 150) * 0.15
+              ctx.lineWidth = 0.5
+              ctx.beginPath()
+              ctx.moveTo(p.x, p.y)
+              ctx.lineTo(particles[j].x, particles[j].y)
+              ctx.stroke()
+            }
           }
-        })
-      })
+        }
+      }
 
       ctx.globalAlpha = 1
-      ctx.shadowBlur = 0
       animationId = requestAnimationFrame(animate)
     }
 
     animate()
 
     const handleResize = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      canvas.width = window.innerWidth * dpr
+      canvas.height = window.innerHeight * dpr
+      ctx.scale(dpr, dpr)
     }
-
     window.addEventListener("resize", handleResize)
 
     return () => {
